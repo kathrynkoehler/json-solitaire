@@ -37,16 +37,21 @@ app.get('/files/:filename', async (req, res) => {
 // writes useful product data to new file
 app.post('/write/products', async (req, res) => {
   try {
+    res.type('text')
+    console.log('inside writeprod');
     let content = req.body.content;
+    //console.log(JSON.stringify(req.body.content));
     if (content) {
-      
-      await fs.writeFile('allProducts.json', newContent);
-      res.type('text').send('write success!');
+      let newContent = JSON.stringify(content);
+      console.log(JSON.stringify(newContent));
+      //console.log(typeof(newContent));
+      await fs.writeFile('./public/cleaned-data/allProducts.json', content);
+      res.send('write success!');
     } else {
-      res.status(400).type('text').send('write fail :( no content');
+      res.status(400).send('write fail :( no content');
     }
   } catch (err) {
-    res.status(400).type('text').send('write error');
+    res.status(500).send('write error! - ' + err);
   }
 });
 
@@ -55,14 +60,14 @@ app.post('/write/details', async (req, res) => {
   try {
     let content = req.body.content;
     if (content) {
-
-      await fs.writeFile('allDetails.json', newContent);
+      let newContent = JSON.stringify(content);
+      await fs.writeFile('./public/cleaned-data/allDetails.json', newContent);
       res.type('text').send('write success!');
     } else {
       res.status(400).type('text').send('write fail :( no content');
     }
   } catch (err) {
-    res.status(400).type('text').send('write error');
+    res.status(400).type('text').send('write error: ' + err);
   }
 });
 

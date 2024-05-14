@@ -1,24 +1,28 @@
-// in json, results are grouped by SKU
-  // search results page is grouped by PRODUCT
-  // so 1 product (a shoe) could come in 2 colors * 10 sizes = 20 SKUs
+/**
+ * this file is a reworking of index.js, to use the cleaned/organized data
+ * rather than parsing it all on each load.
+ */
 
 'use strict';
 
 (function () {
 
   window.addEventListener('load', init);
+  
+  // product json file to parse
+  //const FILE = '/json-files/sonic pink.json';
 
   // directory holding all json files to parse
   const DIRECTORY = '/json-files';
   // holds extracted details from json
-  let allDetails = {};
+  let allDetails = [];
 
   // once the page loads we can start appending data
   async function init() {
     try {
       let fileNames = await grabAllJson();
       for (let i = 0; i < fileNames.length; i++) {
-        //console.log(fileNames[i]);
+        console.log(fileNames[i]);
         await grabOneJson(fileNames[i]);
       }
     } catch (err) {
@@ -33,6 +37,7 @@
       await statusCheck(res);
       let data = await res.json();
       decomposeSKU(data, filename);
+      collapse();
     } catch (err) {
       console.log(err);
     }
@@ -69,11 +74,10 @@
       value = skus[item].value;
       //console.log(skus[item]["details"]);
       let productData = getImage(data, prodId);
-      //allDetails[prodId] = extractDetails(skus[item]);
-      //let details;
+      let details = extractDetails(skus[item]);
       // write details to new file so we don't have to do it on every page load
-      //console.log(allDetails[prodId]);
-      addToPage(item, value, productData, filename);
+      //console.log(details);
+      addToPage(item, value, productData, details, filename);
     }
   }
 
@@ -100,7 +104,7 @@
   }
 
   // add data to page
-  function addToPage(id, value, productData, filename) {
+  function addToPage(id, value, productData, details, filename) {
     const photo = gen('img');
     photo.src = productData[0];
     photo.alt = productData[1];
@@ -115,33 +119,17 @@
     score.textContent = 'Score: ' + value;
 
     // drop down!
-    const dropDownButton = gen('button');
-    dropDownButton.textContent = 'Score Components';
-    dropDownButton.classList.add('collapsible');
-
-    
-    const dropDownContainer = gen('article');
-    dropDownContainer.classList.add('content');
-    dropDownContainer.classList.add('hidden');
-
-    const dropDownContent = gen('p');
-    dropDownContent.textContent = 'FILLER!!!';
-    dropDownContainer.appendChild(dropDownContent);
-
-    // let details = allDetails[id];
+    // const dropDownButton = gen('button');
+    // dropDownButton.textContent = 'Score Components';
+    // dropDownButton.classList.add('collapsible');
+    // const dropDownContainer = gen('article');
+    // dropDownContainer.classList.add('content');
+    // //dropDownContainer.classList.add('hidden');
     // for (let i = 0; i < details.length; i++) {
     //   const dropDownContent = gen('p');
     //   dropDownContent.textContent = details[i][0] + ' = ' + details[i][1];
     //   dropDownContainer.appendChild(dropDownContent);
     // }
-
-
-    dropDownButton.addEventListener('click', () => {
-      dropDownButton.classList.toggle('active');
-      let content = dropDownButton.nextElementSibling;
-      content.classList.toggle('hidden');
-      console.log(content);
-    });
 
     const article = gen('article');
     article.classList.add('card');
@@ -149,14 +137,14 @@
     article.appendChild(title);
     article.appendChild(prodId);
     article.appendChild(score);
-
     // drop down!
-    article.appendChild(dropDownButton);
-    article.appendChild(dropDownContainer);
+    //article.appendChild(dropDownButton);
+    //article.appendChild(dropDownContainer);
     //console.log(filename);
-
     const parent = document.getElementById(`${filename}`);
     parent.appendChild(article);
+
+    
   }
 
   // grabs image and display name from details
@@ -177,38 +165,34 @@
   // param: skus[item] from decompose
   // recursively calls self until no details field left
   function extractDetails(item) {
-    let object = [];
     // for each field in json obj, check if it's details
     Object.keys(item).forEach(key => {
       if (typeof item[key] === 'object' && item[key] !== null && key === "details") {
         // if details, pull out the score and description
         let short = item["details"];
         for (let i = 0; i < short.length; i++) {
-          object.push([short[i]["description"], short[i]["value"]]);
+          allDetails.push([short[i]["description"], short[i]["value"]]);
           // then check for more details
           extractDetails(short[i]);
         }
         // when finished with one obj, do the other nested ones too
         //extractDetails(item["details"]);
       } else {
-        console.log(object);
-        allDetails[item] = object;
-        return object;
+        console.log(allDetails);
+        return allDetails;
       }
     });
   }
 
   // make the collapsible lists
   function collapse() {
-    console.log('collapse');
     let lists = qsa(".collapsible");
     for (let i = 0; i < lists.length; i++) {
-      console.log(lists[i]);
       lists[i].addEventListener('click', () => {
         lists[i].classList.toggle('active');
         let content = lists[i].nextElementSibling;
+        //console.log(content);
         content.classList.toggle('hidden');
-        console.log(content);
       });
     }
   }

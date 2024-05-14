@@ -14,6 +14,8 @@
   let allDetails = {};
   let allProducts = {};
 
+  window.addEventListener('load', init);
+
   async function init() {
     try {
       let fileNames = await grabAllJson();
@@ -21,8 +23,9 @@
         console.log(fileNames[i]);
         await grabOneJson(fileNames[i]);
         // write details to new file so we don't have to do it on every page load
+        console.log(allProducts);
         await writeProducts();
-        await writeDetails();
+        //await writeDetails();
       }
     } catch (err) {
       console.error('init ' + err);
@@ -65,7 +68,7 @@
   //       'skuId': '',
   //       'skuScore': 0,
   //       'skuImg': ''
-  //     }
+  //     },
   //   ]
   // }
 
@@ -78,71 +81,50 @@
 
     for (item in skus) {
       let prodId = item.split('_').slice(1)[0];
+      let skuId = item.split('_')[0];
+      //console.log(skuId);
       value = skus[item].value;
 
       // check if product id already has an object
-      if (allProducts.prodId) {
-        setData(data, allProducts.prodId);
+      //console.log(allProducts[prodId]);
+      if (allProducts[prodId]) {
+        setData(data, allProducts[prodId], skuId);
       } else {
+        //console.log('else');
         let object = {
           'productId': prodId,
           'displayName' : '',
-          'score': value,
-          'skus': []
+          'score': 0,
+          'skus': {}
         }
-        setData(data, object);
-        allProducts.prodId = object;
+        let skuObj = {'skuScore': value, 'skuImg': ''}
+        object['skus'][skuId] = skuObj;
+        //console.log(object);
+        setData(data, object, skuId);
+        allProducts[prodId] = object;
       }
 
       // extract details for every sku_prodid item
-      if (allDetails.item) {
-        allDetails.item.push(extractDetails(item));
-      } else {
-        allDetails.item = [(extractDetails(item))];
-      }
+      //allDetails[item] = [(extractDetails(skus[item]))];
     }
+    //console.log(allDetails);
   }
 
-  // write product data to new file so we don't have to do it on every page load!
-  async function writeProducts() {
-    try {
-      let data = new FormData();
-      data.append('content', allProducts)
-      let res = await fetch('/write/products');
-      await statusCheck(res);
-    } catch (err) {
-
-    }
-  }
-
-  // write product details to new file so we don't have to do it on every page load!
-  async function writeDetails() {
-    try {
-      let data = new FormData();
-      data.append('content', allDetails)
-      let res = await fetch('/write/details');
-      await statusCheck(res);
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  // grabs image and display name from details
-  function setData(data, object) {
+  // grabs image and display name from "response" "docs" object in files
+  function setData(data, object, skuId) {
     let docs = data["response"]["docs"];
     
     let item;
     for (item in docs) {
-      if (object.productId === prodId) {
+      if (docs[item]["product_id"] === object.productId) {
         object.displayName = docs[item]["product_displayName"];
-        object.skus.push(
-          {
-            'skuId': docs[item]["sku_id"], 
-            'skuScore': docs[item]["score"],
-            'skuImg': docs[item]["sku_skuImages"][0]
-          }
-        );
-
+        //console.log(object.skus[docs[item]["sku_id"]]);
+        object.skus[docs[item]["sku_id"]]['skuImg'] = docs[item]["sku_skuImages"][0];
+          // {
+          //   //'skuId': docs[item]["sku_id"], 
+          //   //'skuScore': docs[item]["score"],    // TODO: WRONG!
+          //   'skuImg': docs[item]["sku_skuImages"][0]
+          // };
         return object;
       }
     }
@@ -152,23 +134,57 @@
   // param: skus[item] from decompose
   // recursively calls self until no details field left
   function extractDetails(item) {
-    // for each field in json obj, check if it's details
+    // for each field in json obj, check if it's 'details'
+    let object = [];
+    //console.log(item);
     Object.keys(item).forEach(key => {
       if (typeof item[key] === 'object' && item[key] !== null && key === "details") {
         // if details, pull out the score and description
+        //console.log('HERE!!');
         let short = item["details"];
+        //console.log('SHORT: ' + JSON.stringify(short));
+        //console.log((short));
         for (let i = 0; i < short.length; i++) {
-          allDetails.push([short[i]["description"], short[i]["value"]]);
+          //console.log(short[i]["value"]);
+          object.push([short[i]["description"], short[i]["value"]]);
+          //console.log(object[item][short[i]["description"]]);
           // then check for more details
           extractDetails(short[i]);
         }
         // when finished with one obj, do the other nested ones too
         //extractDetails(item["details"]);
       } else {
-        console.log(allDetails);
-        return allDetails;
+        console.log(object);
+        return object;
       }
     });
+  }
+
+  // write product data to new file so we don't have to do it on every page load
+  async function writeProducts() {
+    console.log('inside write');
+    try {
+      let data = new FormData();
+      //console.log((allProducts));
+      data.append('content', JSON.stringify(allProducts));
+      let res = await fetch('/write/products', {method: 'POST', body: data});
+      await statusCheck(res);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  // write product details to new file so we don't have to do it on every page load!
+  async function writeDetails() {
+    try {
+      let data = new FormData();
+      //console.log(allDetails);
+      data.append('content', allDetails)
+      let res = await fetch('/write/details', {method: 'POST', body: data});
+      await statusCheck(res);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   
