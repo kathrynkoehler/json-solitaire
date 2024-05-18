@@ -24,9 +24,10 @@
         await grabOneJson(fileNames[i]);
         // write details to new file so we don't have to do it on every page load
         console.log(allProducts);
-        await writeProducts();
+        
         //await writeDetails();
       }
+      await writeProducts();
     } catch (err) {
       console.error('init ' + err);
     }
@@ -58,20 +59,6 @@
     }
   }
 
-  // object example for reference!!
-  // let object = {
-  //   'productId': prodId,
-  //   'displayName' : '',
-  //   'score': value,
-  //   'skus': [
-  //     {
-  //       'skuId': '',
-  //       'skuScore': 0,
-  //       'skuImg': ''
-  //     },
-  //   ]
-  // }
-
   // decompose json file and extract useful fields to save for each product
   // also extract details and save score breakdowns
   function decomposeSKU(data) {
@@ -87,45 +74,51 @@
 
       // check if product id already has an object
       //console.log(allProducts[prodId]);
-      if (allProducts[prodId]) {
-        setData(data, allProducts[prodId], skuId);
-      } else {
-        //console.log('else');
-        let object = {
+      let object = setData(data, prodId, true);
+
+      if (!allProducts[prodId]) {
+        allProducts[prodId] = {
           'productId': prodId,
-          'displayName' : '',
-          'score': 0,
+          'displayName' : object[0],
+          'score': value,
           'skus': {}
         }
-        let skuObj = {'skuScore': value, 'skuImg': ''}
-        object['skus'][skuId] = skuObj;
-        //console.log(object);
-        setData(data, object, skuId);
-        allProducts[prodId] = object;
       }
+      allProducts[prodId]['skus'][skuId] = {'skuScore': {}, 'skuImg': setData[1]};
+      
 
       // extract details for every sku_prodid item
       //allDetails[item] = [(extractDetails(skus[item]))];
     }
+    console.log(allProducts);
     //console.log(allDetails);
   }
 
   // grabs image and display name from "response" "docs" object in files
-  function setData(data, object, skuId) {
+  function setData(data, productId, exists) {
     let docs = data["response"]["docs"];
     
     let item;
     for (item in docs) {
-      if (docs[item]["product_id"] === object.productId) {
-        object.displayName = docs[item]["product_displayName"];
+      if (docs[item]["product_id"] === productId) {
+        // if (!exists) {
+        //   object.displayName = docs[item]["product_displayName"];
+        // } 
+        
+      
         //console.log(object.skus[docs[item]["sku_id"]]);
-        object.skus[docs[item]["sku_id"]]['skuImg'] = docs[item]["sku_skuImages"][0];
+        //console.log(object);
+        //console.log(allProducts[object.productId]);
+        //allProducts[object.productId]['skus'][docs[item]["sku_id"]]['skuImg'] = docs[item]["sku_skuImages"][0];
+        //console.log(object);
           // {
           //   //'skuId': docs[item]["sku_id"], 
           //   //'skuScore': docs[item]["score"],    // TODO: WRONG!
           //   'skuImg': docs[item]["sku_skuImages"][0]
           // };
-        return object;
+        let array = [docs[item]["product_displayName"], docs[item]["sku_skuImages"][0]];
+        //console.log(array);
+        return array;
       }
     }
     
@@ -164,11 +157,21 @@
   async function writeProducts() {
     console.log('inside write');
     try {
+      // first grab what's already in the file so we don't overwrite it
+      // let res = await fetch(`/cleaned-data/allProducts.json`);
+      // await statusCheck(res);
+      // let contents = await res.json();
+      
+      // append new product data to existing contents
+
+      // filename = filename.split(" ").join("-");
+      // filename = filename.split(".").slice(1)[0];
+
       let data = new FormData();
-      //console.log((allProducts));
+      // contents[filename] = JSON.stringify(allProducts);
       data.append('content', JSON.stringify(allProducts));
-      let res = await fetch('/write/products', {method: 'POST', body: data});
-      await statusCheck(res);
+      let res2 = await fetch('/write/products', {method: 'POST', body: data});
+      await statusCheck(res2);
     } catch (err) {
       console.error(err);
     }

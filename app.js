@@ -39,13 +39,13 @@ app.post('/write/products', async (req, res) => {
   try {
     res.type('text')
     console.log('inside writeprod');
-    let content = req.body.content;
-    //console.log(JSON.stringify(req.body.content));
+    let content = (req.body.content);
     if (content) {
-      let newContent = JSON.stringify(content);
-      console.log(JSON.stringify(newContent));
+      //let newContent = JSON.stringify(content);
+      //console.log(JSON.stringify(newContent));
       //console.log(typeof(newContent));
-      await fs.writeFile('./public/cleaned-data/allProducts.json', content);
+      //content = (JSON.parse(content));
+      await fs.writeFile('./public/cleaned-data/allProducts.json', (content));
       res.send('write success!');
     } else {
       res.status(400).send('write fail :( no content');
