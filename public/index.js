@@ -1,7 +1,8 @@
-// in json, results are grouped by SKU
-  // search results page is grouped by PRODUCT
-  // so 1 product (a shoe) could come in 2 colors * 10 sizes = 20 SKUs
-
+/**
+ * Responsible for building interface. 
+ * Reads in data that has already been "cleaned" by decompose.js, then parses 
+ * it out into elements to display to the user on load.
+ */
 'use strict';
 
 (function () {
@@ -9,82 +10,77 @@
   window.addEventListener('load', init);
 
   // directory holding all json files to parse
-  const DIRECTORY = '/json-files';
-  // holds extracted details from json
-  let allDetails = {};
+  const PRODUCTS = 'public/cleaned-data/allProducts.json';
+  // holds extracted product details from json
+  let allProducts = {};
 
   // once the page loads we can start appending data
   async function init() {
     try {
-      let fileNames = await grabAllJson();
-      for (let i = 0; i < fileNames.length; i++) {
-        //console.log(fileNames[i]);
-        await grabOneJson(fileNames[i]);
-      }
+      await setTimeout(async () => {
+        allProducts = await getData();
+        console.log(allProducts);
+        buildInterface();
+      }, 500);
+      
     } catch (err) {
       console.error('init ' + err);
     }
   }
 
-  // grabs the product data for ONE json file
-  async function grabOneJson(filename) {
+  async function getData() {
     try {
-      let res = await fetch(`/files/${filename}`);
-      await statusCheck(res);
-      let data = await res.json();
-      decomposeSKU(data, filename);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  // grabs the product data for ALL json files in directory
-  async function grabAllJson() {
-    try {
-      let res = await fetch('/files');
+      let res = await fetch('/clean');
       await statusCheck(res);
       let data = await res.json();
       return data;
     } catch (err) {
-      console.log(err);
+      console.error('get data: ' + err); 
     }
   }
 
-  function decomposeProduct() {
-    // collate the results for all SKUs under one product card
-    // allow cards to be clicked on => expanded to view all SKUs 
-  }
+  function buildInterface() {
+    // for each 'file' object in allProducts, build header separator
+    let file;
+    for (file in allProducts) {
+      addHeader(file);
 
-  // decompose json file into sku_productID, score, image, and details
-  function decomposeSKU(data, filename) {
-    const skus = data["debug"]["explain"];
-    let item;
-    let value;
-    filename = filename.split(" ").join("-");
-    filename = filename.split(".").join("-");
-    addHeader(filename);
-    for (item in skus) {
-      let prodId = item.split('_').slice(1)[0];
-      //console.log(prodId);
-      value = skus[item].value;
-      //console.log(skus[item]["details"]);
-      let productData = getImage(data, prodId);
-      //allDetails[prodId] = extractDetails(skus[item]);
-      //let details;
-      // write details to new file so we don't have to do it on every page load
-      //console.log(allDetails[prodId]);
-      addToPage(item, value, productData, filename);
-    }
-  }
+      // for each product in file, grab displayname, score, and skus
+      let product;
+      for (product in allProducts[file]) {
+        addProductSection(allProducts[file][product], file);
 
-  // write details to new file so we don't have to do it on every page load!
-  async function writeDetails() {
-    try {
-
-    } catch (err) {
+        // for each sku in product, add card to page with image, score
+        let sku;
+        for (sku in allProducts[file][product]['skus']) {
+          addCard(allProducts[file][product], 
+            allProducts[file][product]['score'], 
+            allProducts[file][product]['skus'][sku], sku,
+            file);
+        }
+      }  
 
     }
+    collapse();
   }
+
+  /*
+    Object.keys(allProducts).forEach((file) => {
+      addHeader(file);
+
+      // for each 
+      Object.keys(file).forEach((product) => {
+        console.log(product);
+
+        Object.keys(product).forEach((sku) => {
+          console.log(sku);
+          addToPage(product, product['score'], product['skus'][sku], file);
+        });
+        
+      });
+      
+    });
+  */
 
   // add new section for each file
   function addHeader(filename) {
@@ -99,17 +95,30 @@
     parent.appendChild(section);
   }
 
-  // add data to page
-  function addToPage(id, value, productData, filename) {
+  // put each product in its own group within the file card list
+  function addProductSection(product, file) {
+    let section = gen('section');
+    section.classList.add(product['productId']);
+    section.classList.add('product-container');
+
+    let parent = document.getElementById(`${file}`);
+    parent.appendChild(section);
+  }
+
+  // add data card to page
+  function addCard(data, value, skuData, sku, filename) {
     const photo = gen('img');
-    photo.src = productData[0];
-    photo.alt = productData[1];
+    photo.src = skuData['skuImg'];
+    photo.alt = data['displayName'];
     
     const title = gen('h1');
-    title.textContent = productData[1];
+    title.textContent = data['displayName'];
 
     const prodId = gen('h2');
-    prodId.textContent = 'ID: ' + id;
+    prodId.textContent = 'ID: ' + data['productId'];
+
+    const skuId = gen('h2');
+    skuId.textContent = 'SKU: ' + sku;
 
     const score = gen('h3');
     score.textContent = 'Score: ' + value;
@@ -119,7 +128,6 @@
     dropDownButton.textContent = 'Score Components';
     dropDownButton.classList.add('collapsible');
 
-    
     const dropDownContainer = gen('article');
     dropDownContainer.classList.add('content');
     dropDownContainer.classList.add('hidden');
@@ -135,7 +143,6 @@
     //   dropDownContainer.appendChild(dropDownContent);
     // }
 
-
     dropDownButton.addEventListener('click', () => {
       dropDownButton.classList.toggle('active');
       let content = dropDownButton.nextElementSibling;
@@ -144,71 +151,33 @@
     });
 
     const article = gen('article');
-    article.classList.add('card');
+    article.classList.add('product-card');
     article.appendChild(photo);
     article.appendChild(title);
     article.appendChild(prodId);
+    article.appendChild(skuId);
     article.appendChild(score);
 
-    // drop down!
     article.appendChild(dropDownButton);
     article.appendChild(dropDownContainer);
-    //console.log(filename);
 
     const parent = document.getElementById(`${filename}`);
-    parent.appendChild(article);
-  }
-
-  // grabs image and display name from details
-  function getImage(data, prodId) {
-    let docs = data["response"]["docs"];
-    let item;
-    for (item in docs) {
-      if (docs[item]["product_id"] === prodId) {
-        let productData = [];
-        productData.push(docs[item]["sku_skuImages"][0]);
-        productData.push(docs[item]["product_displayName"]);
-        return productData;
-      }
-    }
-    
-  }
-  
-  // param: skus[item] from decompose
-  // recursively calls self until no details field left
-  function extractDetails(item) {
-    let object = [];
-    // for each field in json obj, check if it's details
-    Object.keys(item).forEach(key => {
-      if (typeof item[key] === 'object' && item[key] !== null && key === "details") {
-        // if details, pull out the score and description
-        let short = item["details"];
-        for (let i = 0; i < short.length; i++) {
-          object.push([short[i]["description"], short[i]["value"]]);
-          // then check for more details
-          extractDetails(short[i]);
-        }
-        // when finished with one obj, do the other nested ones too
-        //extractDetails(item["details"]);
-      } else {
-        console.log(object);
-        allDetails[item] = object;
-        return object;
-      }
-    });
+    const prodContainer = qs(`#${filename} .${data['productId']}`);
+    prodContainer.appendChild(article);
+    parent.appendChild(prodContainer);
   }
 
   // make the collapsible lists
   function collapse() {
-    console.log('collapse');
+    //console.log('collapse');
     let lists = qsa(".collapsible");
     for (let i = 0; i < lists.length; i++) {
-      console.log(lists[i]);
+      //console.log(lists[i]);
       lists[i].addEventListener('click', () => {
         lists[i].classList.toggle('active');
         let content = lists[i].nextElementSibling;
         content.classList.toggle('hidden');
-        console.log(content);
+        //console.log(content);
       });
     }
   }

@@ -1,483 +1,1354 @@
 {
-  "prod8780551": {
-    "productId": "prod8780551",
-    "displayName": "lululemon Align™ High-Rise Pant 28\"",
-    "score": 0,
-    "skus": {
-      "153100155": { "skuScore": 236627.80601448193 },
-      "153100157": { "skuScore": 236627.80601448193 },
-      "153100161": { "skuScore": 236627.80601448193 },
-      "153100166": { "skuScore": 236627.80601448193 },
-      "153100170": { "skuScore": 236627.80601448193 },
-      "153100174": { "skuScore": 236627.80601448193 },
-      "153100177": { "skuScore": 236627.80601448193 },
-      "153100201": { "skuScore": 236627.80601448193 },
-      "153100205": { "skuScore": 236627.80601448193 },
-      "153100210": { "skuScore": 236627.80601448193 }
+  "align-leggings-json": {
+    "prod8780551": {
+      "productId": "prod8780551",
+      "displayName": "lululemon Align™ High-Rise Pant 28\"",
+      "score": 1300645713.2376251,
+      "skus": {
+        "153100155": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GS6S_065782_1"
+        },
+        "153100157": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GS6S_065782_1"
+        },
+        "153100161": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GS6S_065782_1"
+        },
+        "153100166": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GS6S_065782_1"
+        },
+        "153100170": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GS6S_065782_1"
+        },
+        "153100174": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GS6S_065782_1"
+        },
+        "153100177": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GS6S_065782_1"
+        },
+        "153100201": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GS6S_065782_1"
+        },
+        "153100205": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GS6S_065782_1"
+        },
+        "153100210": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GS6S_065782_1"
+        }
+      }
+    },
+    "prod2020012": {
+      "productId": "prod2020012",
+      "displayName": "lululemon Align™ High-Rise Pant 25\"",
+      "score": 1294908722.0812073,
+      "skus": {
+        "153027498": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRJS_064820_1"
+        },
+        "153027512": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRJS_064820_1"
+        },
+        "153027522": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRJS_064820_1"
+        },
+        "153027635": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRJS_064820_1"
+        },
+        "153027643": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRJS_064820_1"
+        },
+        "153027652": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRJS_064820_1"
+        },
+        "153027661": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRJS_064820_1"
+        },
+        "153027670": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRJS_064820_1"
+        },
+        "153027691": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRJS_064820_1"
+        },
+        "153027733": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRJS_064820_1"
+        }
+      }
+    },
+    "prod9610029": {
+      "productId": "prod9610029",
+      "displayName": "lululemon Align™ High-Rise Crop 23\"",
+      "score": 1269113107.309021,
+      "skus": {
+        "148227747": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BGKS_037125_1"
+        },
+        "148227772": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BGKS_037125_1"
+        },
+        "148227798": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BGKS_037125_1"
+        },
+        "148227829": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BGKS_037125_1"
+        },
+        "148227858": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BGKS_037125_1"
+        },
+        "148227892": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BGKS_037125_1"
+        },
+        "148227926": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BGKS_037125_1"
+        },
+        "148227958": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BGKS_037125_1"
+        },
+        "148228058": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BGKS_037125_1"
+        },
+        "148228093": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BGKS_037125_1"
+        }
+      }
+    },
+    "prod10370071": {
+      "productId": "prod10370071",
+      "displayName": "lululemon Align™ High-Rise Pant with Pockets 25\"",
+      "score": 1263328105.0465393,
+      "skus": {
+        "149529781": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DCES_019746_1"
+        },
+        "149529782": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DCES_019746_1"
+        },
+        "149529783": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DCES_019746_1"
+        },
+        "149529784": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DCES_019746_1"
+        },
+        "149529785": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DCES_019746_1"
+        },
+        "149529786": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DCES_019746_1"
+        },
+        "149529787": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DCES_019746_1"
+        },
+        "149529788": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DCES_019746_1"
+        },
+        "151656165": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DCES_019746_1"
+        },
+        "151656171": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DCES_019746_1"
+        }
+      }
+    },
+    "prod11250399": {
+      "productId": "prod11250399",
+      "displayName": "lululemon Align™ High-Rise Mini-Flare Pant *Regular",
+      "score": 1256822926.2621918,
+      "skus": {
+        "151606310": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FDPS_064820_1"
+        },
+        "151606346": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FDPS_064820_1"
+        },
+        "153153683": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FDPS_064820_1"
+        },
+        "153153693": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FDPS_064820_1"
+        },
+        "153153707": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FDPS_064820_1"
+        },
+        "153153720": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FDPS_064820_1"
+        },
+        "153153745": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FDPS_064820_1"
+        },
+        "153153773": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FDPS_064820_1"
+        },
+        "153153777": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FDPS_064820_1"
+        },
+        "153153786": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FDPS_064820_1"
+        }
+      }
+    },
+    "prod9230087": {
+      "productId": "prod9230087",
+      "displayName": "lululemon Align™ High-Rise Pant with Pockets 28\"",
+      "score": 1256540345.1089478,
+      "skus": {
+        "139427597": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DUIS_037125_1"
+        },
+        "139427638": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DUIS_037125_1"
+        },
+        "153025151": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DUIS_037125_1"
+        },
+        "153025166": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DUIS_037125_1"
+        },
+        "153025182": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DUIS_037125_1"
+        },
+        "153025197": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DUIS_037125_1"
+        },
+        "153025240": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DUIS_037125_1"
+        },
+        "153025329": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DUIS_037125_1"
+        },
+        "153025346": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DUIS_037125_1"
+        },
+        "153025365": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DUIS_037125_1"
+        }
+      }
+    },
+    "prod8780491": {
+      "productId": "prod8780491",
+      "displayName": "lululemon Align™ High-Rise Crop 21\"",
+      "score": 1253168884.5084229,
+      "skus": {
+        "148230943": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BQUS_037125_1"
+        },
+        "148230954": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BQUS_037125_1"
+        },
+        "148230966": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BQUS_037125_1"
+        },
+        "148230974": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BQUS_037125_1"
+        },
+        "148230983": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BQUS_037125_1"
+        },
+        "148230992": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BQUS_037125_1"
+        },
+        "148231000": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BQUS_037125_1"
+        },
+        "148231006": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BQUS_037125_1"
+        },
+        "148231028": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BQUS_037125_1"
+        },
+        "148231033": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BQUS_037125_1"
+        }
+      }
+    },
+    "prod9200552": {
+      "productId": "prod9200552",
+      "displayName": "lululemon Align™ Super-High-Rise Pant 28\"",
+      "score": 1250675203.6930084,
+      "skus": {
+        "153150295": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRKS_064820_1"
+        },
+        "153150323": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRKS_064820_1"
+        },
+        "153150618": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRKS_064820_1"
+        },
+        "153150626": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRKS_064820_1"
+        },
+        "153150636": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRKS_064820_1"
+        },
+        "153150645": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRKS_064820_1"
+        },
+        "153150674": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRKS_064820_1"
+        },
+        "153150716": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRKS_064820_1"
+        },
+        "153150725": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRKS_064820_1"
+        },
+        "153150734": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRKS_064820_1"
+        }
+      }
+    },
+    "prod11250331": {
+      "productId": "prod11250331",
+      "displayName": "lululemon Align™ High-Rise Ribbed Pant 28\"",
+      "score": 1248076480.952095,
+      "skus": {
+        "153106083": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5EU7S_038470_1"
+        },
+        "153106101": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5EU7S_038470_1"
+        },
+        "153106117": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5EU7S_038470_1"
+        },
+        "153106134": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5EU7S_038470_1"
+        },
+        "153106154": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5EU7S_038470_1"
+        },
+        "153106174": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5EU7S_038470_1"
+        },
+        "153106192": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5EU7S_038470_1"
+        },
+        "153106213": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5EU7S_038470_1"
+        },
+        "153106283": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5EU7S_038470_1"
+        },
+        "153106300": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5EU7S_038470_1"
+        }
+      }
+    },
+    "prod9410067": {
+      "productId": "prod9410067",
+      "displayName": "lululemon Align™ High-Rise Pant 31\"",
+      "score": 1245662123.1477966,
+      "skus": {
+        "153150499": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DQPT_038470_1"
+        },
+        "153150508": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DQPT_038470_1"
+        },
+        "153150515": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DQPT_038470_1"
+        },
+        "153150525": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DQPT_038470_1"
+        },
+        "153150550": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DQPT_038470_1"
+        },
+        "153150593": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DQPT_038470_1"
+        },
+        "153150602": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DQPT_038470_1"
+        },
+        "153150609": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DQPT_038470_1"
+        },
+        "153150753": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DQPT_038470_1"
+        },
+        "153150759": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DQPT_038470_1"
+        }
+      }
     }
   },
-  "prod2020012": {
-    "productId": "prod2020012",
-    "displayName": "lululemon Align™ High-Rise Pant 25\"",
-    "score": 0,
-    "skus": {
-      "153027498": { "skuScore": 225013.35729043745 },
-      "153027512": { "skuScore": 225013.35729043745 },
-      "153027522": { "skuScore": 225013.35729043745 },
-      "153027635": { "skuScore": 225013.35729043745 },
-      "153027643": { "skuScore": 225013.35729043745 },
-      "153027652": { "skuScore": 225013.35729043745 },
-      "153027661": { "skuScore": 225013.35729043745 },
-      "153027670": { "skuScore": 225013.35729043745 },
-      "153027691": { "skuScore": 225013.35729043745 },
-      "153027733": { "skuScore": 225013.35729043745 }
+  "belt-bag-json": {
+    "prod8900747": {
+      "productId": "prod8900747",
+      "displayName": "Everywhere Belt Bag 1L",
+      "score": 516602.68604928255,
+      "skus": {
+        "107375795": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9AX2S_065609_1"
+        },
+        "142500085": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9AX2S_065609_1"
+        },
+        "149400162": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9AX2S_065609_1"
+        },
+        "150050161": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9AX2S_065609_1"
+        },
+        "150100154": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9AX2S_065609_1"
+        },
+        "152825196": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9AX2S_065609_1"
+        },
+        "152825197": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9AX2S_065609_1"
+        },
+        "153075236": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9AX2S_065609_1"
+        },
+        "153103853": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9AX2S_065609_1"
+        },
+        "153108232": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9AX2S_065609_1"
+        }
+      }
+    },
+    "prod11130156": {
+      "productId": "prod11130156",
+      "displayName": "Everywhere Belt Bag Large 2L",
+      "score": 504050.35251690075,
+      "skus": {
+        "144400333": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9B11S_056852_1"
+        },
+        "145303741": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9B11S_056852_1"
+        },
+        "150075343": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9B11S_056852_1"
+        },
+        "150075346": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9B11S_056852_1"
+        },
+        "150075594": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9B11S_056852_1"
+        },
+        "150075602": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9B11S_056852_1"
+        },
+        "153075288": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9B11S_056852_1"
+        }
+      }
+    },
+    "prod11520032": {
+      "productId": "prod11520032",
+      "displayName": "Everywhere Belt Bag 1L *Clear",
+      "score": 490723.8225963637,
+      "skus": {
+        "147475064": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BE3S_045312_1"
+        },
+        "147475070": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BE3S_045312_1"
+        }
+      }
+    },
+    "prod11580051": {
+      "productId": "prod11580051",
+      "displayName": "Everywhere Belt Bag with Long Strap 1L",
+      "score": 488673.7333561387,
+      "skus": {
+        "150051078": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BR3S_065609_1"
+        },
+        "150051113": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BR3S_065609_1"
+        },
+        "153075242": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BR3S_065609_1"
+        },
+        "153100685": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BR3S_065609_1"
+        },
+        "153103888": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BR3S_065609_1"
+        },
+        "153104840": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BR3S_065609_1"
+        },
+        "153108483": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BR3S_065609_1"
+        },
+        "153125165": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BR3S_065609_1"
+        }
+      }
+    },
+    "prod10740117": {
+      "productId": "prod10740117",
+      "displayName": "Everywhere Belt Bag 1L *Fleece",
+      "score": 59395.439201991074,
+      "skus": {
+        "147151503": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9B18S_059917_1"
+        }
+      }
+    },
+    "prod11680336": {
+      "productId": "prod11680336",
+      "displayName": "Everywhere Belt Bag Mini *Ripstop",
+      "score": 58694.49696373008,
+      "skus": {
+        "150051297": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BUDS_065360_1"
+        },
+        "150051302": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BUDS_065360_1"
+        },
+        "150051313": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BUDS_065360_1"
+        },
+        "150051318": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BUDS_065360_1"
+        },
+        "150051323": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BUDS_065360_1"
+        }
+      }
+    },
+    "prod11670119": {
+      "productId": "prod11670119",
+      "displayName": "Everywhere Belt Bag 1L *Metal Hardware",
+      "score": 54992.92091907933,
+      "skus": {
+        "150051265": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BU5S_043835_1"
+        },
+        "150051269": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BU5S_043835_1"
+        },
+        "150051277": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BU5S_043835_1"
+        }
+      }
+    },
+    "prod11570591": {
+      "productId": "prod11570591",
+      "displayName": "Everywhere Belt Bag Large with Long Strap 2L",
+      "score": 5074.9713134765625,
+      "skus": {
+        "150051057": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BQQS_4780_1"
+        },
+        "150051065": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BQQS_4780_1"
+        },
+        "150051071": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BQQS_4780_1"
+        }
+      }
+    },
+    "prod11270155": {
+      "productId": "prod11270155",
+      "displayName": "Mini Belt Bag",
+      "score": 688.5579059499287,
+      "skus": {
+        "145025049": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BJ9S_0001_1"
+        },
+        "148525514": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BJ9S_0001_1"
+        }
+      }
+    },
+    "prod11680298": {
+      "productId": "prod11680298",
+      "displayName": "Everywhere Belt Bag Mini",
+      "score": 662.2189331054688,
+      "skus": {
+        "150051219": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BTUS_048097_1"
+        },
+        "150051226": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BTUS_048097_1"
+        }
+      }
     }
   },
-  "prod9610029": {
-    "productId": "prod9610029",
-    "displayName": "lululemon Align™ High-Rise Crop 23\"",
-    "score": 0,
-    "skus": {
-      "148227747": { "skuScore": 1269113107.309021 },
-      "148227772": { "skuScore": 1269113107.309021 },
-      "148227798": { "skuScore": 1269113107.309021 },
-      "148227829": { "skuScore": 1269113107.309021 },
-      "148227858": { "skuScore": 1269113107.309021 },
-      "148227892": { "skuScore": 1269113107.309021 },
-      "148227926": { "skuScore": 1269113107.309021 },
-      "148227958": { "skuScore": 1269113107.309021 },
-      "148228058": { "skuScore": 1269113107.309021 },
-      "148228093": { "skuScore": 1269113107.309021 }
+  "pants-json": {
+    "prod8780551": {
+      "productId": "prod8780551",
+      "displayName": "lululemon Align™ High-Rise Pant 28\"",
+      "score": 236627.80601448193,
+      "skus": {
+        "153100155": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GS6S_065782_1"
+        },
+        "153100157": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GS6S_065782_1"
+        },
+        "153100161": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GS6S_065782_1"
+        },
+        "153100166": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GS6S_065782_1"
+        },
+        "153100170": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GS6S_065782_1"
+        },
+        "153100174": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GS6S_065782_1"
+        },
+        "153100177": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GS6S_065782_1"
+        },
+        "153100201": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GS6S_065782_1"
+        },
+        "153100205": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GS6S_065782_1"
+        },
+        "153100210": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GS6S_065782_1"
+        }
+      }
+    },
+    "prod11020340": {
+      "productId": "prod11020340",
+      "displayName": "Softstreme High-Rise Pant *Regular",
+      "score": 236086.28089305013,
+      "skus": {
+        "153104522": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5EGTS_056266_1"
+        },
+        "153104525": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5EGTS_056266_1"
+        },
+        "153104527": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5EGTS_056266_1"
+        },
+        "153104529": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5EGTS_056266_1"
+        },
+        "153104532": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5EGTS_056266_1"
+        },
+        "153104535": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5EGTS_056266_1"
+        },
+        "153104536": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5EGTS_056266_1"
+        },
+        "153104539": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5EGTS_056266_1"
+        },
+        "153104551": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5EGTS_056266_1"
+        },
+        "153104554": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5EGTS_056266_1"
+        }
+      }
+    },
+    "prod11530198": {
+      "productId": "prod11530198",
+      "displayName": "Dance Studio Mid-Rise Pant *Regular",
+      "score": 235019.36685260572,
+      "skus": {
+        "153104587": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5ENOR_064820_1"
+        },
+        "153104589": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5ENOR_064820_1"
+        },
+        "153108594": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5ENOR_064820_1"
+        },
+        "153108614": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5ENOR_064820_1"
+        },
+        "153108632": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5ENOR_064820_1"
+        },
+        "153108649": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5ENOR_064820_1"
+        },
+        "153108699": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5ENOR_064820_1"
+        },
+        "153108780": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5ENOR_064820_1"
+        },
+        "153108795": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5ENOR_064820_1"
+        },
+        "153108812": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5ENOR_064820_1"
+        }
+      }
+    },
+    "prod9080134": {
+      "productId": "prod9080134",
+      "displayName": "Dance Studio Mid-Rise Jogger *Full Length",
+      "score": 231499.46152308583,
+      "skus": {
+        "153109359": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5ENPS_0002_1"
+        },
+        "153109448": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5ENPS_0002_1"
+        },
+        "153700160": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5ENPS_0002_1"
+        },
+        "153700161": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5ENPS_0002_1"
+        },
+        "153700162": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5ENPS_0002_1"
+        },
+        "153700163": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5ENPS_0002_1"
+        },
+        "153700166": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5ENPS_0002_1"
+        },
+        "153700171": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5ENPS_0002_1"
+        },
+        "153700172": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5ENPS_0002_1"
+        },
+        "153700173": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5ENPS_0002_1"
+        }
+      }
+    },
+    "prod11460294": {
+      "productId": "prod11460294",
+      "displayName": "Swift Mid-Rise Wide-Leg Pant",
+      "score": 228833.04092278704,
+      "skus": {
+        "153157590": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FU4S_056266_1"
+        },
+        "153157594": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FU4S_056266_1"
+        },
+        "153157601": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FU4S_056266_1"
+        },
+        "153157607": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FU4S_056266_1"
+        },
+        "153157624": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FU4S_056266_1"
+        },
+        "153157662": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FU4S_056266_1"
+        },
+        "153157668": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FU4S_056266_1"
+        },
+        "153157678": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FU4S_056266_1"
+        },
+        "153157839": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FU4S_056266_1"
+        },
+        "153157857": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FU4S_056266_1"
+        }
+      }
+    },
+    "prod11670127": {
+      "productId": "prod11670127",
+      "displayName": "Dance Studio Relaxed-Fit Mid-Rise Cargo Pant",
+      "score": 226829.82136118412,
+      "skus": {
+        "151650892": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GILS_038470_1"
+        },
+        "153105587": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GILS_038470_1"
+        },
+        "153105596": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GILS_038470_1"
+        },
+        "153105604": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GILS_038470_1"
+        },
+        "153105612": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GILS_038470_1"
+        },
+        "153105669": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GILS_038470_1"
+        },
+        "153105671": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GILS_038470_1"
+        },
+        "153105673": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GILS_038470_1"
+        },
+        "153105675": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GILS_038470_1"
+        },
+        "153105677": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5GILS_038470_1"
+        }
+      }
+    },
+    "prod11520412": {
+      "productId": "prod11520412",
+      "displayName": "License to Train High-Rise Pant",
+      "score": 225484.65179648995,
+      "skus": {
+        "151678807": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FFES_035955_1"
+        },
+        "151678816": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FFES_035955_1"
+        },
+        "151678825": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FFES_035955_1"
+        },
+        "151678833": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FFES_035955_1"
+        },
+        "151678859": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FFES_035955_1"
+        },
+        "151678902": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FFES_035955_1"
+        },
+        "151678908": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FFES_035955_1"
+        },
+        "151678915": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FFES_035955_1"
+        },
+        "151678937": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FFES_035955_1"
+        },
+        "151678957": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5FFES_035955_1"
+        }
+      }
+    },
+    "prod2020012": {
+      "productId": "prod2020012",
+      "displayName": "lululemon Align™ High-Rise Pant 25\"",
+      "score": 225013.35729043745,
+      "skus": {
+        "153027498": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRJS_064820_1"
+        },
+        "153027512": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRJS_064820_1"
+        },
+        "153027522": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRJS_064820_1"
+        },
+        "153027635": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRJS_064820_1"
+        },
+        "153027643": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRJS_064820_1"
+        },
+        "153027652": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRJS_064820_1"
+        },
+        "153027661": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRJS_064820_1"
+        },
+        "153027670": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRJS_064820_1"
+        },
+        "153027691": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRJS_064820_1"
+        },
+        "153027733": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DRJS_064820_1"
+        }
+      }
+    },
+    "prod9410067": {
+      "productId": "prod9410067",
+      "displayName": "lululemon Align™ High-Rise Pant 31\"",
+      "score": 222885.6732672155,
+      "skus": {
+        "153150499": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DQPT_038470_1"
+        },
+        "153150508": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DQPT_038470_1"
+        },
+        "153150515": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DQPT_038470_1"
+        },
+        "153150525": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DQPT_038470_1"
+        },
+        "153150550": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DQPT_038470_1"
+        },
+        "153150593": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DQPT_038470_1"
+        },
+        "153150602": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DQPT_038470_1"
+        },
+        "153150609": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DQPT_038470_1"
+        },
+        "153150753": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DQPT_038470_1"
+        },
+        "153150759": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DQPT_038470_1"
+        }
+      }
+    },
+    "prod11020342": {
+      "productId": "prod11020342",
+      "displayName": "Softstreme High-Rise Straight-Leg Cropped Pant",
+      "score": 221987.72008414194,
+      "skus": {
+        "153155064": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BZXS_038470_1"
+        },
+        "153155075": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BZXS_038470_1"
+        },
+        "153155085": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BZXS_038470_1"
+        },
+        "153155097": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BZXS_038470_1"
+        },
+        "153155108": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BZXS_038470_1"
+        },
+        "153155120": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BZXS_038470_1"
+        },
+        "153155132": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BZXS_038470_1"
+        },
+        "153155145": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BZXS_038470_1"
+        },
+        "153155193": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BZXS_038470_1"
+        },
+        "153155206": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW6BZXS_038470_1"
+        }
+      }
     }
   },
-  "prod10370071": {
-    "productId": "prod10370071",
-    "displayName": "lululemon Align™ High-Rise Pant with Pockets 25\"",
-    "score": 0,
-    "skus": {
-      "149529781": { "skuScore": 1263328105.0465393 },
-      "149529782": { "skuScore": 1263328105.0465393 },
-      "149529783": { "skuScore": 1263328105.0465393 },
-      "149529784": { "skuScore": 1263328105.0465393 },
-      "149529785": { "skuScore": 1263328105.0465393 },
-      "149529786": { "skuScore": 1263328105.0465393 },
-      "149529787": { "skuScore": 1263328105.0465393 },
-      "149529788": { "skuScore": 1263328105.0465393 },
-      "151656165": { "skuScore": 1263328105.0465393 },
-      "151656171": { "skuScore": 1263328105.0465393 }
+  "sonic-pink-json": {
+    "prod11510241": {
+      "productId": "prod11510241",
+      "displayName": "Back to Life Sport Bottle 18oz *Straw Lid",
+      "score": 4875.208740234375,
+      "skus": {
+        "150051407": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BQPS_028936_1"
+        },
+        "153000237": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BQPS_028936_1"
+        }
+      }
+    },
+    "prod11350143": {
+      "productId": "prod11350143",
+      "displayName": "Back to Life Sport Bottle 24oz *Straw Lid",
+      "score": 4875.208740234375,
+      "skus": {
+        "150100212": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BA8S_028936_1"
+        },
+        "152975194": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9BA8S_028936_1"
+        }
+      }
+    },
+    "prod9580020": {
+      "productId": "prod9580020",
+      "displayName": "Back to Life Sport Bottle 24oz",
+      "score": 4783.82080078125,
+      "skus": {
+        "144575048": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9AHLS_036161_1"
+        }
+      }
+    },
+    "prod10990033": {
+      "productId": "prod10990033",
+      "displayName": "The Mat 5mm *Made With FSC™ Certified Rubber",
+      "score": 4660.025634765625,
+      "skus": {
+        "150050162": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LU9AKES_064648_1"
+        }
+      }
+    },
+    "prod8800120": {
+      "productId": "prod8800120",
+      "displayName": "Speed Up Low-Rise Lined Short 2.5\"",
+      "score": 1187.4529443513748,
+      "skus": {
+        "132301935": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW7AVSR_036161_1"
+        },
+        "132301936": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW7AVSR_036161_1"
+        },
+        "132301937": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW7AVSR_036161_1"
+        },
+        "132301947": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW7AVSR_036161_1"
+        },
+        "147033005": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW7AVSR_036161_1"
+        },
+        "147033008": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW7AVSR_036161_1"
+        },
+        "147033010": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW7AVSR_036161_1"
+        },
+        "147033042": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW7AVSR_036161_1"
+        }
+      }
+    },
+    "prod9320242": {
+      "productId": "prod9320242",
+      "displayName": "Hotty Hot High-Rise Lined Short 4\"",
+      "score": 1271.9029590972932,
+      "skus": {
+        "147006506": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW7AW7T_028936_1"
+        }
+      }
+    },
+    "prod10520954": {
+      "productId": "prod10520954",
+      "displayName": "lululemon Align™ High-Rise Pant with Pockets 25\"",
+      "score": 1200.6231080224243,
+      "skus": {
+        "143485500": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DU4S_036161_1"
+        },
+        "143485502": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DU4S_036161_1"
+        },
+        "143485504": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DU4S_036161_1"
+        },
+        "143485506": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DU4S_036161_1"
+        },
+        "143485510": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5DU4S_036161_1"
+        }
+      }
+    },
+    "prod8360162": {
+      "productId": "prod8360162",
+      "displayName": "lululemon Align™ High-Rise Pant 25\"",
+      "score": 1196.4406993253651,
+      "skus": {
+        "132327530": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5CTCS_036161_1"
+        }
+      }
+    },
+    "prod8840324": {
+      "productId": "prod8840324",
+      "displayName": "lululemon Align™ High-Rise Pant 28\"",
+      "score": 1190.2084306276665,
+      "skus": {
+        "143507320": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW5CTIS_036161_1"
+        }
+      }
+    },
+    "prod9820519": {
+      "productId": "prod9820519",
+      "displayName": "Women's Fast and Free Ponytail Running Hat",
+      "score": 248.13480377197266,
+      "skus": {
+        "147200127": {
+          "skuScore": {},
+          "skuImg": "https://images.lululemon.com/is/image/lululemon/LW9EE2S_036161_1"
+        }
+      }
     }
-  },
-  "prod11250399": {
-    "productId": "prod11250399",
-    "displayName": "lululemon Align™ High-Rise Mini-Flare Pant *Regular",
-    "score": 0,
-    "skus": {
-      "151606310": { "skuScore": 1256822926.2621918 },
-      "151606346": { "skuScore": 1256822926.2621918 },
-      "153153683": { "skuScore": 1256822926.2621918 },
-      "153153693": { "skuScore": 1256822926.2621918 },
-      "153153707": { "skuScore": 1256822926.2621918 },
-      "153153720": { "skuScore": 1256822926.2621918 },
-      "153153745": { "skuScore": 1256822926.2621918 },
-      "153153773": { "skuScore": 1256822926.2621918 },
-      "153153777": { "skuScore": 1256822926.2621918 },
-      "153153786": { "skuScore": 1256822926.2621918 }
-    }
-  },
-  "prod9230087": {
-    "productId": "prod9230087",
-    "displayName": "lululemon Align™ High-Rise Pant with Pockets 28\"",
-    "score": 0,
-    "skus": {
-      "139427597": { "skuScore": 1256540345.1089478 },
-      "139427638": { "skuScore": 1256540345.1089478 },
-      "153025151": { "skuScore": 1256540345.1089478 },
-      "153025166": { "skuScore": 1256540345.1089478 },
-      "153025182": { "skuScore": 1256540345.1089478 },
-      "153025197": { "skuScore": 1256540345.1089478 },
-      "153025240": { "skuScore": 1256540345.1089478 },
-      "153025329": { "skuScore": 1256540345.1089478 },
-      "153025346": { "skuScore": 1256540345.1089478 },
-      "153025365": { "skuScore": 1256540345.1089478 }
-    }
-  },
-  "prod8780491": {
-    "productId": "prod8780491",
-    "displayName": "lululemon Align™ High-Rise Crop 21\"",
-    "score": 0,
-    "skus": {
-      "148230943": { "skuScore": 1253168884.5084229 },
-      "148230954": { "skuScore": 1253168884.5084229 },
-      "148230966": { "skuScore": 1253168884.5084229 },
-      "148230974": { "skuScore": 1253168884.5084229 },
-      "148230983": { "skuScore": 1253168884.5084229 },
-      "148230992": { "skuScore": 1253168884.5084229 },
-      "148231000": { "skuScore": 1253168884.5084229 },
-      "148231006": { "skuScore": 1253168884.5084229 },
-      "148231028": { "skuScore": 1253168884.5084229 },
-      "148231033": { "skuScore": 1253168884.5084229 }
-    }
-  },
-  "prod9200552": {
-    "productId": "prod9200552",
-    "displayName": "lululemon Align™ Super-High-Rise Pant 28\"",
-    "score": 0,
-    "skus": {
-      "153150295": { "skuScore": 1250675203.6930084 },
-      "153150323": { "skuScore": 1250675203.6930084 },
-      "153150618": { "skuScore": 1250675203.6930084 },
-      "153150626": { "skuScore": 1250675203.6930084 },
-      "153150636": { "skuScore": 1250675203.6930084 },
-      "153150645": { "skuScore": 1250675203.6930084 },
-      "153150674": { "skuScore": 1250675203.6930084 },
-      "153150716": { "skuScore": 1250675203.6930084 },
-      "153150725": { "skuScore": 1250675203.6930084 },
-      "153150734": { "skuScore": 1250675203.6930084 }
-    }
-  },
-  "prod11250331": {
-    "productId": "prod11250331",
-    "displayName": "lululemon Align™ High-Rise Ribbed Pant 28\"",
-    "score": 0,
-    "skus": {
-      "153106083": { "skuScore": 1248076480.952095 },
-      "153106101": { "skuScore": 1248076480.952095 },
-      "153106117": { "skuScore": 1248076480.952095 },
-      "153106134": { "skuScore": 1248076480.952095 },
-      "153106154": { "skuScore": 1248076480.952095 },
-      "153106174": { "skuScore": 1248076480.952095 },
-      "153106192": { "skuScore": 1248076480.952095 },
-      "153106213": { "skuScore": 1248076480.952095 },
-      "153106283": { "skuScore": 1248076480.952095 },
-      "153106300": { "skuScore": 1248076480.952095 }
-    }
-  },
-  "prod9410067": {
-    "productId": "prod9410067",
-    "displayName": "lululemon Align™ High-Rise Pant 31\"",
-    "score": 0,
-    "skus": {
-      "153150499": { "skuScore": 222885.6732672155 },
-      "153150508": { "skuScore": 222885.6732672155 },
-      "153150515": { "skuScore": 222885.6732672155 },
-      "153150525": { "skuScore": 222885.6732672155 },
-      "153150550": { "skuScore": 222885.6732672155 },
-      "153150593": { "skuScore": 222885.6732672155 },
-      "153150602": { "skuScore": 222885.6732672155 },
-      "153150609": { "skuScore": 222885.6732672155 },
-      "153150753": { "skuScore": 222885.6732672155 },
-      "153150759": { "skuScore": 222885.6732672155 }
-    }
-  },
-  "prod8900747": {
-    "productId": "prod8900747",
-    "displayName": "Everywhere Belt Bag 1L",
-    "score": 0,
-    "skus": {
-      "107375795": { "skuScore": 516602.68604928255 },
-      "142500085": { "skuScore": 516602.68604928255 },
-      "149400162": { "skuScore": 516602.68604928255 },
-      "150050161": { "skuScore": 516602.68604928255 },
-      "150100154": { "skuScore": 516602.68604928255 },
-      "152825196": { "skuScore": 516602.68604928255 },
-      "152825197": { "skuScore": 516602.68604928255 },
-      "153075236": { "skuScore": 516602.68604928255 },
-      "153103853": { "skuScore": 516602.68604928255 },
-      "153108232": { "skuScore": 516602.68604928255 }
-    }
-  },
-  "prod11130156": {
-    "productId": "prod11130156",
-    "displayName": "Everywhere Belt Bag Large 2L",
-    "score": 0,
-    "skus": {
-      "144400333": { "skuScore": 504050.35251690075 },
-      "145303741": { "skuScore": 504050.35251690075 },
-      "150075343": { "skuScore": 504050.35251690075 },
-      "150075346": { "skuScore": 504050.35251690075 },
-      "150075594": { "skuScore": 504050.35251690075 },
-      "150075602": { "skuScore": 504050.35251690075 },
-      "153075288": { "skuScore": 504050.35251690075 }
-    }
-  },
-  "prod11520032": {
-    "productId": "prod11520032",
-    "displayName": "Everywhere Belt Bag 1L *Clear",
-    "score": 0,
-    "skus": {
-      "147475064": { "skuScore": 490723.8225963637 },
-      "147475070": { "skuScore": 490723.8225963637 }
-    }
-  },
-  "prod11580051": {
-    "productId": "prod11580051",
-    "displayName": "Everywhere Belt Bag with Long Strap 1L",
-    "score": 0,
-    "skus": {
-      "150051078": { "skuScore": 488673.7333561387 },
-      "150051113": { "skuScore": 488673.7333561387 },
-      "153075242": { "skuScore": 488673.7333561387 },
-      "153100685": { "skuScore": 488673.7333561387 },
-      "153103888": { "skuScore": 488673.7333561387 },
-      "153104840": { "skuScore": 488673.7333561387 },
-      "153108483": { "skuScore": 488673.7333561387 },
-      "153125165": { "skuScore": 488673.7333561387 }
-    }
-  },
-  "prod10740117": {
-    "productId": "prod10740117",
-    "displayName": "Everywhere Belt Bag 1L *Fleece",
-    "score": 0,
-    "skus": { "147151503": { "skuScore": 59395.439201991074 } }
-  },
-  "prod11680336": {
-    "productId": "prod11680336",
-    "displayName": "Everywhere Belt Bag Mini *Ripstop",
-    "score": 0,
-    "skus": {
-      "150051297": { "skuScore": 58694.49696373008 },
-      "150051302": { "skuScore": 58694.49696373008 },
-      "150051313": { "skuScore": 58694.49696373008 },
-      "150051318": { "skuScore": 58694.49696373008 },
-      "150051323": { "skuScore": 58694.49696373008 }
-    }
-  },
-  "prod11670119": {
-    "productId": "prod11670119",
-    "displayName": "Everywhere Belt Bag 1L *Metal Hardware",
-    "score": 0,
-    "skus": {
-      "150051265": { "skuScore": 54992.92091907933 },
-      "150051269": { "skuScore": 54992.92091907933 },
-      "150051277": { "skuScore": 54992.92091907933 }
-    }
-  },
-  "prod11570591": {
-    "productId": "prod11570591",
-    "displayName": "Everywhere Belt Bag Large with Long Strap 2L",
-    "score": 0,
-    "skus": {
-      "150051057": { "skuScore": 5074.9713134765625 },
-      "150051065": { "skuScore": 5074.9713134765625 },
-      "150051071": { "skuScore": 5074.9713134765625 }
-    }
-  },
-  "prod11270155": {
-    "productId": "prod11270155",
-    "displayName": "Mini Belt Bag",
-    "score": 0,
-    "skus": {
-      "145025049": { "skuScore": 688.5579059499287 },
-      "148525514": { "skuScore": 688.5579059499287 }
-    }
-  },
-  "prod11680298": {
-    "productId": "prod11680298",
-    "displayName": "Everywhere Belt Bag Mini",
-    "score": 0,
-    "skus": {
-      "150051219": { "skuScore": 662.2189331054688 },
-      "150051226": { "skuScore": 662.2189331054688 }
-    }
-  },
-  "prod11020340": {
-    "productId": "prod11020340",
-    "displayName": "Softstreme High-Rise Pant *Regular",
-    "score": 0,
-    "skus": {
-      "153104522": { "skuScore": 236086.28089305013 },
-      "153104525": { "skuScore": 236086.28089305013 },
-      "153104527": { "skuScore": 236086.28089305013 },
-      "153104529": { "skuScore": 236086.28089305013 },
-      "153104532": { "skuScore": 236086.28089305013 },
-      "153104535": { "skuScore": 236086.28089305013 },
-      "153104536": { "skuScore": 236086.28089305013 },
-      "153104539": { "skuScore": 236086.28089305013 },
-      "153104551": { "skuScore": 236086.28089305013 },
-      "153104554": { "skuScore": 236086.28089305013 }
-    }
-  },
-  "prod11530198": {
-    "productId": "prod11530198",
-    "displayName": "Dance Studio Mid-Rise Pant *Regular",
-    "score": 0,
-    "skus": {
-      "153104587": { "skuScore": 235019.36685260572 },
-      "153104589": { "skuScore": 235019.36685260572 },
-      "153108594": { "skuScore": 235019.36685260572 },
-      "153108614": { "skuScore": 235019.36685260572 },
-      "153108632": { "skuScore": 235019.36685260572 },
-      "153108649": { "skuScore": 235019.36685260572 },
-      "153108699": { "skuScore": 235019.36685260572 },
-      "153108780": { "skuScore": 235019.36685260572 },
-      "153108795": { "skuScore": 235019.36685260572 },
-      "153108812": { "skuScore": 235019.36685260572 }
-    }
-  },
-  "prod9080134": {
-    "productId": "prod9080134",
-    "displayName": "Dance Studio Mid-Rise Jogger *Full Length",
-    "score": 0,
-    "skus": {
-      "153109359": { "skuScore": 231499.46152308583 },
-      "153109448": { "skuScore": 231499.46152308583 },
-      "153700160": { "skuScore": 231499.46152308583 },
-      "153700161": { "skuScore": 231499.46152308583 },
-      "153700162": { "skuScore": 231499.46152308583 },
-      "153700163": { "skuScore": 231499.46152308583 },
-      "153700166": { "skuScore": 231499.46152308583 },
-      "153700171": { "skuScore": 231499.46152308583 },
-      "153700172": { "skuScore": 231499.46152308583 },
-      "153700173": { "skuScore": 231499.46152308583 }
-    }
-  },
-  "prod11460294": {
-    "productId": "prod11460294",
-    "displayName": "Swift Mid-Rise Wide-Leg Pant",
-    "score": 0,
-    "skus": {
-      "153157590": { "skuScore": 228833.04092278704 },
-      "153157594": { "skuScore": 228833.04092278704 },
-      "153157601": { "skuScore": 228833.04092278704 },
-      "153157607": { "skuScore": 228833.04092278704 },
-      "153157624": { "skuScore": 228833.04092278704 },
-      "153157662": { "skuScore": 228833.04092278704 },
-      "153157668": { "skuScore": 228833.04092278704 },
-      "153157678": { "skuScore": 228833.04092278704 },
-      "153157839": { "skuScore": 228833.04092278704 },
-      "153157857": { "skuScore": 228833.04092278704 }
-    }
-  },
-  "prod11670127": {
-    "productId": "prod11670127",
-    "displayName": "Dance Studio Relaxed-Fit Mid-Rise Cargo Pant",
-    "score": 0,
-    "skus": {
-      "151650892": { "skuScore": 226829.82136118412 },
-      "153105587": { "skuScore": 226829.82136118412 },
-      "153105596": { "skuScore": 226829.82136118412 },
-      "153105604": { "skuScore": 226829.82136118412 },
-      "153105612": { "skuScore": 226829.82136118412 },
-      "153105669": { "skuScore": 226829.82136118412 },
-      "153105671": { "skuScore": 226829.82136118412 },
-      "153105673": { "skuScore": 226829.82136118412 },
-      "153105675": { "skuScore": 226829.82136118412 },
-      "153105677": { "skuScore": 226829.82136118412 }
-    }
-  },
-  "prod11520412": {
-    "productId": "prod11520412",
-    "displayName": "License to Train High-Rise Pant",
-    "score": 0,
-    "skus": {
-      "151678807": { "skuScore": 225484.65179648995 },
-      "151678816": { "skuScore": 225484.65179648995 },
-      "151678825": { "skuScore": 225484.65179648995 },
-      "151678833": { "skuScore": 225484.65179648995 },
-      "151678859": { "skuScore": 225484.65179648995 },
-      "151678902": { "skuScore": 225484.65179648995 },
-      "151678908": { "skuScore": 225484.65179648995 },
-      "151678915": { "skuScore": 225484.65179648995 },
-      "151678937": { "skuScore": 225484.65179648995 },
-      "151678957": { "skuScore": 225484.65179648995 }
-    }
-  },
-  "prod11020342": {
-    "productId": "prod11020342",
-    "displayName": "Softstreme High-Rise Straight-Leg Cropped Pant",
-    "score": 0,
-    "skus": {
-      "153155064": { "skuScore": 221987.72008414194 },
-      "153155075": { "skuScore": 221987.72008414194 },
-      "153155085": { "skuScore": 221987.72008414194 },
-      "153155097": { "skuScore": 221987.72008414194 },
-      "153155108": { "skuScore": 221987.72008414194 },
-      "153155120": { "skuScore": 221987.72008414194 },
-      "153155132": { "skuScore": 221987.72008414194 },
-      "153155145": { "skuScore": 221987.72008414194 },
-      "153155193": { "skuScore": 221987.72008414194 },
-      "153155206": { "skuScore": 221987.72008414194 }
-    }
-  },
-  "prod11510241": {
-    "productId": "prod11510241",
-    "displayName": "Back to Life Sport Bottle 18oz *Straw Lid",
-    "score": 0,
-    "skus": {
-      "150051407": { "skuScore": 4783.82080078125 },
-      "153000237": { "skuScore": 4875.208740234375 }
-    }
-  },
-  "prod11350143": {
-    "productId": "prod11350143",
-    "displayName": "Back to Life Sport Bottle 24oz *Straw Lid",
-    "score": 0,
-    "skus": {
-      "150100212": { "skuScore": 4783.82080078125 },
-      "152975194": { "skuScore": 4875.208740234375 }
-    }
-  },
-  "prod9580020": {
-    "productId": "prod9580020",
-    "displayName": "Back to Life Sport Bottle 24oz",
-    "score": 0,
-    "skus": { "144575048": { "skuScore": 4783.82080078125 } }
-  },
-  "prod10990033": {
-    "productId": "prod10990033",
-    "displayName": "The Mat 5mm *Made With FSC™ Certified Rubber",
-    "score": 0,
-    "skus": { "150050162": { "skuScore": 4660.025634765625 } }
-  },
-  "prod8800120": {
-    "productId": "prod8800120",
-    "displayName": "Speed Up Low-Rise Lined Short 2.5\"",
-    "score": 0,
-    "skus": {
-      "132301935": { "skuScore": 1187.4529443513748 },
-      "132301936": { "skuScore": 1187.4529443513748 },
-      "132301937": { "skuScore": 1187.4529443513748 },
-      "132301947": { "skuScore": 1187.4529443513748 },
-      "147033005": { "skuScore": 1273.311169021923 },
-      "147033008": { "skuScore": 1273.311169021923 },
-      "147033010": { "skuScore": 1273.311169021923 },
-      "147033042": { "skuScore": 1273.311169021923 }
-    }
-  },
-  "prod9320242": {
-    "productId": "prod9320242",
-    "displayName": "Hotty Hot High-Rise Lined Short 4\"",
-    "score": 0,
-    "skus": { "147006506": { "skuScore": 1271.9029590972932 } }
-  },
-  "prod10520954": {
-    "productId": "prod10520954",
-    "displayName": "lululemon Align™ High-Rise Pant with Pockets 25\"",
-    "score": 0,
-    "skus": {
-      "143485500": { "skuScore": 1200.6231080224243 },
-      "143485502": { "skuScore": 1200.6231080224243 },
-      "143485504": { "skuScore": 1200.6231080224243 },
-      "143485506": { "skuScore": 1200.6231080224243 },
-      "143485510": { "skuScore": 1200.6231080224243 }
-    }
-  },
-  "prod8360162": {
-    "productId": "prod8360162",
-    "displayName": "lululemon Align™ High-Rise Pant 25\"",
-    "score": 0,
-    "skus": { "132327530": { "skuScore": 1196.4406993253651 } }
-  },
-  "prod8840324": {
-    "productId": "prod8840324",
-    "displayName": "lululemon Align™ High-Rise Pant 28\"",
-    "score": 0,
-    "skus": { "143507320": { "skuScore": 1190.2084306276665 } }
-  },
-  "prod9820519": {
-    "productId": "prod9820519",
-    "displayName": "Women's Fast and Free Ponytail Running Hat",
-    "score": 0,
-    "skus": { "147200127": { "skuScore": 248.13480377197266 } }
   }
 }

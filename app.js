@@ -34,17 +34,26 @@ app.get('/files/:filename', async (req, res) => {
   }
 });
 
+// gets cleaned version of products file
+app.get('/clean/', async (req, res) => {
+  try {
+    let file = await readFile('./public/cleaned-data/allProducts.json');
+    res.json(file);
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      res.status(400).type('text').send(`does not exist`);
+    } else {
+      res.status(400).type('text').send(`couldn't get file`);
+    }
+  }
+});
+
 // writes useful product data to new file
 app.post('/write/products', async (req, res) => {
   try {
     res.type('text')
-    console.log('inside writeprod');
     let content = (req.body.content);
     if (content) {
-      //let newContent = JSON.stringify(content);
-      //console.log(JSON.stringify(newContent));
-      //console.log(typeof(newContent));
-      //content = (JSON.parse(content));
       await fs.writeFile('./public/cleaned-data/allProducts.json', (content));
       res.send('write success!');
     } else {
