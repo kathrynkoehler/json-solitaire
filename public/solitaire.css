@@ -3,24 +3,36 @@ body {
 }
 
 h1 {
-  font-size: large;
+  font-size: medium;
+  padding: 0;
+  margin-bottom: 3px;
 }
 
-h2, h3 {
+h2 {
   font-size: medium;
   font-weight: 400;
+  line-height: 40%;
 }
 
 img {
   width: 100%;
+  object-fit: fill;
+  padding: 0;
+  margin: 0;
 }
 
-section {
+.photo {
+  height: 375px;
+  overflow: hidden;
+}
+
+body > section {
   display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-around;
-  align-items: center;
-  row-gap: 2vh;;
+  align-items: top;
+  row-gap: 2vh;
   width: 90%;
   margin: auto;
 }
@@ -37,22 +49,63 @@ section > h1 {
 }
 
 section.product-container {
-  border: 2px paleturquoise solid;
+  max-width: 33%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  justify-content: end;
+  padding: 3rem;
+}
+
+.card-contents {
+  padding: 6px;
 }
 
 article.product-card {
-  border: 1px rgb(255, 80, 133) solid;
+  border: 1px whitesmoke solid;
   border-radius: 5px;
-  width: 250px;
-  padding: 10px;
-  margin: 15px;
+  width: 330px;
+}
+
+article.title-card {
+  border: 1px grey solid;
 }
 
 article.product-card:hover {
   box-shadow: 4px 4px 4px rgb(255, 205, 213);
 }
+
+.product-card {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  background: white;
+  border-radius: 16px;
+  transition: .4s;
+  z-index: inherit;
+  min-height: 580px;
+  max-height: 580px;
+}
+
+
+/* Solitaire Layout*/  
+.product-card:hover {
+  transform: translateX(2rem);
+  z-index: 1;
+}
+
+.product-card:hover~.product-card {
+  transform: translateY(70px);
+  transform: translateX(-1rem);
+}
+
+.product-card:not(:first-child) {
+  margin-top: -560px;
+}
+
+/*
+  !!! add js function to slightly offset cards diagonally
+  so they're easier to brush through
+*/
 
 /* Style the button that is used to open and close the collapsible content */
 .collapsible {

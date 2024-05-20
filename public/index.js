@@ -21,8 +21,8 @@
         allProducts = await getData();
         console.log(allProducts);
         buildInterface();
+        //offsetCards();
       }, 500);
-      
     } catch (err) {
       console.error('init ' + err);
     }
@@ -54,33 +54,18 @@
         let sku;
         for (sku in allProducts[file][product]['skus']) {
           addCard(allProducts[file][product], 
-            allProducts[file][product]['score'], 
+            allProducts[file][product]['skus'][sku]['skuScore'], 
             allProducts[file][product]['skus'][sku], sku,
             file);
         }
-      }  
-
-    }
-    collapse();
-  }
-
-  /*
-    Object.keys(allProducts).forEach((file) => {
-      addHeader(file);
-
-      // for each 
-      Object.keys(file).forEach((product) => {
-        console.log(product);
-
-        Object.keys(product).forEach((sku) => {
-          console.log(sku);
-          addToPage(product, product['score'], product['skus'][sku], file);
-        });
-        
-      });
+        addProductCard(allProducts[file][product]['skus'], 
+          product, 
+          //allProducts[file][product]['skus'][sku],
+          file);
+      }
       
-    });
-  */
+    }
+  }
 
   // add new section for each file
   function addHeader(filename) {
@@ -105,33 +90,94 @@
     parent.appendChild(section);
   }
 
-  // add data card to page
-  function addCard(data, value, skuData, sku, filename) {
-    const photo = gen('img');
-    photo.src = skuData['skuImg'];
-    photo.alt = data['displayName'];
+  // add primary product card to page
+  function addProductCard(data, productId, filename) {
+    // const photoDiv = gen('div');
+    // photoDiv.classList.add('photo');
+    // const photo = gen('img');
+    // photo.src = skuData['skuImg'];
+    // photo.alt = data['displayName'];
+    // photoDiv.appendChild(photo);
+    let scores = productScores(data);
     
     const title = gen('h1');
     title.textContent = data['displayName'];
+    const prodId = gen('h2');
+    prodId.textContent = 'ID: ' + productId;
+    const average = gen('h2');
+    average.textContent = 'Score average: ' + scores[1];
+    const max = gen('h2');
+    max.textContent = 'Score maximum: ' + scores[2];
+    const min = gen('h2');
+    min.textContent = 'Score minimum: ' + scores[3];
+    const count = gen('h2');
+    count.textContent = 'SKU count: ' + scores[0];
 
+    const contents = gen('div');
+    contents.classList.add('card-contents');
+    contents.appendChild(title);
+    contents.appendChild(prodId);
+    contents.appendChild(average);
+    contents.appendChild(max);
+    contents.appendChild(min);
+    contents.appendChild(count);
+
+    const article = gen('article');
+    article.classList.add('product-card');
+    article.classList.add('title-card');
+    //article.appendChild(photoDiv);
+    article.appendChild(contents);
+
+    const parent = document.getElementById(`${filename}`);
+    const prodContainer = qs(`#${filename} .${productId}`);
+    prodContainer.appendChild(article);
+    parent.appendChild(prodContainer);
+  }
+
+  // compiles data about a product's skus' scores
+  function productScores(product) {
+    let count = 0;
+    let total = 0;
+    let max = 0;
+    let min = 5000000000;
+
+    let sku;
+    for (sku in product) {
+      let current = parseFloat(product[sku]['skuScore']);
+      total += current;
+      count ++;
+      if (current > max) max = current;
+      if (current < min) min = current;
+    }
+    let average = total / count;
+    return [count, average, max, min];
+  }
+
+  // add SKU card to page
+  function addCard(data, value, skuData, sku, filename) {
+    const photoDiv = gen('div');
+    photoDiv.classList.add('photo');
+    const photo = gen('img');
+    photo.src = skuData['skuImg'];
+    photo.alt = data['displayName'];
+    photoDiv.appendChild(photo);
+    
+    const title = gen('h1');
+    title.textContent = data['displayName'];
     const prodId = gen('h2');
     prodId.textContent = 'ID: ' + data['productId'];
-
     const skuId = gen('h2');
     skuId.textContent = 'SKU: ' + sku;
-
-    const score = gen('h3');
+    const score = gen('h2');
     score.textContent = 'Score: ' + value;
 
     // drop down!
     const dropDownButton = gen('button');
     dropDownButton.textContent = 'Score Components';
     dropDownButton.classList.add('collapsible');
-
     const dropDownContainer = gen('article');
     dropDownContainer.classList.add('content');
     dropDownContainer.classList.add('hidden');
-
     const dropDownContent = gen('p');
     dropDownContent.textContent = 'FILLER!!!';
     dropDownContainer.appendChild(dropDownContent);
@@ -147,19 +193,21 @@
       dropDownButton.classList.toggle('active');
       let content = dropDownButton.nextElementSibling;
       content.classList.toggle('hidden');
-      console.log(content);
     });
+
+    const contents = gen('div');
+    contents.classList.add('card-contents');
+    contents.appendChild(title);
+    contents.appendChild(prodId);
+    contents.appendChild(skuId);
+    contents.appendChild(score);
+    contents.appendChild(dropDownButton);
+    contents.appendChild(dropDownContainer);
 
     const article = gen('article');
     article.classList.add('product-card');
-    article.appendChild(photo);
-    article.appendChild(title);
-    article.appendChild(prodId);
-    article.appendChild(skuId);
-    article.appendChild(score);
-
-    article.appendChild(dropDownButton);
-    article.appendChild(dropDownContainer);
+    article.appendChild(photoDiv);
+    article.appendChild(contents);
 
     const parent = document.getElementById(`${filename}`);
     const prodContainer = qs(`#${filename} .${data['productId']}`);
@@ -167,23 +215,24 @@
     parent.appendChild(prodContainer);
   }
 
-  // make the collapsible lists
-  function collapse() {
-    //console.log('collapse');
-    let lists = qsa(".collapsible");
-    for (let i = 0; i < lists.length; i++) {
-      //console.log(lists[i]);
-      lists[i].addEventListener('click', () => {
-        lists[i].classList.toggle('active');
-        let content = lists[i].nextElementSibling;
-        content.classList.toggle('hidden');
-        //console.log(content);
-      });
+  // adjust offset of cards based on position in stack
+  function offsetCards() {
+    let sections = qsa('body > section');
+    for (let i = 0; i < sections.length; i++) {
+      //console.log(sections[i]);
+      let products = qsa(`#${sections[i].id} > section`);
+      for (let k = 0; k < products.length; k++) {
+        let classname = products[k].classList[0];
+        let cards = qsa(`.${classname} .product-card`);
+        for (let m = 0; m < cards.length; m++) {
+          let move = m * 10;
+          cards[m].style.transform = `translateX(-${move}px)`;
+          console.log(cards[m]);
+        }
+      }
     }
   }
 
-
-  
   /* HELPERS!! */
 
   // statuscheck for fetch

@@ -82,20 +82,18 @@
         allProducts[filename][prodId] = {
           'productId': prodId,
           'displayName' : object[0],
-          'score': value,
+          'score': [],
           'skus': {}
         }
       }
       allProducts[filename][prodId]['skus'][skuId] = {
-        'skuScore': {}, 
+        'skuScore': value, 
         'skuImg': object[1]
       };
       
       // extract details for every sku_prodid item
       //allDetails[filename][item] = ((skus[item]));
     }
-    //console.log(allProducts);
-    //console.log(allDetails);
   }
 
   // grabs image and display name from "response" "docs" object in files
