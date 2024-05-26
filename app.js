@@ -37,7 +37,7 @@ app.get('/files/:filename', async (req, res) => {
 // gets cleaned version of products file
 app.get('/clean/', async (req, res) => {
   try {
-    let file = await fs.readFile('./public/cleaned-data/allProducts.json');
+    let file = await readFile('./public/cleaned-data/allProducts.json');
     res.json(file);
   } catch (err) {
     if (err.code === 'ENOENT') {
