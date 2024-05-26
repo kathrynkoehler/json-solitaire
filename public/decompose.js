@@ -22,12 +22,9 @@
       for (let i = 0; i < fileNames.length; i++) {
         console.log(fileNames[i]);
         await grabOneJson(fileNames[i]);
-        // write details to new file so we don't have to do it on every page load
-        //console.log(allProducts);
-        
-        //await writeDetails();
       }
       await writeProducts();
+      
     } catch (err) {
       console.error('init ' + err);
     }
@@ -43,6 +40,9 @@
       filename = filename.split(" ").join("-");
       filename = filename.split(".").join("-");
       await decomposeSKU(data, filename);
+      // this file ends up being too big, so we have to write once per file
+      // instead of all at once
+      await writeDetails(filename);
     } catch (err) {
       console.log(err);
     }
@@ -67,6 +67,7 @@
     let item;
     let value;
     allProducts[filename] = {};
+    allDetails[filename] = {};
 
     for (item in skus) {
       let prodId = item.split('_').slice(1)[0];
@@ -92,8 +93,14 @@
       };
       
       // extract details for every sku_prodid item
-      //allDetails[filename][item] = ((skus[item]));
+      let depth = 0;
+      allDetails[filename][item] = [];
+      let newObj = details2(depth, filename, item, (skus[item]));
+      //console.log(newObj);
+      //console.log(allDetails);
+      //allDetails[filename][item] = newObj;
     }
+    console.log(allDetails);
   }
 
   // grabs image and display name from "response" "docs" object in files
@@ -107,7 +114,6 @@
         return array;
       }
     }
-    
   }
   
   // param: skus[item] from decompose
@@ -139,6 +145,86 @@
     });
   }
 
+  // another try at getting the details out in a way that's easy to parse
+  // for the frontend
+  function details2(depth, filename, prodId, item) {
+
+    // for each field in json, check if it's 'details'
+    let object = [];
+    //console.log(item);
+    Object.keys(item).forEach(key => {
+      if (typeof item[key] === 'object' && item[key] !== null && key === "details") {
+        // if details, pull out the score and description
+        //console.log('HERE!!');
+        let short = item["details"];
+        //console.log('SHORT: ' + JSON.stringify(short));
+        //console.log((short));
+        for (let i = 0; i < short.length; i++) {
+          //console.log(short[i]["value"]);
+          allDetails[filename][prodId].push([depth+1, short[i]["description"], short[i]["value"]]);
+          //console.log([short[i]["description"]]);
+          //console.log(object);
+          // then check for more details
+          //depth++;
+          details2(depth+1, filename, prodId, short[i]);
+        }
+        //allDetails[filename][prodId].push(object);
+        // when finished with one obj, do the other nested ones too
+        details2(depth, filename, prodId, item["details"]);
+      } else {
+        //console.log(object);
+        //depth = 0;
+        return object;
+      }
+    });
+
+  }
+
+  function placeholderDetails() {
+    /*
+    so for each product sku, we need to traverse all of the nested objects/arrays
+    to get down to tfid (/innermost part of the score, as it's the most important)
+
+    so we can either preserve the nesting, or flatten the objects / arrays
+    and have the first index keep track of how deeply nested it was. then that
+    value can be used as a multiplier to indent scores based on depth, and the
+    order of array items is preserved from order of objects. 
+    1 > 2 2 2 > 3 3 > 2 > 1 --- shows 2 lvl 1 objs, lvl 2 nesting, lvl 3 in lvl 2
+    
+    trying 2nd option below:
+    */
+    // for each field in json, check if it's 'details'
+    let object = [];
+    //console.log(item);
+    Object.keys(item).forEach(key => {
+      if (typeof item[key] === 'object' && item[key] !== null && key === "details") {
+        // if details, pull out the score and description
+        //console.log('HERE!!');
+        let short = item["details"];
+        //console.log('SHORT: ' + JSON.stringify(short));
+        //console.log((short));
+        depth++;
+        for (let i = 0; i < short.length; i++) {
+          //console.log(short[i]["value"]);
+          object.push([depth, short[i]["description"], short[i]["value"]]);
+          //console.log([short[i]["description"]]);
+          //console.log(object);
+          // then check for more details
+          //depth++;
+          details2(depth, filename, prodId, short[i]);
+        }
+        allDetails[filename][prodId].push(object);
+        // when finished with one obj, do the other nested ones too
+        depth++;
+        details2(depth, filename, prodId, item["details"]);
+      } else {
+        //console.log(object);
+        depth = 0;
+        return object;
+      }
+    });
+  }
+
   // write product data to new file so we don't have to do it on every page load
   async function writeProducts() {
     //console.log('inside write');
@@ -164,11 +250,13 @@
   }
 
   // write product details to new file so we don't have to do it on every page load!
-  async function writeDetails() {
+  async function writeDetails(filename) {
     try {
       let data = new FormData();
       //console.log(allDetails);
-      data.append('content', JSON.stringify(allDetails));
+      data.append('file', filename);
+      //console.log(JSON.stringify(allDetails[filename]));
+      data.append('content', JSON.stringify(allDetails[filename]));
       let res = await fetch('/write/details', {method: 'POST', body: data});
       await statusCheck(res);
     } catch (err) {

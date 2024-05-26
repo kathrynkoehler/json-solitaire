@@ -37,7 +37,7 @@ app.get('/files/:filename', async (req, res) => {
 // gets cleaned version of products file
 app.get('/clean/', async (req, res) => {
   try {
-    let file = await readFile('./public/cleaned-data/allProducts.json');
+    let file = await fs.readFile('./public/cleaned-data/allProducts.json');
     res.json(file);
   } catch (err) {
     if (err.code === 'ENOENT') {
@@ -67,16 +67,18 @@ app.post('/write/products', async (req, res) => {
 // writes product score breakdowns to new file
 app.post('/write/details', async (req, res) => {
   try {
+    res.type('text');
+    let file = req.body.file;
     let content = req.body.content;
+
     if (content) {
-      let newContent = JSON.stringify(content);
-      await fs.writeFile('./public/cleaned-data/allDetails.json', newContent);
-      res.type('text').send('write success!');
+      await fs.writeFile('./public/cleaned-data/details-' + file, content);
+      res.send('write success!');
     } else {
-      res.status(400).type('text').send('write fail :( no content');
+      res.status(400).send('write fail :( no content');
     }
   } catch (err) {
-    res.status(400).type('text').send('write error: ' + err);
+    res.status(400).send('write error: ' + err);
   }
 });
 
