@@ -39,7 +39,8 @@
     }
   }
 
-  function buildInterface() {
+  // adds all cards to page, separated by search file
+  async function buildInterface() {
     // for each 'file' object in allProducts, build header separator
     let file;
     for (file in allProducts) {
@@ -53,7 +54,7 @@
         // for each sku in product, add card to page with image, score
         let sku;
         for (sku in allProducts[file][product]['skus']) {
-          addCard(allProducts[file][product], 
+          await addCard(allProducts[file][product], 
             allProducts[file][product]['skus'][sku]['skuScore'], 
             allProducts[file][product]['skus'][sku], sku,
             file);
@@ -229,9 +230,9 @@
 
           // apply indent: file[itemId][score][0] number!
 
-            // to push right: add margin to left side of div
+            // to push right: add margin to left side of div, (change width?)
             // could also color code to make it easier to see?
-            
+
           div.appendChild(description);
           div.appendChild(value);
           dropDownContainer.appendChild(div);

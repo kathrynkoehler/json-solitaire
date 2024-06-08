@@ -59,24 +59,18 @@ section.product-container {
 }
 
 /* Style each card */
-.card-contents {
-  display: flex;
-  flex-direction: column;
-  padding: 6px;
-}
-
 article.product-card {
   border: 1px whitesmoke solid;
   border-radius: 5px;
   width: 330px;
 }
 
-article.title-card {
-  border: 1px grey solid;
-}
-
 article.product-card:hover {
   box-shadow: 4px 4px 4px rgb(255, 205, 213);
+}
+
+article.title-card {
+  border: 1px grey solid;
 }
 
 .product-card {
@@ -89,6 +83,12 @@ article.product-card:hover {
   z-index: inherit;
   min-height: 580px;
   max-height: 580px;
+}
+
+.card-contents {
+  display: flex;
+  flex-direction: column;
+  padding: 6px;
 }
 
 
@@ -125,6 +125,11 @@ article.product-card:hover {
 .active, .collapsible:hover {
   background-color: #ffcee1;
 }
+
+/* 
+  add change so that the collapsible content is only open when the card is hovered over
+  and closes automatically when it's not
+*/
 
 /* Style the collapsible content. hidden by default */
 .content {
