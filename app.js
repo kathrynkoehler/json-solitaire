@@ -35,9 +35,24 @@ app.get('/files/:filename', async (req, res) => {
 });
 
 // gets cleaned version of products file
-app.get('/clean/', async (req, res) => {
+app.get('/clean/products', async (req, res) => {
   try {
     let file = await readFile('./public/cleaned-data/allProducts.json');
+    res.json(file);
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      res.status(400).type('text').send(`does not exist`);
+    } else {
+      res.status(400).type('text').send(`couldn't get file`);
+    }
+  }
+});
+
+// gets cleaned version of given details file
+app.get('/clean/details/:filename', async (req, res) => {
+  try {
+    let filename = req.params.filename;
+    let file = await readFile('./public/cleaned-data/details-' + filename);
     res.json(file);
   } catch (err) {
     if (err.code === 'ENOENT') {

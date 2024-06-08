@@ -1,5 +1,6 @@
 body {
   font-family: Calibre, Helvetica Neue, Helvetica, Roboto, Arial, sans-serif;
+  background-color: #fafafa;
 }
 
 h1 {
@@ -48,6 +49,7 @@ section > h1 {
   text-align: center;
 }
 
+/* Style the stack of cards */
 section.product-container {
   max-width: 33%;
   display: flex;
@@ -56,7 +58,10 @@ section.product-container {
   padding: 3rem;
 }
 
+/* Style each card */
 .card-contents {
+  display: flex;
+  flex-direction: column;
   padding: 6px;
 }
 
@@ -102,15 +107,11 @@ article.product-card:hover {
   margin-top: -560px;
 }
 
-/*
-  !!! add js function to slightly offset cards diagonally
-  so they're easier to brush through
-*/
-
 /* Style the button that is used to open and close the collapsible content */
 .collapsible {
+  align-self: flex-end;
   background-color: #ffe4f0;
-  color: #444;
+  color: black;
   cursor: pointer;
   padding: 18px;
   width: 100%;
@@ -120,7 +121,7 @@ article.product-card:hover {
   font-size: 15px;
 }
 
-/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+/* Add a background color to the button if it is clicked on */
 .active, .collapsible:hover {
   background-color: #ffcee1;
 }
@@ -128,10 +129,33 @@ article.product-card:hover {
 /* Style the collapsible content. hidden by default */
 .content {
   overflow: hidden;
-  background-color: #f1f1f1;
+  background-color: #fafafa;
+  border: 1px whitesmoke solid;
   font-size: small;
   padding: 5px;
   display: block;
+}
+
+/* group the added details */
+.content > div {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin: 2px;
+}
+
+/* space out the text in the details */
+.content .detail-desc {
+  max-width: 65%;
+  justify-self: flex-start;
+  margin: 2px;
+}
+
+.content .detail-val {
+  /* max-width: 28%; */
+  justify-self: flex-end;
+  align-self: last baseline;
+  margin: 2px;
 }
 
 .hidden {

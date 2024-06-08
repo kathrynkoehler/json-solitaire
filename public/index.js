@@ -30,7 +30,7 @@
 
   async function getData() {
     try {
-      let res = await fetch('/clean');
+      let res = await fetch('/clean/products');
       await statusCheck(res);
       let data = await res.json();
       return data;
@@ -154,7 +154,7 @@
   }
 
   // add SKU card to page
-  function addCard(data, value, skuData, sku, filename) {
+  async function addCard(data, value, skuData, sku, filename) {
     const photoDiv = gen('div');
     photoDiv.classList.add('photo');
     const photo = gen('img');
@@ -175,19 +175,7 @@
     const dropDownButton = gen('button');
     dropDownButton.textContent = 'Score Components';
     dropDownButton.classList.add('collapsible');
-    const dropDownContainer = gen('article');
-    dropDownContainer.classList.add('content');
-    dropDownContainer.classList.add('hidden');
-    const dropDownContent = gen('p');
-    dropDownContent.textContent = 'FILLER!!!';
-    dropDownContainer.appendChild(dropDownContent);
-
-    // let details = allDetails[id];
-    // for (let i = 0; i < details.length; i++) {
-    //   const dropDownContent = gen('p');
-    //   dropDownContent.textContent = details[i][0] + ' = ' + details[i][1];
-    //   dropDownContainer.appendChild(dropDownContent);
-    // }
+    const dropDownContainer = await scoreList(filename, sku + '_' + data['productId']);
 
     dropDownButton.addEventListener('click', () => {
       dropDownButton.classList.toggle('active');
@@ -215,6 +203,48 @@
     parent.appendChild(prodContainer);
   }
 
+  // add the score breakdown to a card
+  async function scoreList(filename, itemId) {
+    // itemId = sku_prod, stitched back together
+    const dropDownContainer = gen('article');
+    dropDownContainer.classList.add('content');
+    dropDownContainer.classList.add('hidden');
+    
+    let file = await readDetails(filename);
+
+    let item;
+    for (item in file) {
+      if (item === itemId) {
+        console.log(item);
+        let score;
+        for (score in item) {
+          const div = gen('div');
+          console.log(file[item][score]);
+          const description = gen('p');
+          description.textContent = file[itemId][score][1];
+          description.classList.add("detail-desc");
+          const value = gen('p');
+          value.textContent = file[itemId][score][2];
+          value.classList.add("detail-val");
+
+          // apply indent: file[itemId][score][0] number!
+
+            // to push right: add margin to left side of div
+            // could also color code to make it easier to see?
+            
+          div.appendChild(description);
+          div.appendChild(value);
+          dropDownContainer.appendChild(div);
+        }
+        
+
+        
+      }
+      
+    }
+    return dropDownContainer;
+  }
+
   // adjust offset of cards based on position in stack
   function offsetCards() {
     let sections = qsa('body > section');
@@ -230,6 +260,20 @@
           console.log(cards[m]);
         }
       }
+    }
+  }
+
+  // a bandaid for not being able to keep all details in one file. VERY VERY inefficient!!
+  async function readDetails(filename) {
+    //filename = filename.split('-json')[0];
+    try {
+      let res = await fetch('/clean/details/' + filename);
+      await statusCheck(res);
+      let data = await res.json();
+      //console.log(data);
+      return data;
+    } catch (err) {
+      console.error('get data: ' + err); 
     }
   }
 
