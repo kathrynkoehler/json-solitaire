@@ -3,6 +3,13 @@ body {
   background-color: #fafafa;
 }
 
+main {
+  width: 90%;
+  margin: auto;
+}
+
+/* ---------------- Style items section ---------------- */
+
 h1 {
   font-size: medium;
   padding: 0;
@@ -27,15 +34,16 @@ img {
   overflow: hidden;
 }
 
-body > section {
+#items > section {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: space-evenly;
   align-items: top;
   row-gap: 2vh;
-  width: 90%;
+  width: 75%;
   margin: auto;
+  margin-left: 25%;
 }
 
 section > h1 {
@@ -161,6 +169,23 @@ article.title-card {
   justify-self: flex-end;
   align-self: last baseline;
   margin: 2px;
+}
+
+/* ---------------- Style options section ---------------- */
+
+#options {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  /* left: 0; */
+  width: 20%;
+  height: 100%;
+  background-color: white;
+}
+
+#options ul {
+  list-style-type: disc;
 }
 
 .hidden {

@@ -77,7 +77,7 @@
 
     section.appendChild(heading);
 
-    let parent = qs('body');
+    let parent = document.getElementById("items");
     parent.appendChild(section);
   }
 
@@ -244,6 +244,23 @@
       
     }
     return dropDownContainer;
+  }
+
+  // 
+  function sidebar() {
+    // dynamically add checkboxes to a sidebar to filter the cards
+    // by the boosts added to them
+
+    // qsa for all checkboxes
+    // loop over to check that none of their ids/text match the val description
+    // if no match, add to list as a check to exclude all other cards
+  }
+
+  function sidebarTitle() {
+    // add title a la lulu website for search being shown. 
+    // Showing results for:
+    // [file name] -- make sure spaces are not dashes, and .json is elided
+    // add line break before check boxes
   }
 
   // adjust offset of cards based on position in stack
