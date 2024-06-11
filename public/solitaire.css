@@ -77,10 +77,6 @@ article.product-card:hover {
   box-shadow: 4px 4px 4px rgb(255, 205, 213);
 }
 
-article.title-card {
-  border: 1px grey solid;
-}
-
 .product-card {
   display: flex;
   position: relative;
@@ -97,6 +93,20 @@ article.title-card {
   display: flex;
   flex-direction: column;
   padding: 6px;
+}
+
+article.title-card {
+  border: 1px grey solid;
+}
+
+article.title-card .card-search {
+  color: white;
+  background: #c8102e;
+  width: 95%;
+  margin: auto;
+  padding: 2.5%;
+  border-radius: 4px;
+  align-self: center;
 }
 
 
@@ -159,7 +169,7 @@ article.title-card {
 
 /* space out the text in the details */
 .content .detail-desc {
-  max-width: 65%;
+  max-width: 60%;
   justify-self: flex-start;
   margin: 2px;
 }
@@ -182,6 +192,7 @@ article.title-card {
   width: 20%;
   height: 100%;
   background-color: white;
+  padding: 5px;
 }
 
 #options ul {

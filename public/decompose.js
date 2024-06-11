@@ -10,13 +10,19 @@
 
   // directory holding all json files to parse
   const DIRECTORY = '/json-files';
+
   // holds extracted details from json
   let allDetails = {};
   let allProducts = {};
 
   window.addEventListener('load', init);
 
-  async function init() {
+  function init() {
+    document.getElementById("refresh");
+    refresh.addEventListener("click", getData);
+  }
+
+  async function getData() {
     try {
       let fileNames = await grabAllJson();
       for (let i = 0; i < fileNames.length; i++) {
@@ -38,7 +44,7 @@
       let data = await res.json();
       // decompose products, then write to new file from allProducts
       filename = filename.split(" ").join("-");
-      filename = filename.split(".").join("-");
+      filename = filename.split(".")[0];
       await decomposeSKU(data, filename);
       // this file ends up being too big, so we have to write once per file
       // instead of all at once
@@ -100,7 +106,7 @@
       //console.log(allDetails);
       //allDetails[filename][item] = newObj;
     }
-    console.log(allDetails);
+    //console.log(allDetails);
   }
 
   // grabs image and display name from "response" "docs" object in files
@@ -125,7 +131,7 @@
     Object.keys(item).forEach(key => {
       if (typeof item[key] === 'object' && item[key] !== null && key === "details") {
         // if details, pull out the score and description
-        console.log('HERE!!');
+        //console.log('HERE!!');
         let short = item["details"];
         //console.log('SHORT: ' + JSON.stringify(short));
         //console.log((short));

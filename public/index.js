@@ -11,6 +11,7 @@
 
   // directory holding all json files to parse
   const PRODUCTS = 'public/cleaned-data/allProducts.json';
+
   // holds extracted product details from json
   let allProducts = {};
 
@@ -28,6 +29,7 @@
     }
   }
 
+  // gets all cleaned product data
   async function getData() {
     try {
       let res = await fetch('/clean/products');
@@ -41,6 +43,9 @@
 
   // adds all cards to page, separated by search file
   async function buildInterface() {
+    // create search dropdown
+    await search();
+
     // for each 'file' object in allProducts, build header separator
     let file;
     for (file in allProducts) {
@@ -61,11 +66,12 @@
         }
         addProductCard(allProducts[file][product]['skus'], 
           product, 
+          allProducts[file][product],
           //allProducts[file][product]['skus'][sku],
           file);
       }
-      
     }
+    scoreIndent();
   }
 
   // add new section for each file
@@ -91,8 +97,8 @@
     parent.appendChild(section);
   }
 
-  // add primary product card to page
-  function addProductCard(data, productId, filename) {
+  // add title product card to page
+  function addProductCard(data, productId, displayName, filename) {
     // const photoDiv = gen('div');
     // photoDiv.classList.add('photo');
     // const photo = gen('img');
@@ -101,8 +107,11 @@
     // photoDiv.appendChild(photo);
     let scores = productScores(data);
     
+    const search = gen('h1');
+    search.textContent = "search: " + filename.split("-").join(" ");
+    search.classList.add("card-search");
     const title = gen('h1');
-    title.textContent = data['displayName'];
+    title.textContent = displayName['displayName'];
     const prodId = gen('h2');
     prodId.textContent = 'ID: ' + productId;
     const average = gen('h2');
@@ -116,6 +125,7 @@
 
     const contents = gen('div');
     contents.classList.add('card-contents');
+    contents.appendChild(search);
     contents.appendChild(title);
     contents.appendChild(prodId);
     contents.appendChild(average);
@@ -156,6 +166,12 @@
 
   // add SKU card to page
   async function addCard(data, value, skuData, sku, filename) {
+
+    // the card that we'll assemble below
+    const card = gen('article');
+    card.classList.add('product-card');
+  
+    // add photo
     const photoDiv = gen('div');
     photoDiv.classList.add('photo');
     const photo = gen('img');
@@ -163,6 +179,7 @@
     photo.alt = data['displayName'];
     photoDiv.appendChild(photo);
     
+    // add title, productID, SKUID, overall score
     const title = gen('h1');
     title.textContent = data['displayName'];
     const prodId = gen('h2');
@@ -176,7 +193,8 @@
     const dropDownButton = gen('button');
     dropDownButton.textContent = 'Score Components';
     dropDownButton.classList.add('collapsible');
-    const dropDownContainer = await scoreList(filename, sku + '_' + data['productId']);
+    const dropDownContainer = await scoreList(filename, 
+      sku + '_' + data['productId'], card);
 
     dropDownButton.addEventListener('click', () => {
       dropDownButton.classList.toggle('active');
@@ -193,19 +211,17 @@
     contents.appendChild(dropDownButton);
     contents.appendChild(dropDownContainer);
 
-    const article = gen('article');
-    article.classList.add('product-card');
-    article.appendChild(photoDiv);
-    article.appendChild(contents);
+    card.appendChild(photoDiv);
+    card.appendChild(contents);
 
     const parent = document.getElementById(`${filename}`);
     const prodContainer = qs(`#${filename} .${data['productId']}`);
-    prodContainer.appendChild(article);
+    prodContainer.appendChild(card);
     parent.appendChild(prodContainer);
   }
 
   // add the score breakdown to a card
-  async function scoreList(filename, itemId) {
+  async function scoreList(filename, itemId, card) {
     // itemId = sku_prod, stitched back together
     const dropDownContainer = gen('article');
     dropDownContainer.classList.add('content');
@@ -216,38 +232,104 @@
     let item;
     for (item in file) {
       if (item === itemId) {
-        console.log(item);
+        //console.log(item);
         let score;
         for (score in item) {
           const div = gen('div');
-          console.log(file[item][score]);
+          //console.log(file[item][score]);
           const description = gen('p');
           description.textContent = file[itemId][score][1];
           description.classList.add("detail-desc");
+          let indent = "indent-" + file[itemId][score][0];
+          description.classList.add(indent);
           const value = gen('p');
           value.textContent = file[itemId][score][2];
           value.classList.add("detail-val");
-
-          // apply indent: file[itemId][score][0] number!
-
-            // to push right: add margin to left side of div, (change width?)
-            // could also color code to make it easier to see?
 
           div.appendChild(description);
           div.appendChild(value);
           dropDownContainer.appendChild(div);
         }
-        
-
-        
       }
-      
     }
     return dropDownContainer;
   }
 
-  // 
-  function sidebar() {
+  function scoreIndent() {
+    console.log("scoreindent");
+    // apply indent: file[itemId][score][0] number!
+        // to push right: add margin to left side of div, (change width?)
+        // could also color code to make it easier to see?
+    // add class to card for each boost
+    for (let i = 1; i < 7; i++) {
+      let desc = qsa(`.indent-${i}`);
+      for (let k = 0; k < desc.length; k++) {
+        //console.log("3");
+        // let current = Array.from(divs[i].children);
+        // console.log(current);
+        // console.log(current[0]);
+        let indent = i * 8;
+        console.log(indent);
+        desc[k].style.marginLeft = `${indent}px`;
+        desc[k].style.maxWidth = `${desc[k].style.maxWidth - indent}%`;
+      }
+    }
+
+    // let divs = qsa(".content > div");
+    // for (let i = 0; i < divs.length; i++) {
+    //   let desc = divs[i].children[0];
+    //   let indent = desc.classList.split(" ")[1].split("-")[1] * 2;
+    //   desc.style.margin = indent;
+    // }
+
+  }
+
+  // creates dropdown to select which file to show cards for
+  async function search() {
+    try {
+      let res = await fetch('/files');
+      await statusCheck(res);
+      let data = await res.json();
+
+      let parent = qs("select");
+      
+      for (let i = 0; i < data.length; i++) {
+        let name = data[i].split(".")[0];
+        //console.log(name);
+        let option = gen("option");
+        option.value = name;
+        option.textContent = name;
+        parent.appendChild(option);
+      }
+
+      let all = gen("option");
+      all.value = "all";
+      all.textContent = "all files";
+
+      qsa("option")[0].selected = true;
+      //all.selected = true;
+      parent.appendChild(all);
+      
+    } catch (err) {
+      console.error('get data: ' + err); 
+    }
+  }
+
+  // hide non-selected search contents
+  function hideSections() {
+    let selection = qs("select").value;
+    if (selection !== "all files") {
+      let sections = qsa("#items > section");
+      let filename = selection.split(" ").join("-");
+      //filename = filename.split(".")[0];
+      for (let i = 0; i < sections.length; i++) {
+        
+      }
+    }
+  }
+
+  // dynamically add checkboxes to sidebar to filter cards by boost
+  function sidebarOptions() {
     // dynamically add checkboxes to a sidebar to filter the cards
     // by the boosts added to them
 
