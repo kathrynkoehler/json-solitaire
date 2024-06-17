@@ -20,8 +20,10 @@
     try {
       await setTimeout(async () => {
         allProducts = await getData();
-        console.log(allProducts);
-        buildInterface();
+        //console.log(allProducts);
+        await buildInterface();
+        let select = qs('select');
+        select.addEventListener('change', hideSections);
         //offsetCards();
       }, 500);
     } catch (err) {
@@ -72,16 +74,17 @@
       }
     }
     scoreIndent();
+    hideSections();
   }
 
   // add new section for each file
   function addHeader(filename) {
     let section = gen('section');
     section.id = filename;
-    let heading = gen('h1');
-    heading.textContent = filename;
 
-    section.appendChild(heading);
+    // let heading = gen('h1');
+    // heading.textContent = filename;
+    //section.appendChild(heading);
 
     let parent = document.getElementById("items");
     parent.appendChild(section);
@@ -191,7 +194,7 @@
 
     // drop down!
     const dropDownButton = gen('button');
-    dropDownButton.textContent = 'Score Components';
+    dropDownButton.textContent = 'SCORE DETAILS';
     dropDownButton.classList.add('collapsible');
     const dropDownContainer = await scoreList(filename, 
       sku + '_' + data['productId'], card);
@@ -317,14 +320,22 @@
 
   // hide non-selected search contents
   function hideSections() {
+    console.log('hide sections');
     let selection = qs("select").value;
-    if (selection !== "all files") {
-      let sections = qsa("#items > section");
-      let filename = selection.split(" ").join("-");
-      //filename = filename.split(".")[0];
+    let sections = qsa("#items > section");
+    let filename = selection.split(" ").join("-");
+    if (selection !== "all") {
       for (let i = 0; i < sections.length; i++) {
-        
+        if (sections[i].id !== filename) {
+          sections[i].classList.add('hidden');
+        } else {
+          sections[i].classList.remove('hidden');
+        }
       }
+    } else {
+      for (let i = 0; i < sections.length; i++) {
+        sections[i].classList.remove('hidden');
+      };
     }
   }
 
