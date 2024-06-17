@@ -29,6 +29,7 @@
           hideSections();
           sidebarTitle();
         });
+        // id('include').addEventListener();
         //offsetCards();
       }, 500);
     } catch (err) {
@@ -262,14 +263,14 @@
 
   /**
    * add the score breakdown to a card
-   * @param {String} filename - name of the file the product was returned from. used
-   *                       to cycle through correct details
+   * @param {String} filename - name of the file the product was returned from.
+   *                 used to cycle through correct details
    * @param {String} itemId - full SKU_ProductID of the item whose details we need
-   * @param {HTMLElement} card - the card the details are being added to
-   * @returns 
+   * @param {HTMLElement} card - the card the details are being added to. passed
+   *                      in so the boost classes can be applied
+   * @returns completed container element for score dropdown
    */
   async function scoreList(filename, itemId, card) {
-    // itemId = sku_prod, stitched back together
     const dropDownContainer = gen('article');
     dropDownContainer.classList.add('content');
     dropDownContainer.classList.add('hidden');
@@ -279,23 +280,33 @@
     let item;
     for (item in file) {
       if (item === itemId) {
-        //console.log(item);
         let score;
         for (score in item) {
+          // create & populate the score description + value
           const div = gen('div');
-          //console.log(file[item][score]);
+
           const description = gen('p');
-          description.textContent = file[itemId][score][1];
+          let descContent = file[itemId][score][1];
+          description.textContent = descContent;
           description.classList.add("detail-desc");
+
           let indent = "indent-" + file[itemId][score][0];
           description.classList.add(indent);
+
           const value = gen('p');
-          value.textContent = file[itemId][score][2];
+          let valContent = file[itemId][score][2];
+          value.textContent = valContent;
           value.classList.add("detail-val");
 
           div.appendChild(description);
           div.appendChild(value);
           dropDownContainer.appendChild(div);
+
+          // check which boosts are applied & add class to card for filtering
+          if (descContent === "boost") {
+            card.classList.add(`boost-${valContent}-`);
+            sidebarOption(`boost-${valContent}-`);
+          }
         }
       }
     }
@@ -382,14 +393,57 @@
     qs("#results-desc > h1").textContent = selection;
   }
 
-  // dynamically add checkboxes to sidebar to filter cards by boost
-  function sidebarOptions() {
+  /**
+   * dynamically add checkboxes to sidebar to filter cards by boost
+   * @param {String} boost - the boost to be filtered on
+   */
+  function sidebarOption(boost) {
     // dynamically add checkboxes to a sidebar to filter the cards
     // by the boosts added to them
 
-    // qsa for all checkboxes
-    // loop over to check that none of their ids/text match the val description
-    // if no match, add to list as a check to exclude all other cards
+    if (id(`check-${boost}`)) {
+      return;
+    }
+
+    let div = gen('div');
+
+    let input = gen('input');
+    input.type = 'checkbox';
+    input.id = `check-${boost}`;
+    input.addEventListener('change', (e) => {
+      if (e.target.checked) {
+        filterCards(boost);
+      } else {
+        unfilterCards(boost);
+      }
+    });
+
+    let label = gen('label');
+    label.for = input.id;
+    label.textContent = boost;
+
+    div.appendChild(input);
+    div.appendChild(label);
+
+    const parent = id("options");
+    parent.appendChild(div);
+  }
+
+  function filterCards(boost) {
+    let filter = qs('input[type=radio]');
+    // exclude / include based on filter
+    if (filter === "exclude") {
+      let cards = qsa(`.${boost}`);
+      for (let i = 0; i < cards.length; i++) {
+        cards[i].classList.add('hidden');
+      }
+    } else {
+      let cards = qsa(`.product-card :not(.${boost})`);
+      for (let i = 0; i < cards.length; i++) {
+        cards[i].classList.add('hidden');
+      }
+    }
+    
   }
 
   // adjust offset of cards based on position in stack
