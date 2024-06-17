@@ -53,7 +53,7 @@ main {
   background-color: #fff;
   border: 0.0625rem solid #d3d5d7;
   color: black;
-  font-size: 19px;
+  font-size: 18px;
 }
 
 #refresh:hover, select:hover {
@@ -68,13 +68,23 @@ main {
 #options input {
   background-color: #fff;
   border: 0.09375rem solid #53565a;
+  position: relative;
   height: 1rem;
   width: 1rem;
   margin-right: 0.5rem;
+  top: 0.125rem;
 }
 
 input:checked {
-  background-color: #53565a;
+  accent-color: #53535a;
+}
+
+#options label {
+  font-size: 1.0625rem;
+}
+
+option {
+  accent-color: #53535a;
 }
 
 /* ---------------- Style items section ---------------- */
@@ -155,7 +165,7 @@ img {
 .card-contents {
   display: flex;
   flex-direction: column;
-  padding: 6px;
+  padding: 10px;
 }
 
 .title-card {
@@ -233,15 +243,14 @@ img {
   margin: 2px;
 }
 
-/* space out the text in the details */
+/* space out text in the details */
 .content .detail-desc {
-  max-width: 60%;
+  max-width: 55%;
   justify-self: flex-start;
   margin: 2px;
 }
 
 .content .detail-val {
-  /* max-width: 28%; */
   justify-self: flex-end;
   align-self: last baseline;
   margin: 2px;

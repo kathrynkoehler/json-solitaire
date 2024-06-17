@@ -263,35 +263,20 @@
   }
 
   function scoreIndent() {
-    console.log("scoreindent");
-    // apply indent: file[itemId][score][0] number!
-        // to push right: add margin to left side of div, (change width?)
-        // could also color code to make it easier to see?
-    // add class to card for each boost
-    for (let i = 1; i < 7; i++) {
+    for (let i = 1; i < 10; i++) {
       let desc = qsa(`.indent-${i}`);
       for (let k = 0; k < desc.length; k++) {
-        //console.log("3");
-        // let current = Array.from(divs[i].children);
-        // console.log(current);
-        // console.log(current[0]);
-        let indent = i * 8;
-        console.log(indent);
+        let indent = (i-1) * 8;
         desc[k].style.marginLeft = `${indent}px`;
         desc[k].style.maxWidth = `${desc[k].style.maxWidth - indent}%`;
       }
     }
 
-    // let divs = qsa(".content > div");
-    // for (let i = 0; i < divs.length; i++) {
-    //   let desc = divs[i].children[0];
-    //   let indent = desc.classList.split(" ")[1].split("-")[1] * 2;
-    //   desc.style.margin = indent;
-    // }
+    // add class to card for each boost? check as we go
 
   }
 
-  // creates dropdown to select which file to show cards for
+  // creates sidebar dropdown to select which file to show cards for
   async function search() {
     try {
       let res = await fetch('/files');
