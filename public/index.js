@@ -23,7 +23,10 @@
         //console.log(allProducts);
         await buildInterface();
         let select = qs('select');
-        select.addEventListener('change', hideSections);
+        select.addEventListener('change', () => {
+          hideSections();
+          sidebarTitle();
+        });
         //offsetCards();
       }, 500);
     } catch (err) {
@@ -47,6 +50,7 @@
   async function buildInterface() {
     // create search dropdown
     await search();
+    sidebarTitle();
 
     // for each 'file' object in allProducts, build header separator
     let file;
@@ -320,7 +324,6 @@
 
   // hide non-selected search contents
   function hideSections() {
-    console.log('hide sections');
     let selection = qs("select").value;
     let sections = qsa("#items > section");
     let filename = selection.split(" ").join("-");
@@ -350,10 +353,8 @@
   }
 
   function sidebarTitle() {
-    // add title a la lulu website for search being shown. 
-    // Showing results for:
-    // [file name] -- make sure spaces are not dashes, and .json is elided
-    // add line break before check boxes
+    let selection = qs("select").value;
+    qs("#results-desc > h1").textContent = selection;
   }
 
   // adjust offset of cards based on position in stack

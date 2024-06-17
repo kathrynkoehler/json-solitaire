@@ -7,14 +7,14 @@ body {
 main {
   display: flex;
   justify-content: space-evenly;
-  min-width: 70%;
+  max-width: 1580px;
   margin: auto;
   margin-top: 1rem;
 }
 
 /* ---------------- Style sidebar ---------------- */
 
-#options {
+#sidebar {
   display: flex;
   flex-direction: column;
   top: 0;
@@ -22,13 +22,59 @@ main {
   width: 320px;
   height: 100%;
   background-color: white;
-  padding: 5px;
+  padding: 16px;
   padding-top: 2vh;
-  /* margin: 1.5rem; */
+  margin: 1.5rem;
 }
 
-#options ul {
+#sidebar ul {
   list-style-type: disc;
+}
+
+#results-desc {
+  padding: 0px 0px 24px;
+}
+
+#results-desc p {
+  font-size: 19px;
+  line-height: 24px;
+  padding: 24px 0px 0px;
+  margin: 0;
+}
+
+#results-desc h1 {
+  font-size: 30px;
+  padding-bottom: 8px;
+  padding: 8px 0px 0px;
+  margin: 0;
+}
+
+#refresh, select {
+  background-color: #fff;
+  border: 0.0625rem solid #d3d5d7;
+  color: black;
+  font-size: 19px;
+}
+
+#refresh:hover, select:hover {
+  border: 0.0625rem solid #000;
+}
+
+#options {
+  border-top: 0.0625 solid #e5e6e7;
+  padding-top: 16px;
+}
+
+#options input {
+  background-color: #fff;
+  border: 0.09375rem solid #53565a;
+  height: 1rem;
+  width: 1rem;
+  margin-right: 0.5rem;
+}
+
+input:checked {
+  background-color: #53565a;
 }
 
 /* ---------------- Style items section ---------------- */
@@ -66,7 +112,7 @@ img {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: left;
   align-items: top;
   box-sizing: border-box;
   /* row-gap: 2vh; */
@@ -77,26 +123,14 @@ img {
   display: none;
 }
 
-/* section > h1 {
-  font-size: x-large;
-  width: 100%;
-  height: 3vh;
-  background-color: #ffcee1;
-  border-radius: 5px;
-  padding: 1vh;
-  margin-top: 2vh;
-  text-align: center;
-} */
-
 /* Style the stack of cards */
 .product-container {
   width: 330px;
   display: flex;
   flex-direction: column;
   justify-content: end;
-  /* padding: 3rem; */
   margin-bottom: 2rem;
-  padding: 1.5rem;
+  padding: 0 1.5rem 1.5rem;
 }
 
 /* Style each card */
