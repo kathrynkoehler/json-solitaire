@@ -152,7 +152,7 @@ img {
   border: 1px whitesmoke solid;
   border-radius: 5px;
   width: 330px;
-  transition: .4s;
+  transition: .5s;
   z-index: inherit;
   min-height: 580px;
   max-height: 580px;
@@ -183,7 +183,7 @@ img {
 }
 
 
-/* Solitaire Layout*/  
+/* Solitaire layout transitions */  
 .product-card:hover {
   transform: translateX(2rem);
   z-index: 1;
@@ -191,7 +191,7 @@ img {
 
 .product-card:hover~.product-card {
   transform: translateY(70px);
-  transform: translateX(-1rem);
+  transform: translateX(-1.5rem);
 }
 
 .product-card:not(:first-child) {

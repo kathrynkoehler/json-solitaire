@@ -1,7 +1,7 @@
 /**
  * Responsible for building interface. 
  * Reads in data that has already been "cleaned" by decompose.js, then parses 
- * it out into elements to display to the user on load.
+ * it out into "cards" to display to the user on load.
  */
 'use strict';
 
@@ -15,12 +15,14 @@
   // holds extracted product details from json
   let allProducts = {};
 
-  // once the page loads we can start appending data
+  /**
+   * initializes the page upon load. retrieves cleaned product data to build
+   * interface and handle interactivity. 
+   */
   async function init() {
     try {
       await setTimeout(async () => {
         allProducts = await getData();
-        //console.log(allProducts);
         await buildInterface();
         let select = qs('select');
         select.addEventListener('change', () => {
@@ -34,7 +36,10 @@
     }
   }
 
-  // gets all cleaned product data
+  /**
+   * retrieves all cleaned product data from cleaned-data directory.
+   * @returns JSON object of formatted data for all products
+   */
   async function getData() {
     try {
       let res = await fetch('/clean/products');
@@ -46,7 +51,9 @@
     }
   }
 
-  // adds all cards to page, separated by search file
+  /**
+   * adds all cards to page, separated by search file. 
+   */
   async function buildInterface() {
     // create search dropdown
     await search();
@@ -81,7 +88,10 @@
     hideSections();
   }
 
-  // add new section for each file
+/**
+ * add new section for each file
+ * @param {String} filename 
+ */
   function addHeader(filename) {
     let section = gen('section');
     section.id = filename;
@@ -94,7 +104,12 @@
     parent.appendChild(section);
   }
 
-  // put each product in its own group within the file card list
+  /**
+   * put each product in its own group within the file card list
+   * @param {Object} product - JSON object of product details
+   * @param {String} file - the file the item was returned from. used to correctly
+   *                        place the section on the page
+   */
   function addProductSection(product, file) {
     let section = gen('section');
     section.classList.add(product['productId']);
@@ -104,7 +119,13 @@
     parent.appendChild(section);
   }
 
-  // add title product card to page
+  /**
+   * add title product card to card stack
+   * @param {Object} data - JSON object of product data
+   * @param {String} productId - ID of product
+   * @param {String} displayName - Display name of product
+   * @param {String} filename - file the item was returned from
+   */
   function addProductCard(data, productId, displayName, filename) {
     // const photoDiv = gen('div');
     // photoDiv.classList.add('photo');
@@ -152,7 +173,11 @@
     parent.appendChild(prodContainer);
   }
 
-  // compiles data about a product's skus' scores
+  /**
+   * compiles data about a product's skus' scores.
+   * @param {Object} product 
+   * @returns Array of numbers for various calculated aggregates
+   */
   function productScores(product) {
     let count = 0;
     let total = 0;
@@ -171,7 +196,15 @@
     return [count, average, max, min];
   }
 
-  // add SKU card to page
+  /**
+   * build and add SKU card to page
+   * @param {Object} data - JSON object containing data about the item
+   * @param {Number} value - total score of SKU
+   * @param {Array} skuData - details about the SKU, used to retrieve image
+   * @param {String} sku - the SKU of the item
+   * @param {String} filename - the file the product was returned from. used to place
+   *                      the card correctly on the page
+   */
   async function addCard(data, value, skuData, sku, filename) {
 
     // the card that we'll assemble below
@@ -227,7 +260,14 @@
     parent.appendChild(prodContainer);
   }
 
-  // add the score breakdown to a card
+  /**
+   * add the score breakdown to a card
+   * @param {String} filename - name of the file the product was returned from. used
+   *                       to cycle through correct details
+   * @param {String} itemId - full SKU_ProductID of the item whose details we need
+   * @param {HTMLElement} card - the card the details are being added to
+   * @returns 
+   */
   async function scoreList(filename, itemId, card) {
     // itemId = sku_prod, stitched back together
     const dropDownContainer = gen('article');
@@ -262,6 +302,9 @@
     return dropDownContainer;
   }
 
+  /**
+   * indent the score breakdown items according to the nesting level
+   */
   function scoreIndent() {
     for (let i = 1; i < 10; i++) {
       let desc = qsa(`.indent-${i}`);
@@ -276,7 +319,10 @@
 
   }
 
-  // creates sidebar dropdown to select which file to show cards for
+  /**
+   * builds sidebar dropdown to allow user to select which files (searches) to
+   * display returned product cards for.
+   */
   async function search() {
     try {
       let res = await fetch('/files');
@@ -287,7 +333,6 @@
       
       for (let i = 0; i < data.length; i++) {
         let name = data[i].split(".")[0];
-        //console.log(name);
         let option = gen("option");
         option.value = name;
         option.textContent = name;
@@ -299,7 +344,6 @@
       all.textContent = "all files";
 
       qsa("option")[0].selected = true;
-      //all.selected = true;
       parent.appendChild(all);
       
     } catch (err) {
@@ -307,7 +351,9 @@
     }
   }
 
-  // hide non-selected search contents
+  /**
+   * hides non-selected search file contents.
+   */
   function hideSections() {
     let selection = qs("select").value;
     let sections = qsa("#items > section");
@@ -327,6 +373,15 @@
     }
   }
 
+  /**
+   * based upon the selected file to show contents for, changes the title of the
+   * sidebar.
+   */
+  function sidebarTitle() {
+    let selection = qs("select").value;
+    qs("#results-desc > h1").textContent = selection;
+  }
+
   // dynamically add checkboxes to sidebar to filter cards by boost
   function sidebarOptions() {
     // dynamically add checkboxes to a sidebar to filter the cards
@@ -335,11 +390,6 @@
     // qsa for all checkboxes
     // loop over to check that none of their ids/text match the val description
     // if no match, add to list as a check to exclude all other cards
-  }
-
-  function sidebarTitle() {
-    let selection = qs("select").value;
-    qs("#results-desc > h1").textContent = selection;
   }
 
   // adjust offset of cards based on position in stack
@@ -360,23 +410,25 @@
     }
   }
 
-  // a bandaid for not being able to keep all details in one file. VERY VERY inefficient!!
+  /**
+   * reads the cleaned details data from files in order to build the card
+   * dropdowns.
+   * @param {String} filename 
+   * @returns 
+   */
   async function readDetails(filename) {
-    //filename = filename.split('-json')[0];
     try {
       let res = await fetch('/clean/details/' + filename);
       await statusCheck(res);
       let data = await res.json();
-      //console.log(data);
       return data;
     } catch (err) {
       console.error('get data: ' + err); 
     }
   }
 
-  /* HELPERS!! */
+  /* ----- Helpers & wrappers ----- */
 
-  // statuscheck for fetch
   async function statusCheck(response) {
     if (!response.ok) {
       throw new Error(await response.text());
