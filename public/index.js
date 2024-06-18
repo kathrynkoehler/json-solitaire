@@ -9,7 +9,7 @@
 
   window.addEventListener('load', init);
 
-  // holds extracted product information from cleaned json
+  // holds extracted product information from cleaned json files
   let allProducts = {};
   let allDetails = {};
 
