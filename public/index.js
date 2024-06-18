@@ -11,6 +11,7 @@
 
   // holds extracted product information from cleaned json
   let allProducts = {};
+  let allDetails = {};
 
   /**
    * initializes the page upon load. 
@@ -33,9 +34,11 @@
     console.log('load');
     try {
       let items = id('items');
-      let circle = id('load-circle');
+      let circle = qs('svg');
+      let circle2 = id('load-circle');
       items.innerHTML = '';
       circle.classList.remove('hidden');
+      circle2.classList.remove('hidden');
 
       await setTimeout(async () => {
         allProducts = await getData();
@@ -48,6 +51,7 @@
       }, 500);
 
       circle.classList.add('hidden');
+      circle2.classList.remove('hidden');
     } catch (err) {
       console.error('init ' + err);
     }
@@ -79,6 +83,7 @@
     // for each 'file' object in allProducts, build header separator
     let file;
     for (file in allProducts) {
+      allDetails[file] = await readDetails(file);
       let selection = qs("select").value;
       addHeader(file, selection);
 
@@ -301,13 +306,20 @@
     dropDownContainer.classList.add('content');
     dropDownContainer.classList.add('hidden');
     
-    let file = await readDetails(filename);
+    // let file = await readDetails(filename);
+    let file = allDetails[filename];
+    
 
+    // for each product in search results, check if the item we need
     let item;
     for (item in file) {
       if (item === itemId) {
+        console.log(file);
+        // for each score in item, add to item dropdown
         let score;
+        let i = 0;
         for (score in item) {
+          console.log(i++);
           // create & populate the score description + value
           const div = gen('div');
 

@@ -18,7 +18,7 @@ main {
   display: flex;
   flex-direction: column;
   top: 0;
-  /* left: 0; */
+  min-height: 290px;
   width: 320px;
   height: 100%;
   background-color: white;
@@ -85,6 +85,51 @@ input:checked {
 
 option {
   accent-color: #53535a;
+}
+
+/* loading animation for boost list */
+
+svg {
+  height: 100px;
+  width: 250px;
+  position: fixed;
+  z-index: 1;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+#load-circle {
+  z-index: 1;
+  animation: strokeSpin 1.4s ease-in-out infinite both;
+  stroke: #6b6f74;
+  fill: transparent;
+  stroke-dasharray: 150;
+  stroke-linecap: round;
+  stroke-width: 0.25rem;
+  transform-origin: 50% 50%;
+}
+
+/* @keyframes spin {
+  0% {
+    transform: rotateZ(0deg);
+  }
+  100% {
+    transform: rotateZ(360deg);
+  }
+} */
+
+@keyframes strokeSpin {
+  0%, 25% {
+    stroke-dashoffset: 140;
+    transform: rotate(0);
+  }
+  50%, 75% {
+    stroke-dashoffset: 75;
+    transform: rotate(45deg);
+  }
+  100% {
+    stroke-dashoffset: 140;
+    transform: rotate(360deg);
+  }
 }
 
 /* ---------------- Style items section ---------------- */
@@ -199,14 +244,12 @@ img {
   align-self: flex-end;
   background-color: #c8102e;
   color: white;
-  text-align: center;
   font-weight: 600;
   cursor: pointer;
   padding: 18px;
   width: 100%;
   border: 0.0625rem solid;
   border-radius: 0.25rem;
-  text-align: left;
   outline: none;
   font-size: 15px;
 }
@@ -247,6 +290,7 @@ img {
   margin: 2px;
 }
 
+/* use to hide filtered cards based on boost */
 .hide-boost {
   display: none;
 }
@@ -272,49 +316,6 @@ img {
   }
   100% {
     background-position: 1150px 0;
-  }
-}
-
-/* loading animation for boost list */
-
-#load-circle {
-  height: 800px;
-  width: 800px;
-  top: 0;
-  position: fixed;
-  color: black;
-  stroke: #6b6f74;
-  animation: strokeSpin 1.4s ease-in-out infinite;
-  fill: transparent;
-  stroke-dasharray: 150;
-  stroke-linecap: round;
-  stroke-width: 0.25rem;
-  transform-origin: 50% 50%;
-  
-}
-
-
-
-@keyframes spin {
-  0% {
-    transform: rotateZ(0deg);
-  }
-  100% {
-    transform: rotateZ(360deg);
-  }
-}
-@keyframes strokeSpin {
-  0%, 25% {
-    stroke-dashoffset: 140;
-    transform: rotate(0);
-  }
-  50%, 75% {
-    stroke-dashoffset: 75;
-    transform: rotate(45deg);
-  }
-  100% {
-    stroke-dashoffset: 140;
-    transform: rotate(360deg);
   }
 }
 
