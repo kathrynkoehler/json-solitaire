@@ -149,7 +149,7 @@ img {
   position: relative;
   flex-direction: column;
   background: white;
-  border: 1px whitesmoke solid;
+  border: 1px grey solid;
   border-radius: 5px;
   width: 330px;
   transition: .5s;
@@ -166,10 +166,6 @@ img {
   display: flex;
   flex-direction: column;
   padding: 10px;
-}
-
-.title-card {
-  border: 1px grey solid;
 }
 
 .title-card .card-search {
@@ -220,11 +216,6 @@ img {
   background-color: #a00d25;
 }
 
-/* 
-  add change so that the collapsible content is only open when the card is hovered over
-  and closes automatically when it's not
-*/
-
 /* Style the collapsible content. hidden by default */
 .content {
   overflow: hidden;
@@ -254,6 +245,77 @@ img {
   justify-self: flex-end;
   align-self: last baseline;
   margin: 2px;
+}
+
+.hide-boost {
+  display: none;
+}
+
+/* loading animation for item cards */
+.load-items {
+  width: 1150px;
+  height: 100%;
+  position: fixed;
+  z-index: 1;
+}
+
+.loading {
+  animation: shimmerTile 2s forwards infinite;
+  background-color: rgb(250, 250, 250);
+  background-image: linear-gradient(90deg, rgb(250,250,250) 0px, rgb(229,230,231) 20%, rgb(250,250,250) 40%, rgb(250, 250, 250));
+  background-repeat: no-repeat;
+}
+
+@keyframes shimmerTile {
+  0% {
+    background-position: -1150px 0;
+  }
+  100% {
+    background-position: 1150px 0;
+  }
+}
+
+/* loading animation for boost list */
+
+#load-circle {
+  height: 800px;
+  width: 800px;
+  top: 0;
+  position: fixed;
+  color: black;
+  stroke: #6b6f74;
+  animation: strokeSpin 1.4s ease-in-out infinite;
+  fill: transparent;
+  stroke-dasharray: 150;
+  stroke-linecap: round;
+  stroke-width: 0.25rem;
+  transform-origin: 50% 50%;
+  
+}
+
+
+
+@keyframes spin {
+  0% {
+    transform: rotateZ(0deg);
+  }
+  100% {
+    transform: rotateZ(360deg);
+  }
+}
+@keyframes strokeSpin {
+  0%, 25% {
+    stroke-dashoffset: 140;
+    transform: rotate(0);
+  }
+  50%, 75% {
+    stroke-dashoffset: 75;
+    transform: rotate(45deg);
+  }
+  100% {
+    stroke-dashoffset: 140;
+    transform: rotate(360deg);
+  }
 }
 
 .hidden {

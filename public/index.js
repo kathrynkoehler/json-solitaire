@@ -9,18 +9,34 @@
 
   window.addEventListener('load', init);
 
-  // directory holding all json files to parse
-  const PRODUCTS = 'public/cleaned-data/allProducts.json';
-
-  // holds extracted product details from json
+  // holds extracted product information from cleaned json
   let allProducts = {};
 
   /**
-   * initializes the page upon load. retrieves cleaned product data to build
-   * interface and handle interactivity. 
+   * initializes the page upon load. 
    */
   async function init() {
+    let refresh = id('refresh');
+    refresh.removeEventListener('click', loadPage);
+    refresh.addEventListener('click', loadPage);
     try {
+      await loadPage();
+    } catch (err) {
+      console.error('init ' + err);
+    }
+  }
+
+  /**
+   * retrieves cleaned product data to build interface and handle interactivity. 
+   */
+  async function loadPage() {
+    console.log('load');
+    try {
+      let items = id('items');
+      let circle = id('load-circle');
+      items.innerHTML = '';
+      circle.classList.remove('hidden');
+
       await setTimeout(async () => {
         allProducts = await getData();
         await buildInterface();
@@ -29,9 +45,9 @@
           hideSections();
           sidebarTitle();
         });
-        // id('include').addEventListener();
-        //offsetCards();
       }, 500);
+
+      circle.classList.add('hidden');
     } catch (err) {
       console.error('init ' + err);
     }
@@ -63,14 +79,15 @@
     // for each 'file' object in allProducts, build header separator
     let file;
     for (file in allProducts) {
-      addHeader(file);
+      let selection = qs("select").value;
+      addHeader(file, selection);
 
-      // for each product in file, grab displayname, score, and skus
+      // for each product in file, create card stack with displayname, score, skus
       let product;
       for (product in allProducts[file]) {
         addProductSection(allProducts[file][product], file);
 
-        // for each sku in product, add card to page with image, score
+        // for each sku in product, create card with image, score
         let sku;
         for (sku in allProducts[file][product]['skus']) {
           await addCard(allProducts[file][product], 
@@ -78,31 +95,40 @@
             allProducts[file][product]['skus'][sku], sku,
             file);
         }
+
+        // create the title card for the front of the stack
         addProductCard(allProducts[file][product]['skus'], 
           product, 
           allProducts[file][product],
           //allProducts[file][product]['skus'][sku],
           file);
       }
+      qs(`#${file} .loading`).classList.add('hidden');
     }
     scoreIndent();
-    hideSections();
   }
 
 /**
  * add new section for each file
  * @param {String} filename 
  */
-  function addHeader(filename) {
+  function addHeader(filename, selection) {
     let section = gen('section');
     section.id = filename;
 
-    // let heading = gen('h1');
-    // heading.textContent = filename;
-    //section.appendChild(heading);
+    let load = gen('div');
+    load.classList.add('load-items');
+    load.classList.add('loading');
+    section.appendChild(load);
 
     let parent = document.getElementById("items");
     parent.appendChild(section);
+
+    selection = selection.split(" ").join("-");
+    if (selection !== filename && selection !== 'all') {
+      load.classList.add('hidden');
+      section.classList.add('hidden');
+    }
   }
 
   /**
@@ -262,7 +288,7 @@
   }
 
   /**
-   * add the score breakdown to a card
+   * adds the score breakdown to a card. called from addCard()
    * @param {String} filename - name of the file the product was returned from.
    *                 used to cycle through correct details
    * @param {String} itemId - full SKU_ProductID of the item whose details we need
@@ -325,9 +351,6 @@
         desc[k].style.maxWidth = `${desc[k].style.maxWidth - indent}%`;
       }
     }
-
-    // add class to card for each boost? check as we go
-
   }
 
   /**
@@ -394,13 +417,11 @@
   }
 
   /**
-   * dynamically add checkboxes to sidebar to filter cards by boost
+   * dynamically add checkboxes to sidebar to filter cards by boost applied
    * @param {String} boost - the boost to be filtered on
    */
   function sidebarOption(boost) {
-    // dynamically add checkboxes to a sidebar to filter the cards
-    // by the boosts added to them
-
+    // check that boost is not already on list
     if (id(`check-${boost}`)) {
       return;
     }
@@ -429,21 +450,34 @@
     parent.appendChild(div);
   }
 
+  /**
+   * filters the displayed cards based on the boost applied to them.
+   * @param {String} boost - the boost to filter
+   */
   function filterCards(boost) {
-    let filter = qs('input[type=radio]');
-    // exclude / include based on filter
-    if (filter === "exclude") {
+    let filter = qs('input[type=radio]:checked').id;
+    if (filter === "exclude") {   // exclude only cards with the boost
       let cards = qsa(`.${boost}`);
       for (let i = 0; i < cards.length; i++) {
-        cards[i].classList.add('hidden');
+        cards[i].classList.add('hide-boost');
       }
-    } else {
-      let cards = qsa(`.product-card :not(.${boost})`);
+    } else {                     // include only cards with the boost
+      let cards = qsa(`.product-card :not(.${boost}) :not(.title-card)`);
       for (let i = 0; i < cards.length; i++) {
-        cards[i].classList.add('hidden');
+        cards[i].classList.add('hide-boost');
       }
     }
-    
+  }
+
+  /**
+   * reverts applied filter based on boost.
+   * @param {String} boost - the boost to remove the filter for
+   */
+  function unfilterCards(boost) {
+    let filter = qsa(`.${boost} .hide-boost`);
+    for (let i = 0; i < filter.length; i++) {
+      filter[i].classList.remove('hide-boost');
+    }
   }
 
   // adjust offset of cards based on position in stack
