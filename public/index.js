@@ -338,8 +338,8 @@
 
           // check which boosts are applied & add class to card for filtering
           if (descContent === "boost") {
-            card.classList.add(`boost-${valContent}-`);
-            sidebarOption(`boost-${valContent}-`);
+            card.classList.add(`boost-${valContent}`);
+            sidebarOption(`boost-${valContent}`);
           }
         }
       }
@@ -448,6 +448,8 @@
         unfilterCards(boost);
       }
     });
+
+    boost = boost.split("-").join(" ");
 
     let label = gen('label');
     label.for = input.id;
