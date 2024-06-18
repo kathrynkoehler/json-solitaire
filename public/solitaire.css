@@ -98,13 +98,16 @@ svg {
 }
 
 #load-circle {
+  width: 250px;
+  height: 100px;
+  flex-grow: 0;
   z-index: 1;
   animation: strokeSpin 1.4s ease-in-out infinite both;
   stroke: #6b6f74;
   fill: transparent;
   stroke-dasharray: 150;
   stroke-linecap: round;
-  stroke-width: 0.25rem;
+  stroke-width: 0.2rem;
   transform-origin: 50% 50%;
 }
 
@@ -261,12 +264,15 @@ img {
 
 /* Style the collapsible content. hidden by default */
 .content {
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   background-color: #fafafa;
   border: 1px whitesmoke solid;
   font-size: small;
   padding: 5px;
   display: block;
+  max-height: 590px;
+  max-width: 310px;
 }
 
 /* group the added details */
@@ -275,6 +281,7 @@ img {
   justify-content: space-between;
   width: 100%;
   margin: 2px;
+  word-break: break-all;
 }
 
 /* space out text in the details */
@@ -288,6 +295,15 @@ img {
   justify-self: flex-end;
   align-self: last baseline;
   margin: 2px;
+}
+
+/* content dropdown scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c8102e;
 }
 
 /* use to hide filtered cards based on boost */

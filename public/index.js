@@ -31,7 +31,6 @@
    * retrieves cleaned product data to build interface and handle interactivity. 
    */
   async function loadPage() {
-    console.log('load');
     try {
       let items = id('items');
       let circle = qs('svg');
@@ -41,6 +40,7 @@
       circle2.classList.remove('hidden');
 
       await setTimeout(async () => {
+        console.log('timeout');
         allProducts = await getData();
         await buildInterface();
         let select = qs('select');
@@ -48,10 +48,10 @@
           hideSections();
           sidebarTitle();
         });
-      }, 500);
 
-      circle.classList.add('hidden');
-      circle2.classList.remove('hidden');
+        circle.classList.add('hidden');
+        circle2.classList.remove('hidden');
+      }, 500);
     } catch (err) {
       console.error('init ' + err);
     }
@@ -108,7 +108,7 @@
           //allProducts[file][product]['skus'][sku],
           file);
       }
-      qs(`#${file} .loading`).classList.add('hidden');
+      qs(`#${file} > .loading`).classList.add('hidden');
     }
     scoreIndent();
   }
@@ -308,19 +308,15 @@
     
     // let file = await readDetails(filename);
     let file = allDetails[filename];
-    
 
-    // for each product in search results, check if the item we need
+    // for each product in search results, check if it's the item we need
     let item;
     for (item in file) {
       if (item === itemId) {
-        console.log(file);
+
         // for each score in item, add to item dropdown
         let score;
-        let i = 0;
-        for (score in item) {
-          console.log(i++);
-          // create & populate the score description + value
+        for (score in file[item]) {
           const div = gen('div');
 
           const description = gen('p');
@@ -360,7 +356,9 @@
       for (let k = 0; k < desc.length; k++) {
         let indent = (i-1) * 8;
         desc[k].style.marginLeft = `${indent}px`;
-        desc[k].style.maxWidth = `${desc[k].style.maxWidth - indent}%`;
+        const style = window.getComputedStyle(desc[k]);
+        const width = style.getPropertyValue("max-width");
+        desc[k].style.width = `${width - indent}%`;
       }
     }
   }
@@ -460,6 +458,9 @@
 
     const parent = id("options");
     parent.appendChild(div);
+
+    const style = window.getComputedStyle(parent);
+    qs('svg').style.height = style.getPropertyValue('height');
   }
 
   /**
