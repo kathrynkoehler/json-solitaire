@@ -284,6 +284,7 @@
       dropDownButton.classList.toggle('active');
       let content = dropDownButton.nextElementSibling;
       content.classList.toggle('hidden');
+      sidebarScores(dropDownContainer, sku + '_' + data['productId']);
     });
 
     const contents = gen('div');
@@ -470,6 +471,57 @@
   function sidebarTitle() {
     let selection = qs("select").value;
     qs("#results-desc > h1").textContent = selection;
+  }
+
+  /**
+   * add selected card's score breakdown to sidebar list.
+   * @param {Element} scorelist - the container holding the score breakdown for
+   *                  the selected card.
+   * @param {String} title - the product the scores correspond to
+   */
+  function sidebarScores(scorelist, title) {
+    let sidebar = id('scores');
+
+    let container = gen('div');
+    let heading = gen('h2');
+
+    let label = gen('span');
+    label.textContent = title;
+    let icon = scoreSvg();
+
+    heading.appendChild(label);
+    heading.appendChild(icon);
+
+    container.appendChild(heading);
+    container.appendChild(scorelist);
+
+    sidebar.appendChild(container);
+  }
+
+  // build expandable icon svg for score list on sidebar
+  function scoreSvg() {
+    let expand = gen('div');
+    let svg1 = buildSvg();
+    let svg2 = buildSvg();
+
+    expand.append(svg1, svg2);
+
+    return expand;
+  }
+
+  function buildSvg() {
+    let svg = gen('svg');
+    svg.height = "24";
+    svg.width = "24";
+    svg.viewbox = "0 0 24 24";
+    svg.classList.add('expand');
+
+    let path = gen('path');
+    path.d = "M21.39 12.75a1 1 0 0 0 1-1v-.5h-19a1 1 0 0 0-1 1v.5Z";
+    path.stroke= "currentColor";
+
+    svg.appendChild(path);
+    return svg;
   }
 
   /**

@@ -76,7 +76,7 @@ option {
 
 /* loading animation for boost list */
 
-svg {
+#options svg {
   height: 100px;
   width: 250px;
   position: fixed;
@@ -121,3 +121,23 @@ svg {
     transform: rotate(360deg);
   }
 }
+
+
+/* expand dropdowns */
+
+.expand {
+  transition: transform .4s ease-in-out;
+  height: 1rem;
+  width: 1rem;
+  position: relative;
+  stroke: red;
+}
+
+.expand:first-child {
+  transform: rotate(90deg);
+}
+
+.expand:first-child:hover {
+  transform: rotate(0deg);
+}
+
