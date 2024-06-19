@@ -32,6 +32,7 @@
    */
   async function loadPage() {
     try {
+
       // loading animations
       let items = id('items');
       let circle = qs('svg');
@@ -42,7 +43,6 @@
 
       // wait half a second to make sure data is fetched
       await setTimeout(async () => {
-        console.log('timeout');
         allProducts = await getData();
         await buildInterface();
         let select = qs('select');
@@ -273,7 +273,7 @@
     const score = gen('h2');
     score.textContent = 'Score: ' + value;
 
-    // drop down!
+    // score dropdown
     const dropDownButton = gen('button');
     dropDownButton.textContent = 'SCORE DETAILS';
     dropDownButton.classList.add('collapsible');
@@ -289,12 +289,7 @@
 
     const contents = gen('div');
     contents.classList.add('card-contents');
-    contents.appendChild(title);
-    contents.appendChild(prodId);
-    contents.appendChild(order);
-    contents.appendChild(score);
-    contents.appendChild(dropDownButton);
-    contents.appendChild(dropDownContainer);
+    contents.append(title, prodId, order, score, dropDownButton, dropDownContainer);
 
     // card.appendChild(photoDiv);
     card.appendChild(contents);
@@ -387,8 +382,6 @@
     // only allow one deck to be spread at a time. remove spacer elements
     let spread = qs('.product-container.spread');
     if (spread) {
-      console.log(spread.previousSibling);
-      console.log(spread.nextSibling);
       spread.previousSibling.remove();
       spread.nextSibling.remove();
       spread.classList.remove('spread');
@@ -397,7 +390,6 @@
     // spread the new deck
     let card = e.currentTarget;
     card.classList.add('spread');
-    console.log(card);
 
     // add row spacers above and below the spread deck so it's isolated
     let spacer1 = gen('div');
