@@ -96,11 +96,12 @@
 
         // for each sku in product, create card with image, score
         let sku;
+        let i = 1;
         for (sku in allProducts[file][product]['skus']) {
           await addCard(allProducts[file][product], 
             allProducts[file][product]['skus'][sku]['skuScore'], 
             allProducts[file][product]['skus'][sku], sku,
-            file);
+            file, i++);
         }
 
         // create the title card for the front of the stack
@@ -149,6 +150,11 @@
     section.classList.add(product['productId']);
     section.classList.add('product-container');
 
+    // when clicked on, stack will spread
+    section.addEventListener('click', (e) => {
+      spreadDeck(e);
+    });
+
     let parent = document.getElementById(`${file}`);
     parent.appendChild(section);
   }
@@ -161,6 +167,8 @@
    * @param {String} filename - file the item was returned from
    */
   function addProductCard(data, productId, displayName, skuData, filename) {
+    
+    // add product photo
     const photoDiv = gen('div');
     photoDiv.classList.add('photo');
     const photo = gen('img');
@@ -168,6 +176,7 @@
     photo.alt = data['displayName'];
     photoDiv.appendChild(photo);
 
+    // add aggregate scores from skus
     let scores = productScores(data);
     
     const search = gen('h1');
@@ -204,7 +213,7 @@
 
     const parent = document.getElementById(`${filename}`);
     const prodContainer = qs(`#${filename} .${productId}`);
-    prodContainer.appendChild(article);
+    prodContainer.prepend(article);
     parent.appendChild(prodContainer);
   }
 
@@ -232,35 +241,35 @@
   }
 
   /**
-   * build and add SKU card to page
+   * build and add SKU card to page.
    * @param {Object} data - JSON object containing data about the item
    * @param {Number} value - total score of SKU
    * @param {Array} skuData - details about the SKU, used to retrieve image
    * @param {String} sku - the SKU of the item
-   * @param {String} filename - the file the product was returned from. used to place
-   *                      the card correctly on the page
+   * @param {String} filename - the file the product was returned from. used to 
+   *                  place the card correctly on the page
    */
-  async function addCard(data, value, skuData, sku, filename) {
+  async function addCard(data, value, skuData, sku, filename, number) {
 
     // the card that we'll assemble below
     const card = gen('article');
     card.classList.add('product-card');
   
     // add photo
-    const photoDiv = gen('div');
-    photoDiv.classList.add('photo');
-    const photo = gen('img');
-    photo.src = skuData['skuImg'];
-    photo.alt = data['displayName'];
-    photoDiv.appendChild(photo);
+    // const photoDiv = gen('div');
+    // photoDiv.classList.add('photo');
+    // const photo = gen('img');
+    // photo.src = skuData['skuImg'];
+    // photo.alt = data['displayName'];
+    // photoDiv.appendChild(photo);
     
     // add title, productID, SKUID, overall score
     const title = gen('h1');
     title.textContent = data['displayName'];
     const prodId = gen('h2');
-    prodId.textContent = 'ID: ' + data['productId'];
-    const skuId = gen('h2');
-    skuId.textContent = 'SKU: ' + sku;
+    prodId.textContent = 'ID: ' + sku + '_' + data['productId'];
+    const order = gen('p');
+    order.textContent = number;
     const score = gen('h2');
     score.textContent = 'Score: ' + value;
 
@@ -281,12 +290,12 @@
     contents.classList.add('card-contents');
     contents.appendChild(title);
     contents.appendChild(prodId);
-    contents.appendChild(skuId);
+    contents.appendChild(order);
     contents.appendChild(score);
     contents.appendChild(dropDownButton);
     contents.appendChild(dropDownContainer);
 
-    card.appendChild(photoDiv);
+    // card.appendChild(photoDiv);
     card.appendChild(contents);
 
     const parent = document.getElementById(`${filename}`);
@@ -364,6 +373,40 @@
         desc[k].style.width = `${width - indent}%`;
       }
     }
+  }
+
+  /**
+   * when a deck is clicked on, spreads the associated SKU cards beneath title
+   * card out onto the page. 
+   * @param {Event} e - click event triggering function call. allows function to 
+   *                identify the clicked product title card.
+   */
+  function spreadDeck(e) {
+    // only allow one deck to be spread at a time. remove spacer elements
+    let spread = qs('.product-container.spread');
+    if (spread) {
+      console.log(spread.previousSibling);
+      console.log(spread.nextSibling);
+      spread.previousSibling.remove();
+      spread.nextSibling.remove();
+      spread.classList.remove('spread');
+    }
+
+    // spread the new deck
+    let card = e.currentTarget;
+    card.classList.add('spread');
+    console.log(card);
+
+    // add row spacers above and below the spread deck so it's isolated
+    let spacer1 = gen('div');
+    spacer1.classList.add('spread');
+    let spacer2 = gen('div');
+    spacer2.classList.add('spread');
+    card.insertAdjacentElement('beforebegin', spacer1);
+    card.insertAdjacentElement('afterend', spacer2);
+    
+    // make sure the page view follows the new element location
+    card.scrollIntoView({behavior: 'smooth', block: 'center'});
   }
 
   /**
