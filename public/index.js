@@ -32,6 +32,7 @@
    */
   async function loadPage() {
     try {
+      // loading animations
       let items = id('items');
       let circle = qs('svg');
       let circle2 = id('load-circle');
@@ -39,6 +40,7 @@
       circle.classList.remove('hidden');
       circle2.classList.remove('hidden');
 
+      // wait half a second to make sure data is fetched
       await setTimeout(async () => {
         console.log('timeout');
         allProducts = await getData();
@@ -105,7 +107,7 @@
         addProductCard(allProducts[file][product]['skus'], 
           product, 
           allProducts[file][product],
-          //allProducts[file][product]['skus'][sku],
+          allProducts[file][product]['skus'][sku],
           file);
       }
       qs(`#${file} > .loading`).classList.add('hidden');
@@ -158,13 +160,14 @@
    * @param {String} displayName - Display name of product
    * @param {String} filename - file the item was returned from
    */
-  function addProductCard(data, productId, displayName, filename) {
-    // const photoDiv = gen('div');
-    // photoDiv.classList.add('photo');
-    // const photo = gen('img');
-    // photo.src = skuData['skuImg'];
-    // photo.alt = data['displayName'];
-    // photoDiv.appendChild(photo);
+  function addProductCard(data, productId, displayName, skuData, filename) {
+    const photoDiv = gen('div');
+    photoDiv.classList.add('photo');
+    const photo = gen('img');
+    photo.src = skuData['skuImg'];
+    photo.alt = data['displayName'];
+    photoDiv.appendChild(photo);
+
     let scores = productScores(data);
     
     const search = gen('h1');
@@ -196,7 +199,7 @@
     const article = gen('article');
     article.classList.add('product-card');
     article.classList.add('title-card');
-    //article.appendChild(photoDiv);
+    article.appendChild(photoDiv);
     article.appendChild(contents);
 
     const parent = document.getElementById(`${filename}`);
