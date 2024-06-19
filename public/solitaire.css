@@ -12,18 +12,26 @@ main {
   margin-top: 1rem;
 }
 
-h1 {
+#items h1 {
   font-size: medium;
   padding: 0;
   margin-bottom: 3px;
+  margin-top: 10px;
 }
 
-h2 {
+#items h2 {
   font-size: medium;
   font-weight: 400;
-  line-height: 40%;
+  /* line-height: 40%; */
+  margin-bottom: 5px;
+  margin-top: 5px;
 }
 
+/* #items h3 {
+  font-size: medium;
+  padding: 0;
+  margin-bottom: 3px;
+} */
 
 /* ---------------- Style items section ---------------- */
 
@@ -41,7 +49,7 @@ h2 {
 
 #items {
   width: 1150px;
-  margin: 1.5rem;
+  margin: 1rem;
 }
 
 #items > section {
@@ -97,27 +105,39 @@ h2 {
 
 /* Solitaire layout transitions */  
 
-.product-container.spread {
-  width: 100%;
-  overflow-x: scroll;
+.title-card~.product-card {
+  display: none;
 }
 
-.title-card:hover:not(.spread) {
-  transform: translateY(-1rem);
-  z-index: 1;
+.spread .title-card~.product-card {
+  display: block;
 }
+
+/* .title-card:hover~.product-card {
+  margin-right: -335px;
+  transform: translateX(-300px);
+} */
 
 /* .title-card:hover~.product-card {
   transform: translateX(-130px);
   transform: translateY(0.5rem);
 } */
 
-/* hide sku cards behind title card in stack */
-.product-container:not(.spread) > .product-card:not(:first-child) {
-  margin-right: -335px;
-  transform: translateX(-300px);
+.title-card:hover:not(.spread) {
+  transform: translateY(-1rem);
+  z-index: 1;
 }
 
+/* hide sku cards behind title card in stack */
+/* .product-container:not(.spread) > .product-card:not(:first-child) {
+  margin-right: -335px;
+  transform: translateX(-300px);
+} */
+
+.product-container.spread {
+  width: 100%;
+  overflow-x: scroll;
+}
 
 /* spread product cards out from deck */
 .spread .product-card:not(:first-child) {
@@ -176,6 +196,7 @@ h2 {
   padding: 2.5%;
   border-radius: 4px;
   align-self: center;
+  font-size: medium;
 }
 
 
@@ -194,6 +215,7 @@ h2 {
   border-radius: 0.25rem;
   outline: none;
   font-size: 15px;
+  margin-top: 8px;
 }
 
 /* Add a background color to the button if it is clicked on */
@@ -211,7 +233,7 @@ h2 {
   padding: 5px;
   display: block;
   max-height: 380px;
-  max-width: 310px;
+  max-width: 330px;
 }
 
 /* group the added details */
@@ -236,6 +258,10 @@ h2 {
   margin: 2px;
 }
 
+.scoreboost {
+  background-color: rgba(200, 16, 46, 0.2);
+}
+
 /* content dropdown scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
@@ -243,6 +269,10 @@ h2 {
 
 ::-webkit-scrollbar-thumb {
   background: #c8102e;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #a00d25;
 }
 
 

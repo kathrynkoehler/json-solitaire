@@ -179,7 +179,7 @@
     // add aggregate scores from skus
     let scores = productScores(data);
     
-    const search = gen('h1');
+    const search = gen('h3');
     search.textContent = "search: " + filename.split("-").join(" ");
     search.classList.add("card-search");
     const title = gen('h1');
@@ -353,6 +353,7 @@
           if (descContent === "boost") {
             card.classList.add(`boost-${valContent}`);
             sidebarOption(`boost-${valContent}`);
+            div.classList.add('scoreboost');
           }
         }
       }
@@ -487,10 +488,11 @@
 
     let label = gen('span');
     label.textContent = title;
-    let icon = scoreSvg();
+    label.classList.add('category');
+    // let icon = scoreSvg();
 
     heading.appendChild(label);
-    heading.appendChild(icon);
+    // heading.appendChild(icon);
 
     container.appendChild(heading);
     container.appendChild(scorelist);
@@ -505,6 +507,7 @@
     let svg2 = buildSvg();
 
     expand.append(svg1, svg2);
+    expand.classList.add('expand');
 
     return expand;
   }
@@ -518,7 +521,7 @@
 
     let path = gen('path');
     path.d = "M21.39 12.75a1 1 0 0 0 1-1v-.5h-19a1 1 0 0 0-1 1v.5Z";
-    path.stroke= "currentColor";
+    // path.stroke= "currentColor";
 
     svg.appendChild(path);
     return svg;
