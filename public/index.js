@@ -82,7 +82,7 @@
     await search();
     sidebarTitle();
 
-    // for each 'file' object in allProducts, build header separator
+    // for each 'file' object in allProducts, build separate section
     let file;
     for (file in allProducts) {
       allDetails[file] = await readDetails(file);
@@ -111,6 +111,7 @@
           allProducts[file][product]['skus'][sku],
           file);
       }
+      qs(`#${file}`).appendChild(gen('div'));
       qs(`#${file} > .loading`).classList.add('hidden');
     }
     scoreIndent();
@@ -149,14 +150,20 @@
     let section = gen('section');
     section.classList.add(product['productId']);
     section.classList.add('product-container');
+    
+    // spacers that isolate the deck when spread
+    let spacer1 = gen('div');
+    let spacer2 = gen('div');
+    
+    let parent = document.getElementById(`${file}`);
+    parent.appendChild(section);
+    section.insertAdjacentElement('beforebegin', spacer1);
+    section.insertAdjacentElement('afterend', spacer2);
 
     // when clicked on, stack will spread
     section.addEventListener('click', (e) => {
       spreadDeck(e);
     });
-
-    let parent = document.getElementById(`${file}`);
-    parent.appendChild(section);
   }
 
   /**
@@ -387,9 +394,14 @@
     // only allow one deck to be spread at a time. remove spacer elements
     let spread = qs('.product-container.spread');
     if (spread) {
-      spread.previousSibling.remove();
-      spread.nextSibling.remove();
+      spread.previousSibling.classList.remove('spread');
+      spread.nextSibling.classList.remove('spread')
       spread.classList.remove('spread');
+      
+      if (spread === e.currentTarget) {
+        spread.scrollIntoView({behavior: 'smooth', block: 'center'});
+        return;
+      }
     }
 
     // spread the new deck
@@ -397,12 +409,16 @@
     card.classList.add('spread');
 
     // add row spacers above and below the spread deck so it's isolated
-    let spacer1 = gen('div');
-    spacer1.classList.add('spread');
-    let spacer2 = gen('div');
-    spacer2.classList.add('spread');
-    card.insertAdjacentElement('beforebegin', spacer1);
-    card.insertAdjacentElement('afterend', spacer2);
+    // let spacer1 = gen('div');
+    // let spacer2 = gen('div');
+    
+    // card.insertAdjacentElement('beforebegin', spacer1);
+    // card.insertAdjacentElement('afterend', spacer2);
+    // spacer1.classList.add('spread');
+    // spacer2.classList.add('spread');
+
+    card.previousSibling.classList.add('spread');
+    card.nextSibling.classList.add('spread')
     
     // make sure the page view follows the new element location
     card.scrollIntoView({behavior: 'smooth', block: 'center'});

@@ -101,13 +101,13 @@ main {
 
 /* Solitaire layout transitions */  
 
-/* hide sku cards behind title card in stack */
+/* hide sku cards behind title card in stack while not spread */
 .product-container:not(.spread) .title-card~.product-card {
   position: absolute;
   top: 24px;
   left: 24px;
-  transition: transform .3s;
-  margin-right: -50px;
+  margin: 0;
+  transition: transform .3s, position .3s; /* translate into place */
 }
 
 .product-container:not(.spread) .title-card:hover~.product-card {
@@ -120,8 +120,10 @@ main {
   z-index: 1;
 }
 
+/* change layout when deck is spread */
 .spread .title-card~.product-card {
-  display: block;
+  margin: 0;
+  /* transition: transform .3s, margin .8s; */
 }
 
 .product-container.spread {
@@ -132,6 +134,7 @@ main {
 /* spread product cards out from deck */
 .spread .product-card:not(:first-child) {
   /* margin-left: -10px; */
+  transition: transform .3s;
   margin-left: 20px;
   /* transform: translateX(400px); */
 }
@@ -148,10 +151,16 @@ main {
 }
 
 /* spacers for isolating spread decks */
+#items > section > div {
+  width: 0%;
+  height: 0rem;
+  /* transition: transform .8s ease-in-out; */
+  transition: width .3s linear, height .8s ease-in-out;
+}
+
 #items > section > div.spread {
   width: 100%;
   height: 2rem;
-  transition: transform .4s ease-in-out;
 }
 
 
@@ -167,7 +176,7 @@ main {
 .card-contents > p {
   background-color: #c8102e;
   color: white;
-  border-radius: 50%;
+  border-radius: 1.6rem;
   position: absolute;
   top: 5px;
   right: 5px;

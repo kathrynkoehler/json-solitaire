@@ -36,14 +36,14 @@
   margin: 0;
 }
 
-#refresh, select {
+#sidebar button, select {
   background-color: #fff;
   border: 0.0625rem solid #d3d5d7;
   color: black;
   font-size: 18px;
 }
 
-#refresh:hover, select:hover {
+#sidebar button:hover, select:hover {
   border: 0.0625rem solid #000;
 }
 
@@ -72,6 +72,11 @@ input:checked {
 
 option {
   accent-color: #53535a;
+}
+
+#checklist {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 /* loading animation for boost list */
