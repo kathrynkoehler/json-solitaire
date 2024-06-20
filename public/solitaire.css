@@ -97,6 +97,7 @@ main {
 
 .title-card {
   z-index: 1;
+  cursor: pointer;
 }
 
 
@@ -233,8 +234,9 @@ main {
   font-size: small;
   padding: 5px;
   display: block;
-  max-height: 380px;
+  max-height: 35rem;
   max-width: 330px;
+  color: black;
 }
 
 /* group the added details */

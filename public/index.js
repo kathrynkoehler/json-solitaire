@@ -264,6 +264,7 @@
     const prodContainer = qs(`#${filename} .${data['productId']}`);
     prodContainer.appendChild(card);
     parent.appendChild(prodContainer);
+    const productID = sku + '_' + data['productId'];
   
     // add photo
     // const photoDiv = gen('div');
@@ -277,7 +278,7 @@
     const title = gen('h1');
     title.textContent = data['displayName'];
     const prodId = gen('h2');
-    prodId.textContent = 'ID: ' + sku + '_' + data['productId'];
+    prodId.textContent = 'ID: ' + productID;
     const order = gen('p');
     order.textContent = number;
     const score = gen('h2');
@@ -288,13 +289,17 @@
     dropDownButton.textContent = 'SCORE DETAILS';
     dropDownButton.classList.add('collapsible');
     const dropDownContainer = await scoreList(filename, 
-      sku + '_' + data['productId'], card);
+      productID, card);
 
     dropDownButton.addEventListener('click', () => {
       dropDownButton.classList.toggle('active');
       let content = dropDownButton.nextElementSibling;
       content.classList.toggle('hidden');
-      sidebarScores(dropDownContainer, sku + '_' + data['productId']);
+      sidebarScores(dropDownContainer, productID);
+      let sidebarDropDown = id(`#${productID}-scorelist`);
+      if (sidebarDropDown) {
+        sidebarDropDown.classList.toggle('hidden');
+      }
     });
 
     const contents = gen('div');
@@ -320,6 +325,7 @@
     const dropDownContainer = gen('article');
     dropDownContainer.classList.add('content');
     dropDownContainer.classList.add('hidden');
+    dropDownContainer.id = itemId + '-scorelist';
     
     // let file = await readDetails(filename);
     let file = allDetails[filename];
@@ -355,7 +361,6 @@
           if (descContent === "boost") {
             card.classList.add(`boost-${valContent}`);
             const parent = card.parentElement;
-            // console.log(parent);
             // add hide-boost to entire product stack when filtered
             parent.classList.add(`boost-${valContent}`);
             sidebarOption(`boost-${valContent}`);
@@ -582,48 +587,36 @@
 
   /**
    * filters the displayed cards based on the boost applied to them.
-   * @param {String} boost - the boost to filter
    */
   function filterCards() {
     let type = qs('input[type=radio]:checked').id;
     let filters = qsa('#filter input[type=checkbox]:checked');
     
     if (type === "exclude") {   
-      console.log('exclude');
       // for each selected boost
       for (let i = 0; i < filters.length; i++) {
         let boost = (filters[i].id).split('-').slice(1).join('-');
-        console.log(boost);
         // exclude only cards with that boost
         let cards = qsa(`.${boost}`);
-        console.log(cards);
-        console.log(`.${boost}`);
         for (let i = 0; i < cards.length; i++) {
           cards[i].classList.add('hide-boost');
-          // console.log(cards[i]);
         }
       }
       
     } else {    
-      console.log('include');
-      // for each selected boost                 
+      // **** redo this with string concatenation over boost list for querying classes
+      // for each selected boost           
       for (let i = 0; i < filters.length; i++) {
         let boost = (filters[i].id).split('-').slice(1).join('-');
-        console.log(boost);
         // exclude cards WITHOUT the boost
         let cards = qsa(`.product-container:not(.${boost}`); // :not(.title-card)
-        console.log(cards);
         for (let i = 0; i < cards.length; i++) {
-          // console.log(cards[i]);
           cards[i].classList.add('hide-boost');
         }
         // and make sure cards WITH the boost are included
         cards = qsa(`.${boost}`);
-        console.log(cards);
-        console.log(`.${boost}`);
         for (let i = 0; i < cards.length; i++) {
           cards[i].classList.remove('hide-boost');
-          // console.log(cards[i]);
         }
       }
     }
