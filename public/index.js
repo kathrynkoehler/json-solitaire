@@ -159,15 +159,6 @@
     parent.appendChild(section);
     section.insertAdjacentElement('beforebegin', spacer1);
     section.insertAdjacentElement('afterend', spacer2);
-
-    // when clicked on, stack will spread
-    // section.addEventListener('click', (e) => {
-    //   console.log(e.current);
-    //   console.log(e.current.closest('.title-card'));
-    //   if ((e.current).closest('.title-card')) {
-    //     spreadDeck(e);
-    //   }
-    // });
   }
 
   /**
@@ -422,15 +413,6 @@
     section.scrollIntoView({behavior: 'smooth', block: 'center'});
   }
 
-  // function closeDeck(e) {
-  //   let spread = qs('.product-container.spread');
-  //   if (spread === e.currentTarget) {
-  //     spread.previousSibling.classList.remove('spread');
-  //     spread.nextSibling.classList.remove('spread')
-  //     spread.classList.remove('spread');
-  //   }
-  // }
-
   /**
    * builds sidebar dropdown to allow user to select which files (searches) to
    * display returned product cards for.
@@ -654,24 +636,6 @@
     let filter = qsa(`.${boost} .hide-boost`);
     for (let i = 0; i < filter.length; i++) {
       filter[i].classList.remove('hide-boost');
-    }
-  }
-
-  // adjust offset of cards based on position in stack
-  function offsetCards() {
-    let sections = qsa('body > section');
-    for (let i = 0; i < sections.length; i++) {
-      //console.log(sections[i]);
-      let products = qsa(`#${sections[i].id} > section`);
-      for (let k = 0; k < products.length; k++) {
-        let classname = products[k].classList[0];
-        let cards = qsa(`.${classname} .product-card`);
-        for (let m = 0; m < cards.length; m++) {
-          let move = m * 10;
-          cards[m].style.transform = `translateX(-${move}px)`;
-          console.log(cards[m]);
-        }
-      }
     }
   }
 
