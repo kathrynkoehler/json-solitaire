@@ -161,9 +161,13 @@
     section.insertAdjacentElement('afterend', spacer2);
 
     // when clicked on, stack will spread
-    section.addEventListener('click', (e) => {
-      spreadDeck(e);
-    });
+    // section.addEventListener('click', (e) => {
+    //   console.log(e.current);
+    //   console.log(e.current.closest('.title-card'));
+    //   if ((e.current).closest('.title-card')) {
+    //     spreadDeck(e);
+    //   }
+    // });
   }
 
   /**
@@ -221,7 +225,10 @@
     const parent = document.getElementById(`${filename}`);
     const prodContainer = qs(`#${filename} .${productId}`);
     prodContainer.prepend(article);
-    parent.appendChild(prodContainer);
+
+    article.addEventListener('click', (e) => {
+      spreadDeck(e);
+    });
   }
 
   /**
@@ -391,38 +398,38 @@
    *                identify the clicked product title card.
    */
   function spreadDeck(e) {
+    let card = e.currentTarget;
+    let section = e.currentTarget.parentElement;
+
     // only allow one deck to be spread at a time. remove spacer elements
     let spread = qs('.product-container.spread');
     if (spread) {
       spread.previousSibling.classList.remove('spread');
       spread.nextSibling.classList.remove('spread')
       spread.classList.remove('spread');
-      
-      if (spread === e.currentTarget) {
-        spread.scrollIntoView({behavior: 'smooth', block: 'center'});
+      if (spread === section) {
         return;
       }
     }
 
     // spread the new deck
-    let card = e.currentTarget;
-    card.classList.add('spread');
-
-    // add row spacers above and below the spread deck so it's isolated
-    // let spacer1 = gen('div');
-    // let spacer2 = gen('div');
     
-    // card.insertAdjacentElement('beforebegin', spacer1);
-    // card.insertAdjacentElement('afterend', spacer2);
-    // spacer1.classList.add('spread');
-    // spacer2.classList.add('spread');
-
-    card.previousSibling.classList.add('spread');
-    card.nextSibling.classList.add('spread')
+    section.classList.add('spread');
+    section.previousSibling.classList.add('spread');
+    section.nextSibling.classList.add('spread')
     
     // make sure the page view follows the new element location
-    card.scrollIntoView({behavior: 'smooth', block: 'center'});
+    section.scrollIntoView({behavior: 'smooth', block: 'center'});
   }
+
+  // function closeDeck(e) {
+  //   let spread = qs('.product-container.spread');
+  //   if (spread === e.currentTarget) {
+  //     spread.previousSibling.classList.remove('spread');
+  //     spread.nextSibling.classList.remove('spread')
+  //     spread.classList.remove('spread');
+  //   }
+  // }
 
   /**
    * builds sidebar dropdown to allow user to select which files (searches) to
