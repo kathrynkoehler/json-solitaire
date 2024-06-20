@@ -18,7 +18,6 @@
    */
   async function init() {
     let refresh = id('refresh');
-    refresh.removeEventListener('click', loadPage);
     refresh.addEventListener('click', loadPage);
     try {
       await loadPage();
@@ -53,6 +52,7 @@
 
         circle.classList.add('hidden');
         circle2.classList.remove('hidden');
+        id('filter-btn').addEventListener('click', filterCards);
       }, 500);
     } catch (err) {
       console.error('init ' + err);
@@ -254,6 +254,11 @@
     // the card that we'll assemble below
     const card = gen('article');
     card.classList.add('product-card');
+
+    const parent = document.getElementById(`${filename}`);
+    const prodContainer = qs(`#${filename} .${data['productId']}`);
+    prodContainer.appendChild(card);
+    parent.appendChild(prodContainer);
   
     // add photo
     // const photoDiv = gen('div');
@@ -294,10 +299,7 @@
     // card.appendChild(photoDiv);
     card.appendChild(contents);
 
-    const parent = document.getElementById(`${filename}`);
-    const prodContainer = qs(`#${filename} .${data['productId']}`);
-    prodContainer.appendChild(card);
-    parent.appendChild(prodContainer);
+    
   }
 
   /**
@@ -347,6 +349,9 @@
           // check which boosts are applied & add class to card for filtering
           if (descContent === "boost") {
             card.classList.add(`boost-${valContent}`);
+            const parent = card.parentElement;
+            // add hide-boost to entire product stack when filtered
+            // parent.firstElementChild.classList.add(`boost-${valContent}`);
             sidebarOption(`boost-${valContent}`);
             div.classList.add('scoreboost');
           }
@@ -545,13 +550,13 @@
     let input = gen('input');
     input.type = 'checkbox';
     input.id = `check-${boost}`;
-    input.addEventListener('change', (e) => {
-      if (e.target.checked) {
-        filterCards(boost);
-      } else {
-        unfilterCards(boost);
-      }
-    });
+    // input.addEventListener('change', (e) => {
+    //   if (e.target.checked) {
+    //     filterCards(boost);
+    //   } else {
+    //     unfilterCards(boost);
+    //   }
+    // });
 
     boost = boost.split("-").join(" ");
 
@@ -562,7 +567,7 @@
     div.appendChild(input);
     div.appendChild(label);
 
-    const parent = id("options");
+    const parent = id("checklist");
     parent.appendChild(div);
 
     const style = window.getComputedStyle(parent);
@@ -573,17 +578,47 @@
    * filters the displayed cards based on the boost applied to them.
    * @param {String} boost - the boost to filter
    */
-  function filterCards(boost) {
-    let filter = qs('input[type=radio]:checked').id;
-    if (filter === "exclude") {   // exclude only cards with the boost
-      let cards = qsa(`.${boost}`);
-      for (let i = 0; i < cards.length; i++) {
-        cards[i].classList.add('hide-boost');
+  function filterCards() {
+    let type = qs('input[type=radio]:checked').id;
+    let filters = qsa('#filter input[type=checkbox]:checked');
+    
+    if (type === "exclude") {   
+      console.log('exclude');
+      // for each selected boost
+      for (let i = 0; i < filters.length; i++) {
+        let boost = (filters[i].id).split('-').slice(1).join('-');
+        console.log(boost);
+        // exclude only cards with that boost
+        let cards = qsa(`.${boost}`);
+        console.log(cards);
+        console.log(`.${boost}`);
+        for (let i = 0; i < cards.length; i++) {
+          cards[i].classList.add('hide-boost');
+          // console.log(cards[i]);
+        }
       }
-    } else {                     // include only cards with the boost
-      let cards = qsa(`.product-card :not(.${boost}) :not(.title-card)`);
-      for (let i = 0; i < cards.length; i++) {
-        cards[i].classList.add('hide-boost');
+      
+    } else {    
+      console.log('include');
+      // for each selected boost                 
+      for (let i = 0; i < filters.length; i++) {
+        let boost = (filters[i].id).split('-').slice(1).join('-');
+        console.log(boost);
+        // exclude cards WITHOUT the boost
+        let cards = qsa(`.product-card:not(.${boost}`); // :not(.title-card)
+        console.log(cards);
+        for (let i = 0; i < cards.length; i++) {
+          // console.log(cards[i]);
+          cards[i].classList.add('hide-boost');
+        }
+        // and make sure cards WITH the boost are included
+        cards = qsa(`.${boost}`);
+        console.log(cards);
+        console.log(`.${boost}`);
+        for (let i = 0; i < cards.length; i++) {
+          cards[i].classList.remove('hide-boost');
+          // console.log(cards[i]);
+        }
       }
     }
   }

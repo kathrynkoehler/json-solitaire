@@ -307,6 +307,7 @@ main {
 /* use to hide filtered cards based on boost */
 .hide-boost {
   display: none;
+  /* background-color: blue; */
 }
 
 .hidden {
