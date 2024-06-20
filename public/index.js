@@ -481,10 +481,15 @@
     let label = gen('span');
     label.textContent = title;
     label.classList.add('category');
-    // let icon = scoreSvg();
+    let icon = scoreSvg();
 
     heading.appendChild(label);
-    // heading.appendChild(icon);
+    heading.appendChild(icon);
+    heading.addEventListener('click', () => {
+      // heading.classList.toggle('active');
+      let content = heading.nextElementSibling;
+      content.classList.toggle('hidden');
+    });
 
     container.appendChild(heading);
     container.appendChild(scorelist);
@@ -499,21 +504,27 @@
     let svg2 = buildSvg();
 
     expand.append(svg1, svg2);
-    expand.classList.add('expand');
+    expand.classList.add('expandedToggle');
+    expand.addEventListener('click', () => {
+      expand.classList.toggle('expandedToggle');
+      expand.classList.toggle('expandToggle');
+    });
 
+    console.log(expand);
     return expand;
   }
 
   function buildSvg() {
-    let svg = gen('svg');
-    svg.height = "24";
-    svg.width = "24";
-    svg.viewbox = "0 0 24 24";
-    svg.classList.add('expand');
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', "0 0 24 24");
+    svg.setAttribute('height', "24");
+    svg.setAttribute('width', "24");
+    svg.classList.add('expandIcon');
 
     let path = gen('path');
-    path.d = "M21.39 12.75a1 1 0 0 0 1-1v-.5h-19a1 1 0 0 0-1 1v.5Z";
-    // path.stroke= "currentColor";
+    path.setAttribute('d', "M21.39 12.75a1 1 0 0 0 1-1v-.5h-19a1 1 0 0 0-1 1v.5Z");
+    path.setAttribute('stroke', "red");
+    console.log(path);
 
     svg.appendChild(path);
     return svg;

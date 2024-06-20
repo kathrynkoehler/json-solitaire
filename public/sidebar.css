@@ -125,34 +125,62 @@ option {
 
 /* expand dropdowns */
 
-.expand {
+/* style minimized scorelist heading */
+.expandToggle {
+  position: relative;
+  height: 2rem;
+  width: 2rem;
+}
+
+/* by default the scorelist is expanded */
+.expandedToggle {
   transition: transform .4s ease-in-out;
   height: 2rem;
   width: 2rem;
   
   z-index: 1;
-  /* background: blue; */
-  color: black;
-  fill: blue;
-  stroke: red;
+  
 }
 
-div.expand:first-child {
+.expandToggle:first-child {
   transform: rotate(90deg);
 }
 
-div.expand:first-child:hover {
+.expandedToggle:first-child {
   transform: rotate(0deg);
 }
 
-div.expand > svg {
+/* style heading svg */
+.expandIcon {
   transition: transform .4s ease-in-out;
   position: absolute;
-  /* height: 100%;
-  width: 100%; */
+  height: 2rem;
+  width: 2rem;
+
+  
+}
+
+.expandIcon > path {
+  /* background: blue; */
+  background-color: green;
+  color: black;
+  fill: blue;
+  stroke: red;
+  stroke-width: 4px;;
+  /* d : "M21.39 12.75a1 1 0 0 0 1-1v-.5h-19a1 1 0 0 0-1 1v.5Z"; */
+}
+
+/* show that the sidebar heading for scores is clickable */
+#scores > div > h2 {
+  /* cursor: pointer; */
 }
 
 .category {
   font-weight: 600;
   font-size: medium;
+}
+
+/* minimize the dropdown content on the sidebar */
+.minimize {
+
 }

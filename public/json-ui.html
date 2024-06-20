@@ -27,6 +27,7 @@
           </svg>
           <div id="filter">
             <!-- boost values for filtering cards are populated here -->
+             
             <div>
               <label><input type="radio" id="include" name="filter" value="include"> Include</label>
               <label><input type="radio" id="exclude" name="filter" value="exclude"> Exclude</label>
@@ -35,16 +36,20 @@
         </section>
         <section id="scores">
           <!-- when a card is selected, its score breakdown populates here -->
-          <!-- <div class="expand">
-            <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="expand">
-              <path d="M21.39 12.75a1 1 0 0 0 1-1v-.5h-19a1 1 0 0 0-1 1v.5Z" stroke="currentColor">
-              </path>
-            </svg>
-            <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="expand-2kKYt">
-              <path d="M21.39 12.75a1 1 0 0 0 1-1v-.5h-19a1 1 0 0 0-1 1v.5Z" stroke="currentColor">
-              </path>
-            </svg>
-          </div> -->
+          <div>
+            <h2>
+              <span></span>
+              <div class="expandedToggle">
+                <svg height="24" width="24" viewBox="0 0 24 24" class="expandIcon">
+                  <path d="M21.39 12.75a1 1 0 0 0 1-1v-.5h-19a1 1 0 0 0-1 1v.5Z" stroke="currentColor"></path>
+                </svg>
+                <svg height="24" width="24" viewBox="0 0 24 24" class="expandIcon">
+                  <path d="M21.39 12.75a1 1 0 0 0 1-1v-.5h-19a1 1 0 0 0-1 1v.5Z" stroke="currentColor"></path>
+                </svg>
+              </div>
+            </h2>
+          </div>
+          
         </section>
       </section>
       <section id="items">
