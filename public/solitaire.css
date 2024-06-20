@@ -76,6 +76,7 @@ main {
   margin-bottom: 2rem;
   padding: 1.5rem;
   position: relative;
+  min-height: 580px;
 }
 
 /* Style each card */

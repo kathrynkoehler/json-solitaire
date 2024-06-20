@@ -491,10 +491,10 @@
     let label = gen('span');
     label.textContent = title;
     label.classList.add('category');
-    let icon = scoreSvg();
+    // let icon = scoreSvg();
 
     heading.appendChild(label);
-    heading.appendChild(icon);
+    // heading.appendChild(icon);
     heading.addEventListener('click', () => {
       // heading.classList.toggle('active');
       let content = heading.nextElementSibling;

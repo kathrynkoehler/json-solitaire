@@ -170,14 +170,13 @@ option {
   background-color: green;
   color: black;
   fill: blue;
-  stroke: red;
+  stroke: purple;
   stroke-width: 4px;;
-  /* d : "M21.39 12.75a1 1 0 0 0 1-1v-.5h-19a1 1 0 0 0-1 1v.5Z"; */
 }
 
 /* show that the sidebar heading for scores is clickable */
 #scores > div > h2 {
-  /* cursor: pointer; */
+  cursor: pointer;
 }
 
 .category {
