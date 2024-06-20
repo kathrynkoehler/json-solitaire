@@ -75,6 +75,7 @@ main {
   justify-content: flex-start;
   margin-bottom: 2rem;
   padding: 1.5rem;
+  position: relative;
 }
 
 /* Style each card */
@@ -86,53 +87,42 @@ main {
   border: 1px grey solid;
   border-radius: 5px;
   width: 330px;
-  transition: .5s;
   z-index: inherit;
   min-height: 580px;
   max-height: 580px;
   flex-shrink: 0;
-  transition: transform .4s ease-in-out;
+  transition: transform .3s ease-in-out;
 }
 
 .title-card {
   z-index: 1;
 }
 
-/* article.product-card:hover {
-  box-shadow: 4px 4px 4px rgb(255, 205, 213);
-} */
-
 
 /* Solitaire layout transitions */  
 
-.title-card~.product-card {
-  display: none;
+/* hide sku cards behind title card in stack */
+.product-container:not(.spread) .title-card~.product-card {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  transition: transform .3s;
+  margin-right: -50px;
 }
 
-.spread .title-card~.product-card {
+.product-container:not(.spread) .title-card:hover~.product-card {
   display: block;
+  transform: translate(8px, -8px);
 }
-
-/* .title-card:hover~.product-card {
-  margin-right: -335px;
-  transform: translateX(-300px);
-} */
-
-/* .title-card:hover~.product-card {
-  transform: translateX(-130px);
-  transform: translateY(0.5rem);
-} */
 
 .title-card:hover:not(.spread) {
   transform: translateY(-1rem);
   z-index: 1;
 }
 
-/* hide sku cards behind title card in stack */
-/* .product-container:not(.spread) > .product-card:not(:first-child) {
-  margin-right: -335px;
-  transform: translateX(-300px);
-} */
+.spread .title-card~.product-card {
+  display: block;
+}
 
 .product-container.spread {
   width: 100%;
@@ -165,7 +155,7 @@ main {
 }
 
 
-
+/* style card interiors */
 
 .card-contents {
   display: flex;
