@@ -355,8 +355,9 @@
           if (descContent === "boost") {
             card.classList.add(`boost-${valContent}`);
             const parent = card.parentElement;
+            // console.log(parent);
             // add hide-boost to entire product stack when filtered
-            // parent.firstElementChild.classList.add(`boost-${valContent}`);
+            parent.classList.add(`boost-${valContent}`);
             sidebarOption(`boost-${valContent}`);
             div.classList.add('scoreboost');
           }
@@ -610,7 +611,7 @@
         let boost = (filters[i].id).split('-').slice(1).join('-');
         console.log(boost);
         // exclude cards WITHOUT the boost
-        let cards = qsa(`.product-card:not(.${boost}`); // :not(.title-card)
+        let cards = qsa(`.product-container:not(.${boost}`); // :not(.title-card)
         console.log(cards);
         for (let i = 0; i < cards.length; i++) {
           // console.log(cards[i]);
