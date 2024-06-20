@@ -1,3 +1,7 @@
+/**
+ * backend file to support file reading / writing for JSON solitaire interface.
+ */
+
 "use strict";
 
 const express = require("express");
@@ -117,7 +121,6 @@ async function readFile(filename) {
     console.err('readfile failed ' + err);
   }
 }
-
 
 // tells the code to serve static files in a directory called 'public'
 app.use(express.static('public'));
