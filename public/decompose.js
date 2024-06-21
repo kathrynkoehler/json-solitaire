@@ -99,19 +99,22 @@
       value = skus[item].value;
 
       // check if product id already has an object
-      let object = setData(data, prodId);
+      let object = setData(data, prodId, skuId);
+      // console.log(skuId);
 
       if (!allProducts[filename][prodId]) {
         allProducts[filename][prodId] = {
           'productId': prodId,
           'displayName' : object[0],
-          'score': [],
+          'size': object[1],    // when image removed, change to [1]
           'skus': {}
         }
       }
       allProducts[filename][prodId]['skus'][skuId] = {
         'skuScore': value, 
-        'skuImg': object[1]
+        'skuImg': object[2],
+        'color': object[4],
+        'price': object[3]
       };
       
       // extract details for every sku_prodid item
@@ -128,12 +131,37 @@
    * @param {String} productId - the product whose image and name we are retrieving
    * @returns array of displayname + image for each product
    */
-  function setData(data, productId) {
+  function setData(data, productId, skuId) {
     let docs = data["response"]["docs"];
     let item;
+
+    // for each product, find details list
     for (item in docs) {
+      console.log(docs[item]["product_id"]);
+      console.log(productId);
       if (docs[item]["product_id"] === productId) {
-        let array = [docs[item]["product_displayName"], docs[item]["sku_skuImages"][0]];
+        let array = [docs[item]["product_displayName"],   // object[0]
+            docs[item]["sku_size"]];                      // object[1]
+
+        let skuslist = docs[item]["style_order_list"];
+
+        for (let i = 0; i < skuslist.length; i++) {
+          console.log(i);
+
+          if (skuslist[i]["sku_id"] === skuId) {
+            console.log(skuslist[i]);
+
+            let colors = [skuslist[i]["sku_colorGroup"], 
+              skuslist[i]["sku_colorCodeDesc"]];
+
+            array.push(
+              skuslist[i]["sku_skuImages"][0],    // object[2]
+              skuslist[i]["list_price"],          // object[3]
+              colors                              // object[4]
+            );
+          }
+        }
+
         return array;
       }
     }

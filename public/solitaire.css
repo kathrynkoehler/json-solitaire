@@ -43,7 +43,7 @@ main {
 }
 
 .photo {
-  height: 375px;
+  height: 400px;
   overflow: hidden;
 }
 
@@ -172,7 +172,7 @@ main {
   display: flex;
   flex-direction: column;
   padding: 10px;
-  margin-top: 1rem;
+  margin-top: 0.7rem;
 }
 
 .card-contents > p {

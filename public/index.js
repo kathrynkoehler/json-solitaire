@@ -13,6 +13,10 @@
   let allProducts = {};
   let allDetails = {};
 
+  const GLOBAL_BOOSTS = {
+    'boost-1000': "What's New"
+  };
+
   /**
    * initializes the page upon load. 
    */
@@ -43,6 +47,7 @@
       // wait half a second to make sure data is fetched
       await setTimeout(async () => {
         allProducts = await getData();
+        console.log(allProducts);
         await buildInterface();
         let select = qs('select');
         select.addEventListener('change', () => {
@@ -98,10 +103,14 @@
         let sku;
         let i = 1;
         for (sku in allProducts[file][product]['skus']) {
+          // console.log(allProducts[file][product]['productId']);
+          // console.log(allProducts[file][product]['skus'][sku]);
           await addCard(allProducts[file][product], 
             allProducts[file][product]['skus'][sku]['skuScore'], 
-            allProducts[file][product]['skus'][sku], sku,
-            file, i++);
+            allProducts[file][product]['skus'][sku],
+            sku,
+            file, 
+            i++);
         }
 
         // create the title card for the front of the stack
@@ -171,12 +180,12 @@
   function addProductCard(data, productId, displayName, skuData, filename) {
     
     // add product photo
-    const photoDiv = gen('div');
-    photoDiv.classList.add('photo');
-    const photo = gen('img');
-    photo.src = skuData['skuImg'];
-    photo.alt = data['displayName'];
-    photoDiv.appendChild(photo);
+    // const photoDiv = gen('div');
+    // photoDiv.classList.add('photo');
+    // const photo = gen('img');
+    // photo.src = skuData['skuImg'];
+    // photo.alt = data['displayName'];
+    // photoDiv.appendChild(photo);
 
     // add aggregate scores from skus
     let scores = productScores(data);
@@ -210,7 +219,7 @@
     const article = gen('article');
     article.classList.add('product-card');
     article.classList.add('title-card');
-    article.appendChild(photoDiv);
+    // article.appendChild(photoDiv);
     article.appendChild(contents);
 
     const parent = document.getElementById(`${filename}`);
@@ -249,8 +258,8 @@
    * build and add SKU card to page.
    * @param {Object} data - JSON object containing data about the item
    * @param {Number} value - total score of SKU
-   * @param {Array} skuData - details about the SKU, used to retrieve image
-   * @param {String} sku - the SKU of the item
+   * @param {Array} skuData - details object for SKU, used to retrieve image
+   * @param {String} sku - the SKUId of the item
    * @param {String} filename - the file the product was returned from. used to 
    *                  place the card correctly on the page
    */
@@ -263,16 +272,19 @@
     const parent = document.getElementById(`${filename}`);
     const prodContainer = qs(`#${filename} .${data['productId']}`);
     prodContainer.appendChild(card);
-    parent.appendChild(prodContainer);
+    // parent.appendChild(prodContainer);
     const productID = sku + '_' + data['productId'];
   
     // add photo
-    // const photoDiv = gen('div');
-    // photoDiv.classList.add('photo');
-    // const photo = gen('img');
-    // photo.src = skuData['skuImg'];
-    // photo.alt = data['displayName'];
-    // photoDiv.appendChild(photo);
+    // console.log(data);
+    const photoDiv = gen('div');
+    photoDiv.classList.add('photo');
+    const photo = gen('img');
+    photo.src = skuData['skuImg'];
+    // console.log(skuData);
+    photo.alt = data['displayName'];
+    photoDiv.appendChild(photo);
+    // console.log(photoDiv);
     
     // add title, productID, SKUID, overall score
     const title = gen('h1');
@@ -306,7 +318,7 @@
     contents.classList.add('card-contents');
     contents.append(title, prodId, order, score, dropDownButton, dropDownContainer);
 
-    // card.appendChild(photoDiv);
+    card.appendChild(photoDiv);
     card.appendChild(contents);
 
     
