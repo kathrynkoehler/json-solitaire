@@ -56,7 +56,7 @@ main {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: left;
+  justify-content: space-between;
   align-items: top;
   box-sizing: border-box;
   /* row-gap: 2vh; */
@@ -74,7 +74,7 @@ main {
   flex-direction: row;
   justify-content: flex-start;
   margin-bottom: 2rem;
-  padding: 1.5rem;
+  padding: 1rem;
   position: relative;
   min-height: 580px;
 }
@@ -188,9 +188,10 @@ main {
   max-width: 50%;
   width: fit-content;
   text-align: center;
+  /* z-index: 1; */
 }
 
-.title-card .card-search {
+#items .title-card .card-search {
   color: white;
   background: #c8102e;
   width: 95%;

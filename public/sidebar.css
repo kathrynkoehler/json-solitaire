@@ -79,6 +79,55 @@ option {
   margin-bottom: 1rem;
 }
 
+
+/* search bar */
+#choose-files > div {
+  height: 3rem;
+  width: 100%;
+  position: relative;
+  /* font-size: 16px; */
+  
+}
+
+#searchbar {
+  border-radius: .25rem;
+  color: #53565a;
+  padding: 0 2rem 0 2.5rem;
+  border: 1.5px solid #000;
+  height: 3rem;
+  width: 100%;
+  line-height: 1.2;
+  font-size: 16px;
+}
+
+#icon_search {
+  position: absolute;
+  box-sizing: border-box;
+  top: 1rem;
+  left: 0.75rem;
+}
+
+#icon_search > path {
+  box-sizing: border-box;
+  /* position: absolute; */
+  /* top: 1.125rem; */
+  left: 0.75rem;
+}
+
+#searchbar::-webkit-search-cancel-button {
+  /* color: black; */
+  -webkit-appearance: none;
+  
+  height: 16px;
+  width: 16px;
+  background: url('.public/img/plus.png');
+}
+
+#searchbar::-webkit-search-cancel-button::before, 
+#searchbar::-webkit-search-cancel-button::after {
+  transform: rotate(45deg);
+}
+
 /* loading animation for boost list */
 
 #options svg {
@@ -133,36 +182,36 @@ option {
 /* style minimized scorelist heading */
 .expandToggle {
   position: relative;
-  height: 2rem;
-  width: 2rem;
+  margin: 0;
+  height: 1rem;
+  width: 1rem;
+  transition: transform .4s ease-in-out;
 }
 
 /* by default the scorelist is expanded */
 .expandedToggle {
   transition: transform .4s ease-in-out;
-  height: 2rem;
-  width: 2rem;
-  
+  height: 1rem;
+  width: 1rem;
   z-index: 1;
-  
 }
 
 .expandToggle:first-child {
   transform: rotate(90deg);
+  transition: transform .4s ease-in-out;
 }
 
 .expandedToggle:first-child {
   transform: rotate(0deg);
+  transition: transform .4s ease-in-out;
 }
 
 /* style heading svg */
 .expandIcon {
   transition: transform .4s ease-in-out;
   position: absolute;
-  height: 2rem;
-  width: 2rem;
-
-  
+  height: 1rem;
+  width: 1rem;
 }
 
 .expandIcon > path {
@@ -171,7 +220,7 @@ option {
   color: black;
   fill: blue;
   stroke: purple;
-  stroke-width: 4px;;
+  stroke-width: 4px;
 }
 
 /* show that the sidebar heading for scores is clickable */
@@ -182,9 +231,6 @@ option {
 .category {
   font-weight: 600;
   font-size: medium;
+  position: relative;
 }
 
-/* minimize the dropdown content on the sidebar */
-.minimize {
-
-}

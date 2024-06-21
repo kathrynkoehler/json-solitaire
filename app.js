@@ -1,5 +1,5 @@
 /**
- * backend file to support file reading / writing for JSON solitaire interface.
+ * backend to support file reading / writing for JSON solitaire interface.
  */
 
 "use strict";

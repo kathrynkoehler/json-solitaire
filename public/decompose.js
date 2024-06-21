@@ -8,6 +8,8 @@
 
 (function () {
 
+  const QUERY_URL = 'https://lululemon.c.lucidworks.cloud/api/apps/LLM_us/query/LLM_us?q=';
+
   // holds extracted details from json
   let allDetails = {};
   let allProducts = {};
@@ -20,8 +22,34 @@
    * of decomposing it.
    */
   function init() {
+    // this will be deleted when search is functional
     document.getElementById("refresh");
     refresh.addEventListener("click", getData);
+
+    id('search-form').addEventListener('submit', (e) => {
+      e.preventDefault;     // possibly remove, might want page reload?
+      queryData(e);
+    });
+  }
+
+  /**
+   * queries data directly from api.
+   */
+  async function queryData(e) {
+    e.preventDefault();
+    try {
+      // get the search, query api
+      let search = id('searchbar').value;
+      search = search.split(' ').join('%20');
+      let res = await fetch(QUERY_URL + search);
+      await statusCheck(res);
+      res = res.json();   // this is our new "dirty" data to parse
+
+      // parse to "clean" file
+        // rewrite grabOneJson, eliding initial fetch to file
+    } catch (err) {
+      console.error('queryData: ' + err);
+    }
   }
 
   /**
@@ -139,7 +167,7 @@
     for (item in docs) {
       console.log(docs[item]["product_id"]);
       console.log(productId);
-      if (docs[item]["product_id"] === productId) {
+      if (docs[item]["product_id"] === productId ) { //&& docs[item]["sku_id"] === skuId
         let array = [docs[item]["product_displayName"],   // object[0]
             docs[item]["sku_size"]];                      // object[1]
 
@@ -147,7 +175,8 @@
 
         for (let i = 0; i < skuslist.length; i++) {
           console.log(i);
-
+          console.log(skuslist[i]["sku_id"]);
+          console.log(skuId);
           if (skuslist[i]["sku_id"] === skuId) {
             console.log(skuslist[i]);
 
@@ -159,6 +188,7 @@
               skuslist[i]["list_price"],          // object[3]
               colors                              // object[4]
             );
+            return array;
           }
         }
 

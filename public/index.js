@@ -14,15 +14,18 @@
   let allDetails = {};
 
   const GLOBAL_BOOSTS = {
-    'boost-1000': "What's New"
+    'boost-1000': "What's New",
+    'boost-502': 'Category: women',
+    'boost-1000000': 'Category: 2/women/pants/leggings',
+    'boost-10': 'Collection: align',    // boosted specific products or collections (DisplayName: belt, bag)
+    'boost-5': 'Synonym: Category Name: leg, tight' // and sku_colorCodeDesc: sonic, pink
   };
 
   /**
    * initializes the page upon load. 
    */
   async function init() {
-    let refresh = id('refresh');
-    refresh.addEventListener('click', loadPage);
+    id('refresh').addEventListener('click', loadPage);
     try {
       await loadPage();
     } catch (err) {
@@ -38,7 +41,7 @@
 
       // loading animations
       let items = id('items');
-      let circle = qs('svg');
+      let circle = qs('#options svg');
       let circle2 = id('load-circle');
       items.innerHTML = '';
       circle.classList.remove('hidden');
@@ -58,6 +61,7 @@
         circle.classList.add('hidden');
         circle2.classList.remove('hidden');
         id('filter-btn').addEventListener('click', filterCards);
+        id('unfilter-btn').addEventListener('click', unfilterCards);
       }, 500);
     } catch (err) {
       console.error('init ' + err);
@@ -190,11 +194,11 @@
     // add aggregate scores from skus
     let scores = productScores(data);
     
-    const search = gen('h3');
-    search.textContent = "search: " + filename.split("-").join(" ");
+    const search = gen('h1');
+    search.textContent = displayName['displayName'];
     search.classList.add("card-search");
-    const title = gen('h1');
-    title.textContent = displayName['displayName'];
+    // const title = gen('h1');
+    // title.textContent = displayName['displayName'];
     const prodId = gen('h2');
     prodId.textContent = 'ID: ' + productId;
     const average = gen('h2');
@@ -209,7 +213,7 @@
     const contents = gen('div');
     contents.classList.add('card-contents');
     contents.appendChild(search);
-    contents.appendChild(title);
+    // contents.appendChild(title);
     contents.appendChild(prodId);
     contents.appendChild(average);
     contents.appendChild(max);
@@ -269,7 +273,7 @@
     const card = gen('article');
     card.classList.add('product-card');
 
-    const parent = document.getElementById(`${filename}`);
+    // const parent = document.getElementById(`${filename}`);
     const prodContainer = qs(`#${filename} .${data['productId']}`);
     prodContainer.appendChild(card);
     // parent.appendChild(prodContainer);
@@ -371,11 +375,16 @@
 
           // check which boosts are applied & add class to card for filtering
           if (descContent === "boost") {
-            card.classList.add(`boost-${valContent}`);
+            let context = (div.previousElementSibling).previousElementSibling;
+            // console.log(context);
+            let name = context.childNodes[0].textContent;
+            name = (name.split(' ')[0]).split(':')[1];
+            // console.log(name);
+            card.classList.add(`${name}-boost-${valContent}`);
             const parent = card.parentElement;
             // add hide-boost to entire product stack when filtered
-            parent.classList.add(`boost-${valContent}`);
-            sidebarOption(`boost-${valContent}`);
+            parent.classList.add(`${name}-boost-${valContent}`);
+            sidebarOption(`${name}-boost-${valContent}`);
             div.classList.add('scoreboost');
           }
         }
@@ -442,6 +451,7 @@
       let data = await res.json();
 
       let parent = qs("select");
+      parent.innerHTML = '';
       
       for (let i = 0; i < data.length; i++) {
         let name = data[i].split(".")[0];
@@ -528,8 +538,12 @@
   // build expandable icon svg for score list on sidebar
   function scoreSvg() {
     let expand = gen('div');
-    let svg1 = buildSvg();
-    let svg2 = buildSvg();
+    let svg1 = gen('img');
+    let svg2 = gen('img');
+    svg1.src = './img/minus.png';
+    svg2.src = './img/minus.png';
+    svg1.classList.add('expandIcon');
+    svg2.classList.add('expandIcon');
 
     expand.append(svg1, svg2);
     expand.classList.add('expandedToggle');
@@ -538,7 +552,7 @@
       expand.classList.toggle('expandToggle');
     });
 
-    console.log(expand);
+    // console.log(expand);
     return expand;
   }
 
@@ -594,7 +608,7 @@
     parent.appendChild(div);
 
     const style = window.getComputedStyle(parent);
-    qs('svg').style.height = style.getPropertyValue('height');
+    qs('#options svg').style.height = style.getPropertyValue('height');
   }
 
   /**
@@ -616,7 +630,6 @@
       }
       
     } else {    
-      // **** redo this with string concatenation over boost list for querying classes
       // for each selected boost           
       for (let i = 0; i < filters.length; i++) {
         let boost = (filters[i].id).split('-').slice(1).join('-');
@@ -635,11 +648,18 @@
   }
 
   /**
-   * reverts applied filter based on boost.
-   * @param {String} boost - the boost to remove the filter for
+   * clears all applied filters.
    */
-  function unfilterCards(boost) {
-    let filter = qsa(`.${boost} .hide-boost`);
+  function unfilterCards() {
+    let type = qs('input[type=radio]:checked');
+    type.checked = false;
+
+    let filters = qsa('#filter input[type=checkbox]:checked');
+    for (let i = 0; i < filters.length; i++) {
+      filters[i].checked = false;
+    }
+
+    let filter = qsa(`.hide-boost`);
     for (let i = 0; i < filter.length; i++) {
       filter[i].classList.remove('hide-boost');
     }
