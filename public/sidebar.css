@@ -86,7 +86,7 @@ option {
   width: 100%;
   position: relative;
   /* font-size: 16px; */
-  
+  margin-top: 16px;
 }
 
 #searchbar {

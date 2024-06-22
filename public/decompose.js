@@ -271,4 +271,8 @@
     return response;
   }
 
+  function id(idName) {
+    return document.getElementById(idName);
+  }
+
 })();

@@ -190,6 +190,7 @@
     // photo.src = skuData['skuImg'];
     // photo.alt = data['displayName'];
     // photoDiv.appendChild(photo);
+    // console.log(data[0]);
 
     // add aggregate scores from skus
     let scores = productScores(data);
@@ -587,15 +588,10 @@
     let input = gen('input');
     input.type = 'checkbox';
     input.id = `check-${boost}`;
-    // input.addEventListener('change', (e) => {
-    //   if (e.target.checked) {
-    //     filterCards(boost);
-    //   } else {
-    //     unfilterCards(boost);
-    //   }
-    // });
 
-    boost = boost.split("-").join(" ");
+    boost = boost.split("-");
+    boost[0] = boost[0] + ':';
+    boost = boost.join(" ");
 
     let label = gen('label');
     label.for = input.id;
