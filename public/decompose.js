@@ -27,7 +27,7 @@
     let refresh = document.getElementById("refresh");
     refresh.addEventListener("click", getData);
 
-    let cookieId = 'id=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJwY3VycmFuIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6WyJvcGVuaWQiLCJlbWFpbCIsInByb2ZpbGUiXSwiaXNzIjoiaHR0cDpcL1wvcHJveHk6Njc2NFwvb2F1dGgyXC9kZWZhdWx0IiwicmVhbG0iOiJuYXRpdmUiLCJleHAiOjE3MTkyNDk0OTAsImlhdCI6MTcxOTI0NzY5MCwidXNlcklkIjoiY2IwZTA2OTAtMjM1Ny00M2Y3LTkzNzUtOGMwMzM2OWMxNzA4IiwicGVybWlzc2lvbnNfdnMiOjg1OTY2NTYxMDcsImF1dGhvcml0aWVzIjpbInJlYWRvbmx5Il19.B0WBLQskHo2iPgWXGnW1XqMJ0zJJz8KVByurRPmEXkVqYUtk1dGFByg_AB1xB3hNy4maOuN4kgzcW_btMTJdxNLbIk7B_mN9ZfcjjWJwubzkGG_Sr9LBL6dDhys2pxVR9JABxlYxEBJu1-1JAOf5O0WYF_JvdPHjEVnmTaiMxIwPYw5XFDB_n3xyG_jrU31YcbDImTfbbwEeJjGOFPJWTCV4o0b8BXnhV3xeTATFD1KgBOuLZ-BbT-_Ub52YVY-v23QPKdM3fJStCTkDqKKzKrge1RsPe8VojhAEBKDeTLU8A7ta97-LQD7Z_4kMoTxDNWtlTkYh71IMjkbbFlh2mg';
+    let cookieId = 'id=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJwY3VycmFuIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6WyJvcGVuaWQiLCJlbWFpbCIsInByb2ZpbGUiXSwiaXNzIjoiaHR0cDpcL1wvcHJveHk6Njc2NFwvb2F1dGgyXC9kZWZhdWx0IiwicmVhbG0iOiJuYXRpdmUiLCJleHAiOjE3MTkyNTMwNDcsImlhdCI6MTcxOTI1MTI0NywidXNlcklkIjoiY2IwZTA2OTAtMjM1Ny00M2Y3LTkzNzUtOGMwMzM2OWMxNzA4IiwicGVybWlzc2lvbnNfdnMiOjg1OTY2NTYxMDcsImF1dGhvcml0aWVzIjpbInJlYWRvbmx5Il19.XXpkJSbdA53gHU7yL-XCLJ0unp81chGNZum2lWCMKgXdaYDijrGvZrvfhwt2Oq5H9TZn4f91RFkFRWX6Sljq3RzSOFyeZK-tKpT6u49RzyoGkKOiqiL6GvU58lESF68tGhS9AmLfVPqIisqPU-KeQf2_asO_AfJs0CnJEyBS0URv7f_FjHcK3GPrmj_CCs33ktBQYk3P5jIitPES3GOYyD9wxLmcLkdRF8Q2YvBgAoCncNZHyatrDJFya5dxEOYk9SjPtkHfPRqHfY54b4nsxdJr0rnEizPItBINstuZGVJDPt8NSd8oT4VJqYBb1uiv-25I1DAwqiXbER-irEzAzA';
     document.cookie = cookieId;
 
 
@@ -139,24 +139,25 @@
       // check if product id already has an object
       let array = setData(data, prodId, skuId);
 
-      if (!array) {
-        console.log("no array");
-      }
+      // if (!array) {
+      //   console.log("no array");
+      // }
 
-      console.log(typeof(array));
-      // console.log(skuId);
-      let displayName = array[0];
-      let size = array[1];
-      let img = array[2];
-      let price = array[3];
-      let skuimg = array[4];
-      console.log(displayName, size, img, price);
+      // console.log(typeof(array));
+      // // console.log(skuId);
+      // let displayName = array[0];
+      // let size = array[1];
+      // let img = array[2];
+      // let price = array[3];
+      // let skuimg = array[4];
+      // console.log(displayName, size, img, skuimg, price);
 
       if (!allProducts[filename][prodId]) {
         allProducts[filename][prodId] = {
           'productId': prodId,
           'displayName' : array[0],
           'size': array[1],    // when image removed, change to [1]
+          // 'prodImg': img,
           'skus': {}
         }
       }
@@ -190,10 +191,10 @@
     for (item in docs) {
       // console.log(docs[item]["product_id"]);
       // console.log(productId);
-      if (docs[item]["product_id"] === productId && docs[item]["sku_id"] === skuId) { //
+      if (docs[item]["product_id"] === productId) { //&& docs[item]["sku_id"] === skuId
         let array = [docs[item]["product_displayName"],   // object[0]
             docs[item]["sku_size"],                       // object[1]
-            docs[item]["sku_skuImages"][0],               // object[2] (prod img)
+            // docs[item]["sku_skuImages"][0],               // object[2] (prod img)
             // docs[item]["list_price"]
           ];                    // object[3]
 
@@ -210,8 +211,8 @@
               skuslist[i]["sku_colorCodeDesc"]];
 
             array.push(
-              skuslist[i]["list_price"],          // object[3]
-              skuslist[i]["sku_skuImages"][0],    // object[4]
+              skuslist[i]["sku_skuImages"][0],    // object[3]
+              skuslist[i]["list_price"],          // object[4]
               colors                              // object[5]
             );
             return array;

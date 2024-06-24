@@ -1,0 +1,27 @@
+/* default sizing is for a screen larger than ~1650x1084 (xlarge devices). */
+
+/* large devices (desktops, laptops, 992px+) */
+@media only screen and (min-width: 1650px) {
+  main {
+    width: 100%; /* something less than 1580px*/
+    margin: none;
+  }
+}
+
+/* medium devices (tablets, 768px+) */
+@media only screen and (min-width: 768px) {
+  main {
+    width: 100%; /* something less than 1580px*/
+    margin: none;
+  }
+}
+
+/* small devices (406px+) */
+@media only screen and (min-width: 400px) {
+  main {
+    width: 100%; /* something less than 1580px*/
+    margin: none;
+  }
+
+  
+}

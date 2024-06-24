@@ -88,47 +88,53 @@
    * adds all cards to page, separated by search file. 
    */
   async function buildInterface() {
-    // create search dropdown
-    await search();
-    sidebarTitle();
+    try {
 
-    // for each 'file' object in allProducts, build separate section
-    let file;
-    for (file in allProducts) {
-      allDetails[file] = await readDetails(file);
-      let selection = qs("select").value;
-      addHeader(file, selection);
+    
+      // create search dropdown
+      await search();
+      sidebarTitle();
 
-      // for each product in file, create card stack with displayname, score, skus
-      let product;
-      for (product in allProducts[file]) {
-        addProductSection(allProducts[file][product], file);
+      // for each 'file' object in allProducts, build separate section
+      let file;
+      for (file in allProducts) {
+        allDetails[file] = await readDetails(file);
+        let selection = qs("select").value;
+        addHeader(file, selection);
 
-        // for each sku in product, create card with image, score
-        let sku;
-        let i = 1;
-        for (sku in allProducts[file][product]['skus']) {
-          // console.log(allProducts[file][product]['productId']);
-          // console.log(allProducts[file][product]['skus'][sku]);
-          await addCard(allProducts[file][product], 
-            allProducts[file][product]['skus'][sku]['skuScore'], 
+        // for each product in file, create card stack with displayname, score, skus
+        let product;
+        for (product in allProducts[file]) {
+          addProductSection(allProducts[file][product], file);
+
+          // for each sku in product, create card with image, score
+          let sku;
+          let i = 1;
+          for (sku in allProducts[file][product]['skus']) {
+            // console.log(allProducts[file][product]['productId']);
+            // console.log(allProducts[file][product]['skus'][sku]);
+            await addCard(allProducts[file][product], 
+              allProducts[file][product]['skus'][sku]['skuScore'], 
+              allProducts[file][product]['skus'][sku],
+              sku,
+              file, 
+              i++);
+          }
+
+          // create the title card for the front of the stack
+          addProductCard(allProducts[file][product]['skus'], 
+            product, 
+            allProducts[file][product],
             allProducts[file][product]['skus'][sku],
-            sku,
-            file, 
-            i++);
+            file);
         }
-
-        // create the title card for the front of the stack
-        addProductCard(allProducts[file][product]['skus'], 
-          product, 
-          allProducts[file][product],
-          allProducts[file][product]['skus'][sku],
-          file);
+        qs(`#${file}`).appendChild(gen('div'));
+        qs(`#${file} > .loading`).classList.add('hidden');
       }
-      qs(`#${file}`).appendChild(gen('div'));
-      qs(`#${file} > .loading`).classList.add('hidden');
+      scoreIndent();
+    } catch (err) {
+      console.error(err);
     }
-    scoreIndent();
   }
 
 /**
