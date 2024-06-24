@@ -9,6 +9,7 @@
 (function () {
 
   const QUERY_URL = 'https://lululemon.c.lucidworks.cloud/api/apps/LLM_us/query/LLM_us?q=';
+  const DEBUG_URL = '&debug=results&debug.explain.structured=true';
 
   // holds extracted details from json
   let allDetails = {};
@@ -23,8 +24,12 @@
    */
   function init() {
     // this will be deleted when search is functional
-    document.getElementById("refresh");
+    let refresh = document.getElementById("refresh");
     refresh.addEventListener("click", getData);
+
+    let cookieId = 'id=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJwY3VycmFuIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6WyJvcGVuaWQiLCJlbWFpbCIsInByb2ZpbGUiXSwiaXNzIjoiaHR0cDpcL1wvcHJveHk6Njc2NFwvb2F1dGgyXC9kZWZhdWx0IiwicmVhbG0iOiJuYXRpdmUiLCJleHAiOjE3MTkyNDk0OTAsImlhdCI6MTcxOTI0NzY5MCwidXNlcklkIjoiY2IwZTA2OTAtMjM1Ny00M2Y3LTkzNzUtOGMwMzM2OWMxNzA4IiwicGVybWlzc2lvbnNfdnMiOjg1OTY2NTYxMDcsImF1dGhvcml0aWVzIjpbInJlYWRvbmx5Il19.B0WBLQskHo2iPgWXGnW1XqMJ0zJJz8KVByurRPmEXkVqYUtk1dGFByg_AB1xB3hNy4maOuN4kgzcW_btMTJdxNLbIk7B_mN9ZfcjjWJwubzkGG_Sr9LBL6dDhys2pxVR9JABxlYxEBJu1-1JAOf5O0WYF_JvdPHjEVnmTaiMxIwPYw5XFDB_n3xyG_jrU31YcbDImTfbbwEeJjGOFPJWTCV4o0b8BXnhV3xeTATFD1KgBOuLZ-BbT-_Ub52YVY-v23QPKdM3fJStCTkDqKKzKrge1RsPe8VojhAEBKDeTLU8A7ta97-LQD7Z_4kMoTxDNWtlTkYh71IMjkbbFlh2mg';
+    document.cookie = cookieId;
+
 
     id('search-form').addEventListener('submit', (e) => {
       e.preventDefault;     // possibly remove, might want page reload?
@@ -41,9 +46,14 @@
       // get the search, query api
       let search = id('searchbar').value;
       search = search.split(' ').join('%20');
-      let res = await fetch(QUERY_URL + search);
+      let res = await fetch(QUERY_URL + search + DEBUG_URL, {
+        'authority': 'lululemon-dev.c.lucidworks.cloud',
+        'method': 'GET',
+        'credentials': 'include',
+      });
       await statusCheck(res);
       res = res.json();   // this is our new "dirty" data to parse
+      console.log(res);
 
       // parse to "clean" file
         // rewrite grabOneJson, eliding initial fetch to file
@@ -127,22 +137,35 @@
       value = skus[item].value;
 
       // check if product id already has an object
-      let object = setData(data, prodId, skuId);
+      let array = setData(data, prodId, skuId);
+
+      if (!array) {
+        console.log("no array");
+      }
+
+      console.log(typeof(array));
       // console.log(skuId);
+      let displayName = array[0];
+      let size = array[1];
+      let img = array[2];
+      let price = array[3];
+      let skuimg = array[4];
+      console.log(displayName, size, img, price);
 
       if (!allProducts[filename][prodId]) {
         allProducts[filename][prodId] = {
           'productId': prodId,
-          'displayName' : object[0],
-          'size': object[1],    // when image removed, change to [1]
+          'displayName' : array[0],
+          'size': array[1],    // when image removed, change to [1]
           'skus': {}
         }
       }
+      // console.log((array[2]).toString());
       allProducts[filename][prodId]['skus'][skuId] = {
         'skuScore': value, 
-        'skuImg': object[2],
-        'color': object[4],
-        'price': object[3]
+        'skuImg': array[2],
+        // 'color': array[4],
+        'price': array[3]
       };
       
       // extract details for every sku_prodid item
@@ -165,33 +188,36 @@
 
     // for each product, find details list
     for (item in docs) {
-      console.log(docs[item]["product_id"]);
-      console.log(productId);
-      if (docs[item]["product_id"] === productId ) { //&& docs[item]["sku_id"] === skuId
+      // console.log(docs[item]["product_id"]);
+      // console.log(productId);
+      if (docs[item]["product_id"] === productId && docs[item]["sku_id"] === skuId) { //
         let array = [docs[item]["product_displayName"],   // object[0]
-            docs[item]["sku_size"]];                      // object[1]
+            docs[item]["sku_size"],                       // object[1]
+            docs[item]["sku_skuImages"][0],               // object[2] (prod img)
+            // docs[item]["list_price"]
+          ];                    // object[3]
 
         let skuslist = docs[item]["style_order_list"];
 
         for (let i = 0; i < skuslist.length; i++) {
-          console.log(i);
-          console.log(skuslist[i]["sku_id"]);
-          console.log(skuId);
+          // console.log(i);
+          // console.log(skuslist[i]["sku_id"]);
+          // console.log(skuId);
           if (skuslist[i]["sku_id"] === skuId) {
-            console.log(skuslist[i]);
+            // console.log(skuslist[i]);
 
             let colors = [skuslist[i]["sku_colorGroup"], 
               skuslist[i]["sku_colorCodeDesc"]];
 
             array.push(
-              skuslist[i]["sku_skuImages"][0],    // object[2]
               skuslist[i]["list_price"],          // object[3]
-              colors                              // object[4]
+              skuslist[i]["sku_skuImages"][0],    // object[4]
+              colors                              // object[5]
             );
             return array;
           }
         }
-
+        // console.log(typeof(array));
         return array;
       }
     }

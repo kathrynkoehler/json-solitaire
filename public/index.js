@@ -28,6 +28,7 @@
     id('refresh').addEventListener('click', loadPage);
     try {
       await loadPage();
+      console.log(allProducts);
     } catch (err) {
       console.error('init ' + err);
     }
