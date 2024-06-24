@@ -13,14 +13,6 @@
   let allProducts = {};
   let allDetails = {};
 
-  const GLOBAL_BOOSTS = {
-    'boost-1000': "What's New",
-    'boost-502': 'Category: women',
-    'boost-1000000': 'Category: 2/women/pants/leggings',
-    'boost-10': 'Collection: align',    // boosted specific products or collections (DisplayName: belt, bag)
-    'boost-5': 'Synonym: Category Name: leg, tight' // and sku_colorCodeDesc: sonic, pink
-  };
-
   /**
    * initializes the page upon load. 
    */
@@ -63,7 +55,7 @@
         circle2.classList.remove('hidden');
         id('filter-btn').addEventListener('click', filterCards);
         id('unfilter-btn').addEventListener('click', unfilterCards);
-        qs(`#${file} > .loading`).classList.add('hidden');
+        qs(`#items .loading`).classList.add('hidden');
       }, 500);
     } catch (err) {
       console.error('init ' + err);
