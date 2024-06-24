@@ -59,7 +59,7 @@ main {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: top;
   box-sizing: border-box;
   /* row-gap: 2vh; */
