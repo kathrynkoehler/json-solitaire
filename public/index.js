@@ -63,6 +63,7 @@
         circle2.classList.remove('hidden');
         id('filter-btn').addEventListener('click', filterCards);
         id('unfilter-btn').addEventListener('click', unfilterCards);
+        qs(`#${file} > .loading`).classList.add('hidden');
       }, 500);
     } catch (err) {
       console.error('init ' + err);
@@ -128,8 +129,8 @@
             allProducts[file][product]['skus'][sku],
             file);
         }
-        qs(`#${file}`).appendChild(gen('div'));
-        qs(`#${file} > .loading`).classList.add('hidden');
+        // qs(`#${file}`).appendChild(gen('div'));
+        
       }
       scoreIndent();
     } catch (err) {
@@ -173,7 +174,9 @@
     
     // spacers that isolate the deck when spread
     let spacer1 = gen('div');
+    spacer1.classList.add('hidden');
     let spacer2 = gen('div');
+    spacer2.classList.add('hidden');
     
     let parent = document.getElementById(`${file}`);
     parent.appendChild(section);
@@ -431,7 +434,9 @@
     let spread = qs('.product-container.spread');
     if (spread) {
       spread.previousSibling.classList.remove('spread');
+      spread.previousSibling.classList.add('hidden');
       spread.nextSibling.classList.remove('spread')
+      section.nextSibling.classList.add('hidden');
       spread.classList.remove('spread');
       if (spread === section) {
         return;
@@ -439,9 +444,10 @@
     }
 
     // spread the new deck
-    
     section.classList.add('spread');
+    section.previousSibling.classList.remove('hidden');
     section.previousSibling.classList.add('spread');
+    section.nextSibling.classList.remove('hidden');
     section.nextSibling.classList.add('spread')
     
     // make sure the page view follows the new element location
