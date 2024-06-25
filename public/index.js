@@ -102,8 +102,8 @@
           addProductSection(item, file);
 
           // for each sku in product, create card with image, score
+          let count = Object.keys(item['skus']).length;
           let sku;
-          let i = 1;
           for (sku in item['skus']) {
             // console.log(allProducts[file][product]['productId']);
             // console.log(allProducts[file][product]['skus'][sku]);
@@ -113,7 +113,7 @@
               item['skus'][sku],                  // skuData
               sku,                                // sku
               file,                               // filename
-              i++);                               // number
+              count--);                               // number
           }
           
           // create the title card for the front of the stack
@@ -282,7 +282,7 @@
 
     // const parent = document.getElementById(`${filename}`);
     const prodContainer = qs(`#${filename} .${data['productId']}`);
-    prodContainer.appendChild(card);
+    prodContainer.prepend(card);
     // parent.appendChild(prodContainer);
     const productID = sku + '_' + data['productId'];
   
