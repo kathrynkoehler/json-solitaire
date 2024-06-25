@@ -73,35 +73,30 @@
       res = res.json();   // this is our new "dirty" data to parse
       console.log(res);
 
-      // parse to "clean" file
-        // rewrite grabOneJson, eliding initial fetch to file
-      // decompose products list, then write to new file from allProducts
+      // decompose products list, write "clean" to allProducts and allDetails
       search = search.split(" ").join("-");
       search = search.split(".")[0];
-      await decomposeSKU(data, search);
+      await decomposeSKU(res, search);
 
-      // this file ends up being too big, so we have to write once per file
-      // instead of all files at once
-      await writeDetails(filename);
     } catch (err) {
       console.error('queryData: ' + err);
     }
   }
 
   /**
-   * Decomposes the JSON from the original data files, extracting useful fields
+   * Decomposes the JSON from the original data, extracting useful fields
    * to save for each listed product. Also extracts score details and saves
    * those breakdowns.
    * @param {Object} data - the JSON data to parse
-   * @param {String} filename - the file being parsed. used to organize the 
+   * @param {String} search - the search being parsed. used to organize the 
    *                  resulting decomposed data.
    */
-  function decomposeSKU(data, filename) {
+  function decomposeSKU(data, search) {
     const skus = data["debug"]["explain"];
     let item;
     let value;
-    allProducts[filename] = {};
-    allDetails[filename] = {};
+    allProducts[search] = {};
+    allDetails[search] = {};
 
     for (item in skus) {
       let prodId = item.split('_').slice(1)[0];
@@ -124,8 +119,8 @@
       // let skuimg = array[4];
       // console.log(displayName, size, img, skuimg, price);
 
-      if (!allProducts[filename][prodId]) {
-        allProducts[filename][prodId] = {
+      if (!allProducts[search][prodId]) {
+        allProducts[search][prodId] = {
           'productId': prodId,
           'displayName' : array[0],
           'size': array[1],    // when image removed, change to [1]
@@ -134,7 +129,7 @@
         }
       }
       // console.log((array[2]).toString());
-      allProducts[filename][prodId]['skus'][skuId] = {
+      allProducts[search][prodId]['skus'][skuId] = {
         'skuScore': value, 
         'skuImg': array[2],
         // 'color': array[4],
@@ -143,8 +138,8 @@
       
       // extract details for every sku_prodid item
       let depth = 0;
-      allDetails[filename][item] = [];
-      let newObj = traverseDetails(depth, filename, item, (skus[item]));
+      allDetails[search][item] = [];
+      let newObj = traverseDetails(depth, search, item, (skus[item]));
     }
   }
 
@@ -200,25 +195,31 @@
    * breakdown for each item. The score value and description are saved into an
    * array, along with the depth of that score in the nested JSON object. 
    * @param {Number} depth - the current depth of the nested object
-   * @param {String} filename - the file being parsed
+   * @param {String} search - the search data being parsed
    * @param {String} prodId - the ID of the product's score being parsed
    * @param {Object} item - the JSON object being traversed
    * @returns the array of score depth + description + value for each nested object
    */
-  function traverseDetails(depth, filename, prodId, item) {
+  function traverseDetails(depth, search, prodId, item) {
+    
     // for each field in json, check if it's 'details'
     let object = [];
     Object.keys(item).forEach(key => {
+
+      // if details, pull out the score and description
       if (typeof item[key] === 'object' && item[key] !== null && key === "details") {
-        // if details, pull out the score and description
+        
+        // pull out all scores at that depth
         let short = item["details"];
         for (let i = 0; i < short.length; i++) {
-          allDetails[filename][prodId].push([depth+1, short[i]["description"], short[i]["value"]]);
+          allDetails[search][prodId].push([depth+1, short[i]["description"], short[i]["value"]]);
+          
           // then check for more details
-          traverseDetails(depth+1, filename, prodId, short[i]);
+          traverseDetails(depth+1, search, prodId, short[i]);
         }
+
         // when finished with one obj, do the other nested ones too
-        traverseDetails(depth, filename, prodId, item["details"]);
+        traverseDetails(depth, search, prodId, item["details"]);
       } else {
         return object;
       }
@@ -258,22 +259,7 @@
       id('unfilter-btn').addEventListener('click', unfilterCards);
       qs(`#items .loading`).classList.add('hidden');
     } catch (err) {
-      console.error('init ' + err);
-    }
-  }
-
-  /**
-   * retrieves all cleaned product data from cleaned-data directory.
-   * @returns JSON object of formatted data for all products
-   */
-  async function getData() {
-    try {
-      let res = await fetch('/clean/products');
-      await statusCheck(res);
-      let data = await res.json();
-      return data;
-    } catch (err) {
-      console.error('get data: ' + err); 
+      console.error('displayData ' + err);
     }
   }
 
@@ -284,14 +270,14 @@
     try {
 
     
-      // create search dropdown
-      await search();
+      // change search title on sidebar
+      // await search();
       sidebarTitle();
 
-      // for each 'file' object in allProducts, build separate section
+      // for each search query object in allProducts, build separate section
       let file;
       for (file in allProducts) {
-        allDetails[file] = await readDetails(file);
+        // allDetails[file] = await readDetails(file);
         let selection = qs("select").value;
         addHeader(file, selection);
 
@@ -326,18 +312,21 @@
       }
       scoreIndent();
     } catch (err) {
-      console.error(err);
+      console.error('buildInterface ' + err);
     }
   }
 
 /**
- * add new section for each file
- * @param {String} filename 
+ * add new section within #items for search query
+ * @param {String} search - the query string
+ * @param {String} selection - the selected section to display. hides current
+ *                  section if not the selected one. TODO: REMOVE!
  */
-  function addHeader(filename, selection) {
+  function addHeader(search, selection) {
     let section = gen('section');
-    section.id = filename;
+    section.id = search;
 
+    // add loading animation (TODO: check that this gets removed)
     let load = gen('div');
     load.classList.add('load-items');
     load.classList.add('loading');
@@ -347,7 +336,7 @@
     parent.appendChild(section);
 
     selection = selection.split(" ").join("-");
-    if (selection !== filename && selection !== 'all') {
+    if (selection !== search && selection !== 'all') {
       load.classList.add('hidden');
       section.classList.add('hidden');
     }
@@ -356,10 +345,10 @@
   /**
    * put each product in its own group within the file card list
    * @param {Object} product - JSON object of product details
-   * @param {String} file - the file the item was returned from. used to correctly
-   *                        place the section on the page
+   * @param {String} search - the search the item was returned from. used to
+   *                  place the section on the page
    */
-  function addProductSection(product, file) {
+  function addProductSection(product, search) {
     let section = gen('section');
     section.classList.add(product['productId']);
     section.classList.add('product-container');
@@ -370,7 +359,7 @@
     let spacer2 = gen('div');
     // spacer2.classList.add('hidden');
     
-    let parent = document.getElementById(`${file}`);
+    let parent = document.getElementById(`${search}`);
     parent.appendChild(section);
     section.insertAdjacentElement('beforebegin', spacer1);
     section.insertAdjacentElement('afterend', spacer2);
@@ -381,9 +370,9 @@
    * @param {Object} data - JSON object of product data
    * @param {String} productId - ID of product
    * @param {String} displayName - Display name of product
-   * @param {String} filename - file the item was returned from
+   * @param {String} search - query the item was returned from
    */
-  function addProductCard(data, productId, displayName, skuData, filename) {
+  function addProductCard(data, productId, displayName, skuData, search) {
     
     // add product photo
     // const photoDiv = gen('div');
@@ -429,8 +418,8 @@
     // article.appendChild(photoDiv);
     article.appendChild(contents);
 
-    const parent = document.getElementById(`${filename}`);
-    const prodContainer = qs(`#${filename} .${productId}`);
+    const parent = document.getElementById(`${search}`);
+    const prodContainer = qs(`#${search} .${productId}`);
     prodContainer.prepend(article);
 
     article.addEventListener('click', (e) => {
@@ -467,17 +456,17 @@
    * @param {Number} value - total score of SKU
    * @param {Array} skuData - details object for SKU, used to retrieve image
    * @param {String} sku - the SKUId of the item
-   * @param {String} filename - the file the product was returned from. used to 
-   *                  place the card correctly on the page
+   * @param {String} search - the query the product was returned from. used to 
+   *                  place the card on the page
    */
-  async function addCard(data, value, skuData, sku, filename, number) {
+  async function addCard(data, value, skuData, sku, search, number) {
 
     // the card that we'll assemble below
     const card = gen('article');
     card.classList.add('product-card');
 
-    // const parent = document.getElementById(`${filename}`);
-    const prodContainer = qs(`#${filename} .${data['productId']}`);
+    // const parent = document.getElementById(`${search}`);
+    const prodContainer = qs(`#${search} .${data['productId']}`);
     prodContainer.appendChild(card);
     // parent.appendChild(prodContainer);
     const productID = sku + '_' + data['productId'];
@@ -507,7 +496,7 @@
     const dropDownButton = gen('button');
     dropDownButton.textContent = 'SCORE DETAILS';
     dropDownButton.classList.add('collapsible');
-    const dropDownContainer = await scoreList(filename, 
+    const dropDownContainer = await scoreList(search, 
       productID, card);
 
     dropDownButton.addEventListener('click', () => {
@@ -527,27 +516,25 @@
 
     card.appendChild(photoDiv);
     card.appendChild(contents);
-
-    
   }
 
   /**
    * adds the score breakdown to a card. called from addCard()
-   * @param {String} filename - name of the file the product was returned from.
-   *                 used to cycle through correct details
+   * @param {String} search - the query the product was returned from.
+   *          used to cycle through correct details
    * @param {String} itemId - full SKU_ProductID of the item whose details we need
    * @param {HTMLElement} card - the card the details are being added to. passed
-   *                      in so the boost classes can be applied
+   *          in so the boost classes can be applied
    * @returns completed container element for score dropdown
    */
-  async function scoreList(filename, itemId, card) {
+  async function scoreList(search, itemId, card) {
     const dropDownContainer = gen('article');
     dropDownContainer.classList.add('content');
     dropDownContainer.classList.add('hidden');
     dropDownContainer.id = itemId + '-scorelist';
     
-    // let file = await readDetails(filename);
-    let file = allDetails[filename];
+    // let file = await readDetails(search);
+    let file = allDetails[search];
 
     // for each product in search results, check if it's the item we need
     let item;
@@ -619,7 +606,7 @@
    *                identify the clicked product title card.
    */
   function spreadDeck(e) {
-    let card = e.currentTarget;
+    // let card = e.currentTarget;
     let section = e.currentTarget.parentElement;
 
     // only allow one deck to be spread at a time. remove spacer elements
@@ -652,27 +639,28 @@
    */
   async function search() {
     try {
-      let res = await fetch('/files');
-      await statusCheck(res);
-      let data = await res.json();
+      // let res = await fetch('/files');
+      // await statusCheck(res);
+      // let data = await res.json();
 
-      let parent = qs("select");
-      parent.innerHTML = '';
+      // let parent = qs("select");
+      // parent.innerHTML = '';
       
-      for (let i = 0; i < data.length; i++) {
-        let name = data[i].split(".")[0];
-        let option = gen("option");
-        option.value = name;
-        option.textContent = name;
-        parent.appendChild(option);
-      }
+      // for (let i = 0; i < data.length; i++) {
+      //   let name = data[i].split(".")[0];
+      //   let option = gen("option");
+      //   option.value = name;
+      //   option.textContent = name;
+      //   parent.appendChild(option);
+      // }
 
-      let all = gen("option");
-      all.value = "all";
-      all.textContent = "all files";
+      // let all = gen("option");
+      // all.value = "all";
+      // all.textContent = "all files";
 
-      qsa("option")[0].selected = true;
-      parent.appendChild(all);
+      // qsa("option")[0].selected = true;
+      // parent.appendChild(all);
+      
       
     } catch (err) {
       console.error('get data: ' + err); 
@@ -685,10 +673,10 @@
   function hideSections() {
     let selection = qs("select").value;
     let sections = qsa("#items > section");
-    let filename = selection.split(" ").join("-");
+    let search = selection.split(" ").join("-");
     if (selection !== "all") {
       for (let i = 0; i < sections.length; i++) {
-        if (sections[i].id !== filename) {
+        if (sections[i].id !== search) {
           sections[i].classList.add('hidden');
         } else {
           sections[i].classList.remove('hidden');
@@ -706,8 +694,8 @@
    * sidebar.
    */
   function sidebarTitle() {
-    let selection = qs("select").value;
-    qs("#results-desc > h1").textContent = selection;
+    let search = id('searchbar').value;
+    qs("#results-desc > h1").textContent = search;
   }
 
   /**
