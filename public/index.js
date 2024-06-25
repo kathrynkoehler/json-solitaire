@@ -9,6 +9,11 @@
 
   window.addEventListener('load', init);
 
+  // const portions of api url
+  const QUERY_URL = 'https://lululemon.c.lucidworks.cloud/api/apps/LLM_us/query/LLM_us?q=';
+  const DEBUG_URL = '&debug=results&debug.explain.structured=true';
+  let cookieId = 'id=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJwY3VycmFuIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6WyJvcGVuaWQiLCJlbWFpbCIsInByb2ZpbGUiXSwiaXNzIjoiaHR0cDpcL1wvcHJveHk6Njc2NFwvb2F1dGgyXC9kZWZhdWx0IiwicmVhbG0iOiJuYXRpdmUiLCJleHAiOjE3MTkyNTMwNDcsImlhdCI6MTcxOTI1MTI0NywidXNlcklkIjoiY2IwZTA2OTAtMjM1Ny00M2Y3LTkzNzUtOGMwMzM2OWMxNzA4IiwicGVybWlzc2lvbnNfdnMiOjg1OTY2NTYxMDcsImF1dGhvcml0aWVzIjpbInJlYWRvbmx5Il19.XXpkJSbdA53gHU7yL-XCLJ0unp81chGNZum2lWCMKgXdaYDijrGvZrvfhwt2Oq5H9TZn4f91RFkFRWX6Sljq3RzSOFyeZK-tKpT6u49RzyoGkKOiqiL6GvU58lESF68tGhS9AmLfVPqIisqPU-KeQf2_asO_AfJs0CnJEyBS0URv7f_FjHcK3GPrmj_CCs33ktBQYk3P5jIitPES3GOYyD9wxLmcLkdRF8Q2YvBgAoCncNZHyatrDJFya5dxEOYk9SjPtkHfPRqHfY54b4nsxdJr0rnEizPItBINstuZGVJDPt8NSd8oT4VJqYBb1uiv-25I1DAwqiXbER-irEzAzA';
+
   // holds extracted product information from cleaned json files
   let allProducts = {};
   let allDetails = {};
@@ -17,6 +22,19 @@
    * initializes the page upon load. 
    */
   async function init() {
+    // this will be deleted when search is functional
+    let refresh = document.getElementById("refresh");
+    refresh.addEventListener("click", getData);
+    
+    // prep searchbar to query api
+    document.cookie = cookieId;
+    id('search-form').addEventListener('submit', async (e) => {
+      e.preventDefault;     // possibly remove, might want page reload?
+      await queryData(e);
+      await displayData();
+    });
+
+    // build basic page elements on load, wait for api data
     id('refresh').addEventListener('click', loadPage);
     try {
       await loadPage();
@@ -30,8 +48,192 @@
    * retrieves cleaned product data to build interface and handle interactivity. 
    */
   async function loadPage() {
-    try {
+    items.innerHTML = '';
+  }
 
+  /*
+    ************** decompose response from api **************
+  */
+
+  /**
+   * queries data directly from api.
+   */
+  async function queryData(e) {
+    e.preventDefault();
+    try {
+      // get the search, query api
+      let search = id('searchbar').value;
+      search = search.split(' ').join('%20');
+      let res = await fetch(QUERY_URL + search + DEBUG_URL, {
+        'authority': 'lululemon-dev.c.lucidworks.cloud',
+        'method': 'GET',
+        'credentials': 'include',
+      });
+      await statusCheck(res);
+      res = res.json();   // this is our new "dirty" data to parse
+      console.log(res);
+
+      // parse to "clean" file
+        // rewrite grabOneJson, eliding initial fetch to file
+      // decompose products list, then write to new file from allProducts
+      search = search.split(" ").join("-");
+      search = search.split(".")[0];
+      await decomposeSKU(data, search);
+
+      // this file ends up being too big, so we have to write once per file
+      // instead of all files at once
+      await writeDetails(filename);
+    } catch (err) {
+      console.error('queryData: ' + err);
+    }
+  }
+
+  /**
+   * Decomposes the JSON from the original data files, extracting useful fields
+   * to save for each listed product. Also extracts score details and saves
+   * those breakdowns.
+   * @param {Object} data - the JSON data to parse
+   * @param {String} filename - the file being parsed. used to organize the 
+   *                  resulting decomposed data.
+   */
+  function decomposeSKU(data, filename) {
+    const skus = data["debug"]["explain"];
+    let item;
+    let value;
+    allProducts[filename] = {};
+    allDetails[filename] = {};
+
+    for (item in skus) {
+      let prodId = item.split('_').slice(1)[0];
+      let skuId = item.split('_')[0];
+      value = skus[item].value;
+
+      // check if product id already has an object
+      let array = setData(data, prodId, skuId);
+
+      // if (!array) {
+      //   console.log("no array");
+      // }
+
+      // console.log(typeof(array));
+      // // console.log(skuId);
+      // let displayName = array[0];
+      // let size = array[1];
+      // let img = array[2];
+      // let price = array[3];
+      // let skuimg = array[4];
+      // console.log(displayName, size, img, skuimg, price);
+
+      if (!allProducts[filename][prodId]) {
+        allProducts[filename][prodId] = {
+          'productId': prodId,
+          'displayName' : array[0],
+          'size': array[1],    // when image removed, change to [1]
+          // 'prodImg': img,
+          'skus': {}
+        }
+      }
+      // console.log((array[2]).toString());
+      allProducts[filename][prodId]['skus'][skuId] = {
+        'skuScore': value, 
+        'skuImg': array[2],
+        // 'color': array[4],
+        'price': array[3]
+      };
+      
+      // extract details for every sku_prodid item
+      let depth = 0;
+      allDetails[filename][item] = [];
+      let newObj = traverseDetails(depth, filename, item, (skus[item]));
+    }
+  }
+
+  /**
+   * Grabs the image and displayName from "response" "docs" object in the file.
+   * Saves these as an array that will later be saved in the "cleaned" data object.
+   * @param {Object} data - the JSON to parse
+   * @param {String} productId - the product whose image and name we are retrieving
+   * @returns array of displayname + image for each product
+   */
+  function setData(data, productId, skuId) {
+    let docs = data["response"]["docs"];
+    let item;
+
+    // for each product, find details list
+    for (item in docs) {
+      // console.log(docs[item]["product_id"]);
+      // console.log(productId);
+      if (docs[item]["product_id"] === productId) { //&& docs[item]["sku_id"] === skuId
+        let array = [docs[item]["product_displayName"],   // object[0]
+            docs[item]["sku_size"],                       // object[1]
+            // docs[item]["sku_skuImages"][0],               // object[2] (prod img)
+            // docs[item]["list_price"]
+          ];                    // object[3]
+
+        let skuslist = docs[item]["style_order_list"];
+
+        for (let i = 0; i < skuslist.length; i++) {
+          // console.log(i);
+          // console.log(skuslist[i]["sku_id"]);
+          // console.log(skuId);
+          if (skuslist[i]["sku_id"] === skuId) {
+            // console.log(skuslist[i]);
+
+            let colors = [skuslist[i]["sku_colorGroup"], 
+              skuslist[i]["sku_colorCodeDesc"]];
+
+            array.push(
+              skuslist[i]["sku_skuImages"][0],    // object[3]
+              skuslist[i]["list_price"],          // object[4]
+              colors                              // object[5]
+            );
+            return array;
+          }
+        }
+        return array;
+      }
+    }
+  }
+
+  /**
+   * Recursive function traverses the nested JSON object containing the score
+   * breakdown for each item. The score value and description are saved into an
+   * array, along with the depth of that score in the nested JSON object. 
+   * @param {Number} depth - the current depth of the nested object
+   * @param {String} filename - the file being parsed
+   * @param {String} prodId - the ID of the product's score being parsed
+   * @param {Object} item - the JSON object being traversed
+   * @returns the array of score depth + description + value for each nested object
+   */
+  function traverseDetails(depth, filename, prodId, item) {
+    // for each field in json, check if it's 'details'
+    let object = [];
+    Object.keys(item).forEach(key => {
+      if (typeof item[key] === 'object' && item[key] !== null && key === "details") {
+        // if details, pull out the score and description
+        let short = item["details"];
+        for (let i = 0; i < short.length; i++) {
+          allDetails[filename][prodId].push([depth+1, short[i]["description"], short[i]["value"]]);
+          // then check for more details
+          traverseDetails(depth+1, filename, prodId, short[i]);
+        }
+        // when finished with one obj, do the other nested ones too
+        traverseDetails(depth, filename, prodId, item["details"]);
+      } else {
+        return object;
+      }
+    });
+  }
+
+  /*
+    ************** create interface from data **************
+  */
+
+  /**
+   * displays the data retrieved from the api. called when queryData() completes
+   */
+  async function displayData() {
+    try {
       // loading animations
       let items = id('items');
       let circle = qs('#options svg');
@@ -41,22 +243,20 @@
       circle2.classList.remove('hidden');
 
       // wait half a second to make sure data is fetched
-      await setTimeout(async () => {
-        allProducts = await getData();
-        console.log(allProducts);
-        await buildInterface();
-        let select = qs('select');
-        select.addEventListener('change', () => {
-          hideSections();
-          sidebarTitle();
-        });
+      allProducts = await getData();
+      console.log(allProducts);
+      await buildInterface();
+      let select = qs('select');
+      select.addEventListener('change', () => {
+        hideSections();
+        sidebarTitle();
+      });
 
-        circle.classList.add('hidden');
-        circle2.classList.remove('hidden');
-        id('filter-btn').addEventListener('click', filterCards);
-        id('unfilter-btn').addEventListener('click', unfilterCards);
-        qs(`#items .loading`).classList.add('hidden');
-      }, 500);
+      circle.classList.add('hidden');
+      circle2.classList.remove('hidden');
+      id('filter-btn').addEventListener('click', filterCards);
+      id('unfilter-btn').addEventListener('click', unfilterCards);
+      qs(`#items .loading`).classList.add('hidden');
     } catch (err) {
       console.error('init ' + err);
     }
