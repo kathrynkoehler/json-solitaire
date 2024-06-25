@@ -86,7 +86,7 @@
     
       // create search dropdown
       await search();
-      sidebarTitle();
+      
 
       // for each 'file' object in allProducts, build separate section
       let file;
@@ -126,6 +126,7 @@
         // qs(`#${file}`).appendChild(gen('div'));
         
       }
+      sidebarTitle();
       scoreIndent();
     } catch (err) {
       console.error(err);
@@ -512,7 +513,7 @@
     qs("#results-desc > h1").textContent = selection;
 
     selection = selection.split(' ').join('-');
-    let count = Object.keys(allProducts[`${selection}`]).length;
+    let count = qsa(`#${selection} > section`).length;
     let span = qs('#results-desc span');
     span.textContent = count;
   }
