@@ -510,6 +510,11 @@
   function sidebarTitle() {
     let selection = qs("select").value;
     qs("#results-desc > h1").textContent = selection;
+
+    selection = selection.split(' ').join('-');
+    let count = Object.keys(allProducts[`${selection}`]).length;
+    let span = qs('#results-desc span');
+    span.textContent = count;
   }
 
   /**
