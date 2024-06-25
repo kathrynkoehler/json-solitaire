@@ -157,16 +157,16 @@
           'productId': prodId,
           'displayName' : array[0],
           'size': array[1],    // when image removed, change to [1]
-          // 'prodImg': img,
+          'prodImg': array[2],
           'skus': {}
         }
       }
       // console.log((array[2]).toString());
       allProducts[filename][prodId]['skus'][skuId] = {
         'skuScore': value, 
-        'skuImg': array[2],
+        'skuImg': array[3],
         // 'color': array[4],
-        'price': array[3]
+        'price': array[4]
       };
       
       // extract details for every sku_prodid item
@@ -194,7 +194,7 @@
       if (docs[item]["product_id"] === productId) { //&& docs[item]["sku_id"] === skuId
         let array = [docs[item]["product_displayName"],   // object[0]
             docs[item]["sku_size"],                       // object[1]
-            // docs[item]["sku_skuImages"][0],               // object[2] (prod img)
+            docs[item]["sku_skuImages"][0],               // object[2] (prod img)
             // docs[item]["list_price"]
           ];                    // object[3]
 

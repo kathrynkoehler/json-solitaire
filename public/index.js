@@ -98,28 +98,30 @@
         // for each product in file, create card stack with displayname, score, skus
         let product;
         for (product in allProducts[file]) {
-          addProductSection(allProducts[file][product], file);
+          let item = allProducts[file][product];        // alias call
+          addProductSection(item, file);
 
           // for each sku in product, create card with image, score
           let sku;
           let i = 1;
-          for (sku in allProducts[file][product]['skus']) {
+          for (sku in item['skus']) {
             // console.log(allProducts[file][product]['productId']);
             // console.log(allProducts[file][product]['skus'][sku]);
-            await addCard(allProducts[file][product], 
-              allProducts[file][product]['skus'][sku]['skuScore'], 
-              allProducts[file][product]['skus'][sku],
-              sku,
-              file, 
-              i++);
+            
+            await addCard(item,                   // data
+              item['skus'][sku]['skuScore'],      // value
+              item['skus'][sku],                  // skuData
+              sku,                                // sku
+              file,                               // filename
+              i++);                               // number
           }
-
+          
           // create the title card for the front of the stack
-          addProductCard(allProducts[file][product]['skus'], 
-            product, 
-            allProducts[file][product],
-            allProducts[file][product]['skus'][sku],
-            file);
+          addProductCard(item['skus'],            // data
+            product,                              // productId
+            item,                                 // displayName
+            item['prodImg'],                      // image
+            file);                                // filename
         }
         // qs(`#${file}`).appendChild(gen('div'));
         
@@ -181,17 +183,18 @@
    * @param {Object} data - JSON object of product data
    * @param {String} productId - ID of product
    * @param {String} displayName - Display name of product
+   * @param {String} image - prodImg to display on card
    * @param {String} filename - file the item was returned from
    */
-  function addProductCard(data, productId, displayName, skuData, filename) {
+  function addProductCard(data, productId, displayName, image, filename) {
     
     // add product photo
-    // const photoDiv = gen('div');
-    // photoDiv.classList.add('photo');
-    // const photo = gen('img');
-    // photo.src = skuData['skuImg'];
-    // photo.alt = data['displayName'];
-    // photoDiv.appendChild(photo);
+    const photoDiv = gen('div');
+    photoDiv.classList.add('photo');
+    const photo = gen('img');
+    photo.src = image;
+    photo.alt = displayName;
+    photoDiv.appendChild(photo);
     // console.log(data[0]);
 
     // add aggregate scores from skus
@@ -226,7 +229,7 @@
     const article = gen('article');
     article.classList.add('product-card');
     article.classList.add('title-card');
-    // article.appendChild(photoDiv);
+    article.appendChild(photoDiv);
     article.appendChild(contents);
 
     const parent = document.getElementById(`${filename}`);
@@ -269,6 +272,7 @@
    * @param {String} sku - the SKUId of the item
    * @param {String} filename - the file the product was returned from. used to 
    *                  place the card correctly on the page
+   * @param {Number} number - the order that the sku was returned in
    */
   async function addCard(data, value, skuData, sku, filename, number) {
 
@@ -327,8 +331,6 @@
 
     card.appendChild(photoDiv);
     card.appendChild(contents);
-
-    
   }
 
   /**
