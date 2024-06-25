@@ -311,6 +311,7 @@
         
       }
       scoreIndent();
+      qs('load-items').classList.add('hidden');
     } catch (err) {
       console.error('buildInterface ' + err);
     }
