@@ -23,21 +23,20 @@
    */
   async function init() {
     // this will be deleted when search is functional
-    let refresh = document.getElementById("refresh");
-    refresh.addEventListener("click", getData);
+    // let refresh = document.getElementById("refresh");
+    // refresh.addEventListener("click", getData);
     
     // prep searchbar to query api
     document.cookie = cookieId;
     id('search-form').addEventListener('submit', async (e) => {
       e.preventDefault;     // possibly remove, might want page reload?
-      await queryData(e);
-      await displayData();
+      await loadPage(e);
     });
 
     // build basic page elements on load, wait for api data
-    id('refresh').addEventListener('click', loadPage);
+    // id('refresh').addEventListener('click', loadPage);
     try {
-      await loadPage();
+      // await loadPage();
       console.log(allProducts);
     } catch (err) {
       console.error('init ' + err);
@@ -47,8 +46,27 @@
   /**
    * retrieves cleaned product data to build interface and handle interactivity. 
    */
-  async function loadPage() {
-    items.innerHTML = '';
+  async function loadPage(e) {
+    try {
+      // loading animations
+      let items = id('items');
+      let circle = qs('#options svg');
+      let circle2 = id('load-circle');
+      items.innerHTML = '';
+      circle.classList.remove('hidden');
+      circle2.classList.remove('hidden');
+
+      await queryData(e);
+      await displayData();
+
+      // items.innerHTML = '';
+      circle.classList.add('hidden');
+      circle2.classList.add('hidden');
+      qs(`#items .loading`).classList.add('hidden');
+      // qs('load-items').classList.add('hidden');
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   /*
@@ -61,6 +79,7 @@
   async function queryData(e) {
     e.preventDefault();
     try {
+      
       // get the search, query api
       let search = id('searchbar').value;
       search = search.split(' ').join('%20');
@@ -89,14 +108,14 @@
    * those breakdowns.
    * @param {Object} data - the JSON data to parse
    * @param {String} search - the search being parsed. used to organize the 
-   *                  resulting decomposed data.
+   *                  resulting decomposed data. TODO: remove
    */
   function decomposeSKU(data, search) {
     const skus = data["debug"]["explain"];
     let item;
     let value;
-    allProducts[search] = {};
-    allDetails[search] = {};
+    allProducts = {};
+    allDetails = {};
 
     for (item in skus) {
       let prodId = item.split('_').slice(1)[0];
@@ -119,8 +138,8 @@
       // let skuimg = array[4];
       // console.log(displayName, size, img, skuimg, price);
 
-      if (!allProducts[search][prodId]) {
-        allProducts[search][prodId] = {
+      if (!allProducts[prodId]) {
+        allProducts[prodId] = {
           'productId': prodId,
           'displayName' : array[0],
           'size': array[1],    // when image removed, change to [1]
@@ -129,7 +148,7 @@
         }
       }
       // console.log((array[2]).toString());
-      allProducts[search][prodId]['skus'][skuId] = {
+      allProducts[prodId]['skus'][skuId] = {
         'skuScore': value, 
         'skuImg': array[2],
         // 'color': array[4],
@@ -138,7 +157,7 @@
       
       // extract details for every sku_prodid item
       let depth = 0;
-      allDetails[search][item] = [];
+      allDetails[item] = [];
       let newObj = traverseDetails(depth, search, item, (skus[item]));
     }
   }
@@ -152,9 +171,9 @@
    */
   function setData(data, productId, skuId) {
     let docs = data["response"]["docs"];
-    let item;
-
+    
     // for each product, find details list
+    let item;
     for (item in docs) {
       // console.log(docs[item]["product_id"]);
       // console.log(productId);
@@ -195,7 +214,7 @@
    * breakdown for each item. The score value and description are saved into an
    * array, along with the depth of that score in the nested JSON object. 
    * @param {Number} depth - the current depth of the nested object
-   * @param {String} search - the search data being parsed
+   * @param {String} search - the search data being parsed (TODO: remove)
    * @param {String} prodId - the ID of the product's score being parsed
    * @param {Object} item - the JSON object being traversed
    * @returns the array of score depth + description + value for each nested object
@@ -212,7 +231,7 @@
         // pull out all scores at that depth
         let short = item["details"];
         for (let i = 0; i < short.length; i++) {
-          allDetails[search][prodId].push([depth+1, short[i]["description"], short[i]["value"]]);
+          allDetails[prodId].push([depth+1, short[i]["description"], short[i]["value"]]);
           
           // then check for more details
           traverseDetails(depth+1, search, prodId, short[i]);
@@ -235,16 +254,9 @@
    */
   async function displayData() {
     try {
-      // loading animations
-      let items = id('items');
-      let circle = qs('#options svg');
-      let circle2 = id('load-circle');
-      items.innerHTML = '';
-      circle.classList.remove('hidden');
-      circle2.classList.remove('hidden');
-
-      // wait half a second to make sure data is fetched
-      allProducts = await getData();
+      
+      // all products should already be filled, so don't need?
+      // allProducts = await getData();
       console.log(allProducts);
       await buildInterface();
       let select = qs('select');
@@ -253,11 +265,8 @@
         sidebarTitle();
       });
 
-      circle.classList.add('hidden');
-      circle2.classList.remove('hidden');
       id('filter-btn').addEventListener('click', filterCards);
       id('unfilter-btn').addEventListener('click', unfilterCards);
-      qs(`#items .loading`).classList.add('hidden');
     } catch (err) {
       console.error('displayData ' + err);
     }
@@ -269,7 +278,6 @@
   async function buildInterface() {
     try {
 
-    
       // change search title on sidebar
       // await search();
       sidebarTitle();
@@ -311,7 +319,7 @@
         
       }
       scoreIndent();
-      qs('load-items').classList.add('hidden');
+      
     } catch (err) {
       console.error('buildInterface ' + err);
     }
@@ -327,7 +335,6 @@
     let section = gen('section');
     section.id = search;
 
-    // add loading animation (TODO: check that this gets removed)
     let load = gen('div');
     load.classList.add('load-items');
     load.classList.add('loading');
@@ -336,15 +343,15 @@
     let parent = document.getElementById("items");
     parent.appendChild(section);
 
-    selection = selection.split(" ").join("-");
-    if (selection !== search && selection !== 'all') {
-      load.classList.add('hidden');
-      section.classList.add('hidden');
-    }
+    // selection = selection.split(" ").join("-");
+    // if (selection !== search && selection !== 'all') {
+    //   load.classList.add('hidden');
+    //   section.classList.add('hidden');
+    // }
   }
 
   /**
-   * put each product in its own group within the file card list
+   * put each product in its own deck within the file card list
    * @param {Object} product - JSON object of product details
    * @param {String} search - the search the item was returned from. used to
    *                  place the section on the page
@@ -387,9 +394,9 @@
     // add aggregate scores from skus
     let scores = productScores(data);
     
-    const search = gen('h1');
-    search.textContent = displayName['displayName'];
-    search.classList.add("card-search");
+    const title = gen('h1');
+    title.textContent = displayName['displayName'];
+    title.classList.add("card-search");
     // const title = gen('h1');
     // title.textContent = displayName['displayName'];
     const prodId = gen('h2');
@@ -405,7 +412,7 @@
 
     const contents = gen('div');
     contents.classList.add('card-contents');
-    contents.appendChild(search);
+    contents.appendChild(title);
     // contents.appendChild(title);
     contents.appendChild(prodId);
     contents.appendChild(average);
@@ -852,23 +859,6 @@
     let filter = qsa(`.hide-boost`);
     for (let i = 0; i < filter.length; i++) {
       filter[i].classList.remove('hide-boost');
-    }
-  }
-
-  /**
-   * reads the cleaned details data from files in order to build the card
-   * dropdowns.
-   * @param {String} filename 
-   * @returns 
-   */
-  async function readDetails(filename) {
-    try {
-      let res = await fetch('/clean/details/' + filename);
-      await statusCheck(res);
-      let data = await res.json();
-      return data;
-    } catch (err) {
-      console.error('get data: ' + err); 
     }
   }
 
