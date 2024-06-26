@@ -12,7 +12,7 @@
   // const portions of api url
   const QUERY_URL = 'https://lululemon.c.lucidworks.cloud/api/apps/LLM_us/query/LLM_us?q=';
   const DEBUG_URL = '&debug=results&debug.explain.structured=true';
-  let cookieId = 'id=eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJwY3VycmFuIiwicGVybWlzc2lvbnMiOltdLCJzY29wZSI6WyJvcGVuaWQiLCJlbWFpbCIsInByb2ZpbGUiXSwiaXNzIjoiaHR0cDpcL1wvcHJveHk6Njc2NFwvb2F1dGgyXC9kZWZhdWx0IiwicmVhbG0iOiJuYXRpdmUiLCJleHAiOjE3MTkyNTMwNDcsImlhdCI6MTcxOTI1MTI0NywidXNlcklkIjoiY2IwZTA2OTAtMjM1Ny00M2Y3LTkzNzUtOGMwMzM2OWMxNzA4IiwicGVybWlzc2lvbnNfdnMiOjg1OTY2NTYxMDcsImF1dGhvcml0aWVzIjpbInJlYWRvbmx5Il19.XXpkJSbdA53gHU7yL-XCLJ0unp81chGNZum2lWCMKgXdaYDijrGvZrvfhwt2Oq5H9TZn4f91RFkFRWX6Sljq3RzSOFyeZK-tKpT6u49RzyoGkKOiqiL6GvU58lESF68tGhS9AmLfVPqIisqPU-KeQf2_asO_AfJs0CnJEyBS0URv7f_FjHcK3GPrmj_CCs33ktBQYk3P5jIitPES3GOYyD9wxLmcLkdRF8Q2YvBgAoCncNZHyatrDJFya5dxEOYk9SjPtkHfPRqHfY54b4nsxdJr0rnEizPItBINstuZGVJDPt8NSd8oT4VJqYBb1uiv-25I1DAwqiXbER-irEzAzA';
+  let cookieId;
 
   // holds extracted product information from cleaned json files
   let allProducts = {};
@@ -22,21 +22,13 @@
    * initializes the page upon load. 
    */
   async function init() {
-    // this will be deleted when search is functional
-    // let refresh = document.getElementById("refresh");
-    // refresh.addEventListener("click", getData);
-    
-    // prep searchbar to query api
-    document.cookie = cookieId;
-    id('search-form').addEventListener('submit', async (e) => {
-      e.preventDefault;     // possibly remove, might want page reload?
-      await loadPage(e);
-    });
-
-    // build basic page elements on load, wait for api data
-    // id('refresh').addEventListener('click', loadPage);
     try {
-      // await loadPage();
+      // prep searchbar to query api
+      cookieId = document.cookie;
+      id('search-form').addEventListener('submit', async (e) => {
+        e.preventDefault;     // possibly remove, might want page reload?
+        await loadPage(e);
+      });
       console.log(allProducts);
     } catch (err) {
       console.error('init ' + err);
@@ -56,14 +48,14 @@
       circle.classList.remove('hidden');
       circle2.classList.remove('hidden');
 
+      // query data from api, then display on page
       await queryData(e);
       await displayData();
-
-      // items.innerHTML = '';
+      
+      // when all data is displayed, remove loading icons
       circle.classList.add('hidden');
       circle2.classList.add('hidden');
       qs(`#items .loading`).classList.add('hidden');
-      // qs('load-items').classList.add('hidden');
     } catch (err) {
       console.error(err);
     }
@@ -79,8 +71,7 @@
   async function queryData(e) {
     e.preventDefault();
     try {
-      
-      // get the search, query api
+      // get the search string, query api
       let search = id('searchbar').value;
       search = search.split(' ').join('%20');
       let res = await fetch(QUERY_URL + search + DEBUG_URL, {
@@ -89,14 +80,13 @@
         'credentials': 'include',
       });
       await statusCheck(res);
-      res = res.json();   // this is our new "dirty" data to parse
+      res = res.json();         // this is the new "dirty" data to parse
       console.log(res);
 
-      // decompose products list, write "clean" to allProducts and allDetails
+      // decompose products list & scores, write to allProducts and allDetails
       search = search.split(" ").join("-");
       search = search.split(".")[0];
-      await decomposeSKU(res, search);
-
+      decomposeSKU(res, search);
     } catch (err) {
       console.error('queryData: ' + err);
     }
@@ -254,17 +244,12 @@
    */
   async function displayData() {
     try {
-      
-      // all products should already be filled, so don't need?
-      // allProducts = await getData();
+      // build card decks, change title to match query
       console.log(allProducts);
       await buildInterface();
-      let select = qs('select');
-      select.addEventListener('change', () => {
-        hideSections();
-        sidebarTitle();
-      });
+      sidebarTitle();
 
+      // enable filtering on boosts
       id('filter-btn').addEventListener('click', filterCards);
       id('unfilter-btn').addEventListener('click', unfilterCards);
     } catch (err) {
@@ -286,8 +271,7 @@
       let file;
       for (file in allProducts) {
         // allDetails[file] = await readDetails(file);
-        let selection = qs("select").value;
-        addHeader(file, selection);
+        addHeader(file);
 
         // for each product in file, create card stack with displayname, score, skus
         let product;
@@ -328,10 +312,8 @@
 /**
  * add new section within #items for search query
  * @param {String} search - the query string
- * @param {String} selection - the selected section to display. hides current
- *                  section if not the selected one. TODO: REMOVE!
  */
-  function addHeader(search, selection) {
+  function addHeader(search) {
     let section = gen('section');
     section.id = search;
 
@@ -342,12 +324,6 @@
 
     let parent = document.getElementById("items");
     parent.appendChild(section);
-
-    // selection = selection.split(" ").join("-");
-    // if (selection !== search && selection !== 'all') {
-    //   load.classList.add('hidden');
-    //   section.classList.add('hidden');
-    // }
   }
 
   /**
