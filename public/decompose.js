@@ -187,6 +187,8 @@
     let docs = data["response"]["docs"];
     let item;
 
+    // TODO: make this more efficient (break for universal if just looking for sku)
+
     // for each product, find details list
     for (item in docs) {
       // console.log(docs[item]["product_id"]);

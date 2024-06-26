@@ -20,7 +20,7 @@
     id('refresh').addEventListener('click', loadPage);
     try {
       await loadPage();
-      console.log(allProducts);
+      // console.log(allProducts);
     } catch (err) {
       console.error('init ' + err);
     }
@@ -208,12 +208,12 @@
     // title.textContent = displayName['displayName'];
     const prodId = gen('h2');
     prodId.textContent = 'ID: ' + productId;
-    const average = gen('h2');
-    average.textContent = 'Score average: ' + scores[1];
+    // const average = gen('h2');
+    // average.textContent = 'Score average: ' + scores[1];
     const max = gen('h2');
-    max.textContent = 'Score maximum: ' + scores[2];
-    const min = gen('h2');
-    min.textContent = 'Score minimum: ' + scores[3];
+    max.textContent = 'Score maximum: ' + scores[1];
+    // const min = gen('h2');
+    // min.textContent = 'Score minimum: ' + scores[3];
     const count = gen('h2');
     count.textContent = 'SKU count: ' + scores[0];
 
@@ -222,9 +222,9 @@
     contents.appendChild(search);
     // contents.appendChild(title);
     contents.appendChild(prodId);
-    contents.appendChild(average);
+    // contents.appendChild(average);
     contents.appendChild(max);
-    contents.appendChild(min);
+    // contents.appendChild(min);
     contents.appendChild(count);
 
     const article = gen('article');
@@ -249,20 +249,20 @@
    */
   function productScores(product) {
     let count = 0;
-    let total = 0;
     let max = 0;
-    let min = 5000000000;
+    // let total = 0;
+    // let min = 5000000000;
 
     let sku;
     for (sku in product) {
       let current = parseFloat(product[sku]['skuScore']);
-      total += current;
+      // total += current;
       count ++;
       if (current > max) max = current;
-      if (current < min) min = current;
+      // if (current < min) min = current;
     }
-    let average = total / count;
-    return [count, average, max, min];
+    // let average = total / count;
+    return [count, max];
   }
 
   /**
