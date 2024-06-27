@@ -1,7 +1,9 @@
 /**
  * Responsible for building interface. 
- * Reads in data that has already been "cleaned" by decompose.js, then parses 
- * it out into "cards" to display to the user on load.
+ * Allows user to submit authentication credentials to allow server access.
+ * Requests data from server, then parses it into a more readable format, which
+ * is then displayed on the interface in the form of "card decks" for each
+ * returned product. 
  */
 'use strict';
 
@@ -39,6 +41,10 @@
     }
   }
 
+  /**
+   * when user submits their username and password, request to authenticate
+   * new JWT token is sent to server.
+   */
   async function authenticateJWT() {
     try {
       let user = qs('#auth form')['username'].value;
@@ -99,6 +105,7 @@
       // query data from api, then display on page
       await queryData(e);
       await displayData();
+      console.log(allDetails);
       
       // when all data is displayed, remove loading icons
       circle.classList.add('hidden');
@@ -108,10 +115,6 @@
       console.error(err);
     }
   }
-
-  /*
-    ************** decompose response from api **************
-  */
 
   /**
    * queries data directly from api.
@@ -142,6 +145,10 @@
       console.error('queryData: ' + err);
     }
   }
+
+  /*
+    ************** decompose response from api **************
+  */
 
   /**
    * Decomposes the JSON from the original data, extracting useful fields
@@ -332,7 +339,7 @@
         for (sku in item['skus']) {
           // console.log(allProducts[file][product]['productId']);
           // console.log(allProducts[file][product]['skus'][sku]);
-          console.log(item);
+          // console.log(item);
           await addCard(item,                 // data
             item['skus'][sku]['skuScore'],    // value
             item['skus'][sku],                // skudata
@@ -510,7 +517,7 @@
 
       // const parent = document.getElementById(`${search}`);
       const prodContainer = qs(`#${search} .${data['productId']}`);
-      console.log(`#${search} .${data['productId']}`);
+      // console.log(`#${search} .${data['productId']}`);
       prodContainer.prepend(card);
       // parent.appendChild(prodContainer);
       const productID = sku + '_' + data['productId'];
