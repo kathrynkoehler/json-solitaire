@@ -551,12 +551,13 @@
 
       dropDownButton.addEventListener('click', () => {
         dropDownButton.classList.toggle('active');
-        let content = dropDownButton.nextElementSibling;
-        content.classList.toggle('hidden');
-        sidebarScores(dropDownContainer, productID);
+        // let content = dropDownButton.nextElementSibling;
+        // content.classList.toggle('hidden');
         let sidebarDropDown = id(`#${productID}-scorelist`);
         if (sidebarDropDown) {
           sidebarDropDown.classList.toggle('hidden');
+        } else {
+          sidebarScores(dropDownContainer, productID);
         }
       });
 
