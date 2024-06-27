@@ -34,7 +34,6 @@
         e.preventDefault();     // possibly remove, might want page reload?
         await loadPage(e);
       });
-      console.log(allProducts);
     } catch (err) {
       console.error('init ' + err);
     }
@@ -297,7 +296,7 @@
       // build card decks, change title to match query
       console.log(allProducts);
       await buildInterface();
-      sidebarTitle();
+      // sidebarTitle();
 
       // enable filtering on boosts
       id('filter-btn').addEventListener('click', filterCards);
@@ -313,10 +312,10 @@
   async function buildInterface() {
     try {
 
-      // change search title on sidebar
-      // sidebarTitle();
       let search = id('searchbar').value;
       search = search.split(" ").join("-");
+      qs('#scores').innerHTML = '';
+      qs('#checklist').innerHTML = '';
 
       // build section within #items to contain decks
       addHeader(search);
@@ -710,14 +709,19 @@
     let label = gen('span');
     label.textContent = title;
     label.classList.add('category');
-    // let icon = scoreSvg();
+    let icon = gen('img');
+    icon.src = './img/x.png';
 
     heading.appendChild(label);
-    // heading.appendChild(icon);
+    heading.appendChild(icon);
     heading.addEventListener('click', () => {
       // heading.classList.toggle('active');
       let content = heading.nextElementSibling;
       content.classList.toggle('hidden');
+    });
+    icon.addEventListener('click', () => {
+      // (icon.parentNode).parentNode.remove();
+      (icon.parentNode).parentNode.classList.toggle('hidden');
     });
 
     container.appendChild(heading);
