@@ -41,6 +41,15 @@
     }
   }
 
+  function handleError(message, err) {
+    let display = qs('#error p');
+    display.textContent = message + err;
+    id('error').classList.remove('hidden');
+    // when making initial element on page, add 'x' to close (.hidden)
+    // but otherwise leave up indefinitely
+    // cover entire #items section? or all of main?
+  }
+
   /**
    * when user submits their username and password, request to authenticate
    * new JWT token is sent to server.
@@ -52,6 +61,7 @@
       await refreshJwt(API_URL, user, password);
     } catch (err) {
       console.error(err);
+      // TODO: add handlerror here to show user there was a failure
     }
   }
 
@@ -143,6 +153,8 @@
       decomposeSKU(res);
     } catch (err) {
       console.error('queryData: ' + err);
+      // TODO: add handlerror here to show user there was a failure to fetch
+
     }
   }
 

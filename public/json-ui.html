@@ -8,7 +8,6 @@
     <link href="sizing.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
     <script src="index.js"></script>
-    <!-- <script src="decompose.js"></script> -->
   </head>
   <body>
     <main>
@@ -27,11 +26,6 @@
         <section id="choose-files">
           <div>
             <form id="search-form">
-              <!-- <svg height="16" width="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" class="search_show__1Ua6c search_closeIcon__2IKj1 search_hideCloseIcon__3_i6g" focusable="false" role="img" aria-labelledby="icon_:R67emll6:" aria-hidden="false">
-                <title id="icon_close">Close</title>
-                <path d="m13.82 1.82-.35-.35L8 6.94 3.24 2.18a1 1 0 0 0-1.42 0l-.35.35L6.94 8l-4.76 4.76a1 1 0 0 0 0 1.42l.35.35L8 9.06l4.76 4.76a1 1 0 0 0 1.42 0l.35-.35L9.06 8l4.76-4.76a1 1 0 0 0 0-1.42Z" fill="currentColor" fill-rule="evenodd">
-                </path>
-              </svg> -->
               <svg id="icon_search" height="16" width="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" class="search_searchIcon__3DZ3s" focusable="false" role="img">
                 <title>Search</title>
                 <path d="m15.53 14.47-4-4a5.82 5.82 0 1 0-1.07 1.06l3.27 3.26a1 1 0 0 0 1.42 0l.38-.32ZM7 11.25A4.25 4.25 0 1 1 11.25 7 4.26 4.26 0 0 1 7 11.25Z" fill="currentColor" fill-rule="evenodd">
@@ -40,8 +34,6 @@
               <input type="search" id="searchbar" placeholder="Search" autocomplete="off">
             </form>
           </div>
-          
-          
         </section>
         <section id="options">
           <svg class="hidden" viewBox="0 0 40 40">
@@ -61,26 +53,14 @@
         </section>
         <section id="scores">
           <!-- when a card is selected, its score breakdown populates here -->
-          <!-- <div> -->
-            <!-- placeholder heading while adjusting svg -->
-            <!-- <h2>
-              <span></span>
-              <div class="expandedToggle">
-                <svg height="24" width="24" viewBox="0 0 24 24" class="expandIcon" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M21.39 12.75a1 1 0 0 0 1-1v-.5h-19a1 1 0 0 0-1 1v.5Z" stroke="currentColor"></path>
-                </svg>
-                <svg height="24" width="24" viewBox="0 0 24 24" class="expandIcon">
-                  <path d="M21.39 12.75a1 1 0 0 0 1-1v-.5h-19a1 1 0 0 0-1 1v.5Z" stroke="currentColor"></path>
-                </svg>
-              </div>
-            </h2>
-          </div> -->
-          
         </section>
       </section>
       <section id="items">
         <!-- Card stacks are dynamically added here -->
         <!-- <div class="load-items loading"></div> -->
+      </section>
+      <section id="error" class="hidden">
+        <p></p>
       </section>
     </main>
   </body>
