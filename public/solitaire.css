@@ -277,6 +277,10 @@ main {
   background-color: rgba(200, 16, 46, 0.2);
 }
 
+.scorenote {
+  background-color: rgba(16, 19, 200, 0.2);
+}
+
 /* content dropdown scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

@@ -515,11 +515,8 @@
       const card = gen('article');
       card.classList.add('product-card');
 
-      // const parent = document.getElementById(`${search}`);
       const prodContainer = qs(`#${search} .${data['productId']}`);
-      // console.log(`#${search} .${data['productId']}`);
       prodContainer.prepend(card);
-      // parent.appendChild(prodContainer);
       const productID = sku + '_' + data['productId'];
 
       // add photo
@@ -527,10 +524,8 @@
       photoDiv.classList.add('photo');
       const photo = gen('img');
       photo.src = skuData['skuImg'];
-      // console.log(skuData);
       photo.alt = data['displayName'];
       photoDiv.appendChild(photo);
-      // console.log(photoDiv);
       
       // add title, productID, SKUID, overall score
       const title = gen('h1');
@@ -542,17 +537,14 @@
       const score = gen('h2');
       score.textContent = 'Score: ' + value;
 
-      // score dropdown
+      // score details button + list
       const dropDownButton = gen('button');
       dropDownButton.textContent = 'SCORE DETAILS';
       dropDownButton.classList.add('collapsible');
-      const dropDownContainer = await scoreList(search, 
-        productID, card);
-
+      let scores = await scoreList(productID, card);
+      const dropDownContainer = scores;
       dropDownButton.addEventListener('click', () => {
         dropDownButton.classList.toggle('active');
-        // let content = dropDownButton.nextElementSibling;
-        // content.classList.toggle('hidden');
         let sidebarDropDown = id(`#${productID}-scorelist`);
         if (sidebarDropDown) {
           sidebarDropDown.classList.toggle('hidden');
@@ -560,11 +552,11 @@
           sidebarScores(dropDownContainer, productID);
         }
       });
+      // const simple = scores[1];
 
       const contents = gen('div');
       contents.classList.add('card-contents');
       contents.append(title, prodId, order, score, dropDownButton, dropDownContainer);
-
       card.appendChild(photoDiv);
       card.appendChild(contents);
     } catch (err) {
@@ -574,14 +566,12 @@
 
   /**
    * adds the score breakdown to a card. called from addCard()
-   * @param {String} search - the query the product was returned from.
-   *          used to cycle through correct details
    * @param {String} itemId - full SKU_ProductID of the item whose details we need
    * @param {HTMLElement} card - the card the details are being added to. passed
    *          in so the boost classes can be applied
    * @returns completed container element for score dropdown
    */
-  async function scoreList(search, itemId, card) {
+  async function scoreList(itemId, card) {
     const dropDownContainer = gen('article');
     dropDownContainer.classList.add('content');
     dropDownContainer.classList.add('hidden');
@@ -594,6 +584,10 @@
     let item;
     for (item in allDetails) {
       if (item === itemId) {
+        // let simple = gen('details');
+        // let title = gen('summary');
+        // title.textContent = 'Score Summary';
+        // simple.classList.add('content');
 
         // for each score in item, add to item dropdown
         let score;
@@ -630,11 +624,21 @@
             parent.classList.add(`${name}-boost-${valContent}`);
             sidebarOption(`${name}-boost-${valContent}`);
             div.classList.add('scoreboost');
+          } else {
+            descContent = descContent.split(',')[0];
+            if (descContent === 'idf' || descContent === 'tf') {
+              div.classList.add('scorenote');
+            }
           }
+
+          // make a summary dropdown for the score details
+          // if (allDetails[itemId][score][0] < 6) {
+          //   simple.appendChild(div);
+          // }
         }
+        return dropDownContainer;
       }
     }
-    return dropDownContainer;
   }
 
   /**
