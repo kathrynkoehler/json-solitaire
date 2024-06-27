@@ -191,8 +191,8 @@
       allProducts[prodId]['skus'][skuId] = {
         'skuScore': value, 
         'skuImg': array[3],
-        // 'color': array[4],
-        'price': array[4]
+        'price': array[4],
+        'color': array[5],
       };
       
       // extract details for every sku_prodid item
@@ -316,6 +316,7 @@
       // change search title on sidebar
       // sidebarTitle();
       let search = id('searchbar').value;
+      search = search.split(" ").join("-");
 
       // build section within #items to contain decks
       addHeader(search);
@@ -332,12 +333,13 @@
         for (sku in item['skus']) {
           // console.log(allProducts[file][product]['productId']);
           // console.log(allProducts[file][product]['skus'][sku]);
+          console.log(item);
           await addCard(item,                 // data
             item['skus'][sku]['skuScore'],    // value
             item['skus'][sku],                // skudata
-            sku,                                              // sku
-            search,                                           // section
-            count--);                                         // number
+            sku,                              // sku
+            search,                           // section
+            count--);                         // number
         }
 
         // create the title card for the front of the stack
@@ -359,16 +361,21 @@
  * @param {String} search - the query string
  */
   function addHeader(search) {
-    let section = gen('section');
-    section.id = search;
+    try {
+      let section = gen('section');
+      
+      section.id = search;
 
-    let load = gen('div');
-    load.classList.add('load-items');
-    load.classList.add('loading');
-    section.appendChild(load);
+      let load = gen('div');
+      load.classList.add('load-items');
+      load.classList.add('loading');
+      section.appendChild(load);
 
-    let parent = document.getElementById("items");
-    parent.appendChild(section);
+      let parent = document.getElementById("items");
+      parent.appendChild(section);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   /**
@@ -378,20 +385,24 @@
    *                  place the section on the page
    */
   function addProductSection(product, search) {
-    let section = gen('section');
-    section.classList.add(product['productId']);
-    section.classList.add('product-container');
-    
-    // spacers that isolate the deck when spread
-    let spacer1 = gen('div');
-    // spacer1.classList.add('hidden');
-    let spacer2 = gen('div');
-    // spacer2.classList.add('hidden');
-    
-    let parent = document.getElementById(`${search}`);
-    parent.appendChild(section);
-    section.insertAdjacentElement('beforebegin', spacer1);
-    section.insertAdjacentElement('afterend', spacer2);
+    try {
+      let section = gen('section');
+      section.classList.add(product['productId']);
+      section.classList.add('product-container');
+      
+      // spacers that isolate the deck when spread
+      let spacer1 = gen('div');
+      // spacer1.classList.add('hidden');
+      let spacer2 = gen('div');
+      // spacer2.classList.add('hidden');
+      
+      let parent = document.getElementById(`${search}`);
+      parent.appendChild(section);
+      section.insertAdjacentElement('beforebegin', spacer1);
+      section.insertAdjacentElement('afterend', spacer2);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   /**
@@ -402,58 +413,62 @@
    * @param {String} search - query the item was returned from
    */
   function addProductCard(data, productId, displayName, image, search) {
+    try {
+      // add product photo
+      const photoDiv = gen('div');
+      photoDiv.classList.add('photo');
+      const photo = gen('img');
+      photo.src = image;
+      photo.alt = displayName;
+      photoDiv.appendChild(photo);
+      // console.log(data[0]);
+
+      // add aggregate scores from skus
+      let scores = productScores(data);
+      
+      const title = gen('h1');
+      title.textContent = displayName['displayName'];
+      title.classList.add("card-search");
+      // const title = gen('h1');
+      // title.textContent = displayName['displayName'];
+      const prodId = gen('h2');
+      prodId.textContent = 'ID: ' + productId;
+      // const average = gen('h2');
+      // average.textContent = 'Score average: ' + scores[1];
+      const max = gen('h2');
+      max.textContent = 'Score maximum: ' + scores[1];
+      // const min = gen('h2');
+      // min.textContent = 'Score minimum: ' + scores[3];
+      const count = gen('h2');
+      count.textContent = 'SKU count: ' + scores[0];
+
+      const contents = gen('div');
+      contents.classList.add('card-contents');
+      contents.appendChild(title);
+      // contents.appendChild(title);
+      contents.appendChild(prodId);
+      // contents.appendChild(average);
+      contents.appendChild(max);
+      // contents.appendChild(min);
+      contents.appendChild(count);
+
+      const article = gen('article');
+      article.classList.add('product-card');
+      article.classList.add('title-card');
+      article.appendChild(photoDiv);
+      article.appendChild(contents);
+
+      // const parent = document.getElementById(`${search}`);
+      const prodContainer = qs(`#${search} .${productId}`);
+      prodContainer.prepend(article);
+
+      article.addEventListener('click', (e) => {
+        spreadDeck(e);
+      });
+    } catch (err) {
+      console.error(err);
+    }
     
-    // add product photo
-    const photoDiv = gen('div');
-    photoDiv.classList.add('photo');
-    const photo = gen('img');
-    photo.src = image;
-    photo.alt = displayName;
-    photoDiv.appendChild(photo);
-    // console.log(data[0]);
-
-    // add aggregate scores from skus
-    let scores = productScores(data);
-    
-    const title = gen('h1');
-    title.textContent = displayName['displayName'];
-    title.classList.add("card-search");
-    // const title = gen('h1');
-    // title.textContent = displayName['displayName'];
-    const prodId = gen('h2');
-    prodId.textContent = 'ID: ' + productId;
-    // const average = gen('h2');
-    // average.textContent = 'Score average: ' + scores[1];
-    const max = gen('h2');
-    max.textContent = 'Score maximum: ' + scores[1];
-    // const min = gen('h2');
-    // min.textContent = 'Score minimum: ' + scores[3];
-    const count = gen('h2');
-    count.textContent = 'SKU count: ' + scores[0];
-
-    const contents = gen('div');
-    contents.classList.add('card-contents');
-    contents.appendChild(title);
-    // contents.appendChild(title);
-    contents.appendChild(prodId);
-    // contents.appendChild(average);
-    contents.appendChild(max);
-    // contents.appendChild(min);
-    contents.appendChild(count);
-
-    const article = gen('article');
-    article.classList.add('product-card');
-    article.classList.add('title-card');
-    article.appendChild(photoDiv);
-    article.appendChild(contents);
-
-    // const parent = document.getElementById(`${search}`);
-    const prodContainer = qs(`#${search} .${productId}`);
-    prodContainer.prepend(article);
-
-    article.addEventListener('click', (e) => {
-      spreadDeck(e);
-    });
   }
 
   /**
@@ -489,62 +504,65 @@
    *                  place the card on the page
    */
   async function addCard(data, value, skuData, sku, search, number) {
+    try {
+      // the card that we'll assemble below
+      const card = gen('article');
+      card.classList.add('product-card');
 
-    // the card that we'll assemble below
-    const card = gen('article');
-    card.classList.add('product-card');
+      // const parent = document.getElementById(`${search}`);
+      const prodContainer = qs(`#${search} .${data['productId']}`);
+      console.log(`#${search} .${data['productId']}`);
+      prodContainer.prepend(card);
+      // parent.appendChild(prodContainer);
+      const productID = sku + '_' + data['productId'];
 
-    // const parent = document.getElementById(`${search}`);
-    const prodContainer = qs(`#${search} .${data['productId']}`);
-    prodContainer.prepend(card);
-    // parent.appendChild(prodContainer);
-    const productID = sku + '_' + data['productId'];
-  
-    // add photo
-    // console.log(data);
-    const photoDiv = gen('div');
-    photoDiv.classList.add('photo');
-    const photo = gen('img');
-    photo.src = skuData['skuImg'];
-    // console.log(skuData);
-    photo.alt = data['displayName'];
-    photoDiv.appendChild(photo);
-    // console.log(photoDiv);
-    
-    // add title, productID, SKUID, overall score
-    const title = gen('h1');
-    title.textContent = data['displayName'];
-    const prodId = gen('h2');
-    prodId.textContent = 'ID: ' + productID;
-    const order = gen('p');
-    order.textContent = number;
-    const score = gen('h2');
-    score.textContent = 'Score: ' + value;
+      // add photo
+      const photoDiv = gen('div');
+      photoDiv.classList.add('photo');
+      const photo = gen('img');
+      photo.src = skuData['skuImg'];
+      // console.log(skuData);
+      photo.alt = data['displayName'];
+      photoDiv.appendChild(photo);
+      // console.log(photoDiv);
+      
+      // add title, productID, SKUID, overall score
+      const title = gen('h1');
+      title.textContent = data['displayName'];
+      const prodId = gen('h2');
+      prodId.textContent = 'ID: ' + productID;
+      const order = gen('p');
+      order.textContent = number;
+      const score = gen('h2');
+      score.textContent = 'Score: ' + value;
 
-    // score dropdown
-    const dropDownButton = gen('button');
-    dropDownButton.textContent = 'SCORE DETAILS';
-    dropDownButton.classList.add('collapsible');
-    const dropDownContainer = await scoreList(search, 
-      productID, card);
+      // score dropdown
+      const dropDownButton = gen('button');
+      dropDownButton.textContent = 'SCORE DETAILS';
+      dropDownButton.classList.add('collapsible');
+      const dropDownContainer = await scoreList(search, 
+        productID, card);
 
-    dropDownButton.addEventListener('click', () => {
-      dropDownButton.classList.toggle('active');
-      let content = dropDownButton.nextElementSibling;
-      content.classList.toggle('hidden');
-      sidebarScores(dropDownContainer, productID);
-      let sidebarDropDown = id(`#${productID}-scorelist`);
-      if (sidebarDropDown) {
-        sidebarDropDown.classList.toggle('hidden');
-      }
-    });
+      dropDownButton.addEventListener('click', () => {
+        dropDownButton.classList.toggle('active');
+        let content = dropDownButton.nextElementSibling;
+        content.classList.toggle('hidden');
+        sidebarScores(dropDownContainer, productID);
+        let sidebarDropDown = id(`#${productID}-scorelist`);
+        if (sidebarDropDown) {
+          sidebarDropDown.classList.toggle('hidden');
+        }
+      });
 
-    const contents = gen('div');
-    contents.classList.add('card-contents');
-    contents.append(title, prodId, order, score, dropDownButton, dropDownContainer);
+      const contents = gen('div');
+      contents.classList.add('card-contents');
+      contents.append(title, prodId, order, score, dropDownButton, dropDownContainer);
 
-    card.appendChild(photoDiv);
-    card.appendChild(contents);
+      card.appendChild(photoDiv);
+      card.appendChild(contents);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   /**
