@@ -9,10 +9,12 @@
 
   window.addEventListener('load', init);
 
-  // const portions of api url
-  const QUERY_URL = 'https://lululemon.c.lucidworks.cloud/api/apps/LLM_us/query/LLM_us?q=';
-  const DEBUG_URL = '&debug=results&debug.explain.structured=true';
-  let cookieId;
+  // holds current jwt
+  let jwt;
+
+  // api constants
+  const API_URL = 'https://lululemon-dev.c.lucidworks.cloud';
+  const APPID = 'LLM_us';
 
   // holds extracted product information from cleaned json files
   let allProducts = {};
@@ -23,15 +25,62 @@
    */
   async function init() {
     try {
+      qs('#auth form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await authenticateJWT(e);
+      });
       // prep searchbar to query api
-      cookieId = document.cookie;
       id('search-form').addEventListener('submit', async (e) => {
-        e.preventDefault;     // possibly remove, might want page reload?
+        e.preventDefault();     // possibly remove, might want page reload?
         await loadPage(e);
       });
       console.log(allProducts);
     } catch (err) {
       console.error('init ' + err);
+    }
+  }
+
+  async function authenticateJWT() {
+    try {
+      let user = qs('#auth form')['username'].value;
+      let password = qs('#auth form')['password'].value;
+      await refreshJwt(API_URL, user, password);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  // refreshes current jwt, obtaining new from fusion rest api and schedules
+  // method to run again before jwt expires
+  async function refreshJwt(apiUrl, user, password) {
+    const loginUrl = `${apiUrl}/oauth2/token`;
+    const auth = btoa(`${user}:${password}`);
+    const authHeader = `Basic ${auth}`;
+
+    // execute httppost to get jwt
+    console.log(`Obtaining new JWT via ${loginUrl}`);
+    try {
+      const response = await fetch(loginUrl, {
+        method: 'POST',
+        headers: { 'Authorization': authHeader }
+      });
+      await statusCheck(response);
+
+      const responseJSON = await response.json();
+      console.log(responseJSON);
+      jwt = responseJSON['access_token'];
+      const secondsUntilExpiration = parseInt(responseJSON['expires_in']);
+
+      // reschedule before it expires
+      const graceSeconds = secondsUntilExpiration > 15 ? 10 : 2;
+      const secondsUntilRefresh = secondsUntilExpiration - graceSeconds;
+      console.log(`Successfully refreshed JWT, refreshing again in ${secondsUntilRefresh} seconds`);
+
+      setTimeout(async () => {
+        await refreshJwt(apiUrl, user, password);
+      }, secondsUntilRefresh * 1000);
+    } catch (e) {
+      console.error('Attempt to retrieve JWT token failed due to exception. Exiting...', e);
     }
   }
 
@@ -71,16 +120,19 @@
   async function queryData(e) {
     e.preventDefault();
     try {
+      // authenticate current jwt by adding it in auth header
+      const headers = {
+        'Authorization': `Bearer ${jwt}`
+      };
+
       // get the search string, query api
       let search = id('searchbar').value;
       search = search.split(' ').join('%20');
-      let res = await fetch(QUERY_URL + search + DEBUG_URL, {
-        'authority': 'lululemon-dev.c.lucidworks.cloud',
-        'method': 'GET',
-        'credentials': 'include',
-      });
+      const queryURL = `/api/apps/${APPID}/query/${APPID}?q=${search}&debug=results&debug.explain.structured=true`;
+      
+      let res = await fetch(API_URL + queryURL, { headers });
       await statusCheck(res);
-      res = res.json();         // this is the new "dirty" data to parse
+      res = await res.json();         // this is the new "dirty" data to parse
       console.log(res);
 
       // decompose products list & scores, write to allProducts and allDetails
