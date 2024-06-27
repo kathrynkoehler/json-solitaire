@@ -13,6 +13,7 @@
   margin: 1rem;
   position: sticky;
   top: 2rem;
+  /* box-sizing: border-box; */
 }
 
 #sidebar ul {
@@ -121,7 +122,7 @@ option {
   
   height: 16px;
   width: 16px;
-  background: url('.public/img/plus.png');
+  background: url('./img/plus.png');
 }
 
 #searchbar::-webkit-search-cancel-button::before, 
@@ -227,6 +228,7 @@ option {
 /* show that the sidebar heading for scores is clickable */
 #scores > div > h2 {
   cursor: pointer;
+  margin-bottom: 0.5rem;
 }
 
 .category {
@@ -234,4 +236,3 @@ option {
   font-size: medium;
   position: relative;
 }
-

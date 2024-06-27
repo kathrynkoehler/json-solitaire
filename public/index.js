@@ -136,9 +136,9 @@
       console.log(res);
 
       // decompose products list & scores, write to allProducts and allDetails
-      search = search.split(" ").join("-");
-      search = search.split(".")[0];
-      decomposeSKU(res, search);
+      // search = search.split(" ").join("-");
+      // search = search.split(".")[0];
+      decomposeSKU(res);
     } catch (err) {
       console.error('queryData: ' + err);
     }
@@ -149,10 +149,8 @@
    * to save for each listed product. Also extracts score details and saves
    * those breakdowns.
    * @param {Object} data - the JSON data to parse
-   * @param {String} search - the search being parsed. used to organize the 
-   *                  resulting decomposed data. TODO: remove
    */
-  function decomposeSKU(data, search) {
+  function decomposeSKU(data) {
     const skus = data["debug"]["explain"];
     let item;
     let value;
@@ -185,22 +183,22 @@
           'productId': prodId,
           'displayName' : array[0],
           'size': array[1],    // when image removed, change to [1]
-          // 'prodImg': img,
+          'prodImg': array[2],
           'skus': {}
         }
       }
       // console.log((array[2]).toString());
       allProducts[prodId]['skus'][skuId] = {
         'skuScore': value, 
-        'skuImg': array[2],
+        'skuImg': array[3],
         // 'color': array[4],
-        'price': array[3]
+        'price': array[4]
       };
       
       // extract details for every sku_prodid item
       let depth = 0;
       allDetails[item] = [];
-      let newObj = traverseDetails(depth, search, item, (skus[item]));
+      let newObj = traverseDetails(depth, item, (skus[item]));
     }
   }
 
@@ -222,7 +220,7 @@
       if (docs[item]["product_id"] === productId) { //&& docs[item]["sku_id"] === skuId
         let array = [docs[item]["product_displayName"],   // object[0]
             docs[item]["sku_size"],                       // object[1]
-            // docs[item]["sku_skuImages"][0],               // object[2] (prod img)
+            docs[item]["sku_skuImages"][0],               // object[2] (prod img)
             // docs[item]["list_price"]
           ];                    // object[3]
 
@@ -261,7 +259,7 @@
    * @param {Object} item - the JSON object being traversed
    * @returns the array of score depth + description + value for each nested object
    */
-  function traverseDetails(depth, search, prodId, item) {
+  function traverseDetails(depth, prodId, item) {
     
     // for each field in json, check if it's 'details'
     let object = [];
@@ -276,11 +274,11 @@
           allDetails[prodId].push([depth+1, short[i]["description"], short[i]["value"]]);
           
           // then check for more details
-          traverseDetails(depth+1, search, prodId, short[i]);
+          traverseDetails(depth+1, prodId, short[i]);
         }
 
         // when finished with one obj, do the other nested ones too
-        traverseDetails(depth, search, prodId, item["details"]);
+        traverseDetails(depth, prodId, item["details"]);
       } else {
         return object;
       }
@@ -316,46 +314,41 @@
     try {
 
       // change search title on sidebar
-      // await search();
-      sidebarTitle();
+      // sidebarTitle();
+      let search = id('searchbar').value;
 
-      // for each search query object in allProducts, build separate section
-      let file;
-      for (file in allProducts) {
-        // allDetails[file] = await readDetails(file);
-        addHeader(file);
+      // build section within #items to contain decks
+      addHeader(search);
 
-        // for each product in file, create card stack with displayname, score, skus
-        let product;
-        for (product in allProducts[file]) {
-          addProductSection(allProducts[file][product], file);
+      // for each product in file, create card stack with displayname, score, skus
+      let product;
+      for (product in allProducts) {
+        let item = allProducts[product];
+        addProductSection(item, search);
 
-          // for each sku in product, create card with image, score
-          let sku;
-          let i = 1;
-          for (sku in allProducts[file][product]['skus']) {
-            // console.log(allProducts[file][product]['productId']);
-            // console.log(allProducts[file][product]['skus'][sku]);
-            await addCard(allProducts[file][product], 
-              allProducts[file][product]['skus'][sku]['skuScore'], 
-              allProducts[file][product]['skus'][sku],
-              sku,
-              file, 
-              i++);
-          }
-
-          // create the title card for the front of the stack
-          addProductCard(allProducts[file][product]['skus'], 
-            product, 
-            allProducts[file][product],
-            allProducts[file][product]['skus'][sku],
-            file);
+        // for each sku in product, create card with image, score
+        let sku;
+        let count = Object.keys(item['skus']).length;
+        for (sku in item['skus']) {
+          // console.log(allProducts[file][product]['productId']);
+          // console.log(allProducts[file][product]['skus'][sku]);
+          await addCard(item,                 // data
+            item['skus'][sku]['skuScore'],    // value
+            item['skus'][sku],                // skudata
+            sku,                                              // sku
+            search,                                           // section
+            count--);                                         // number
         }
-        // qs(`#${file}`).appendChild(gen('div'));
-        
+
+        // create the title card for the front of the stack
+        addProductCard(item['skus'],    // data
+          product,                      // prodid
+          item,                         // displayname
+          item['prodImg'],              // image
+          search);                      // section
       }
+      sidebarTitle();
       scoreIndent();
-      
     } catch (err) {
       console.error('buildInterface ' + err);
     }
@@ -408,15 +401,15 @@
    * @param {String} displayName - Display name of product
    * @param {String} search - query the item was returned from
    */
-  function addProductCard(data, productId, displayName, skuData, search) {
+  function addProductCard(data, productId, displayName, image, search) {
     
     // add product photo
-    // const photoDiv = gen('div');
-    // photoDiv.classList.add('photo');
-    // const photo = gen('img');
-    // photo.src = skuData['skuImg'];
-    // photo.alt = data['displayName'];
-    // photoDiv.appendChild(photo);
+    const photoDiv = gen('div');
+    photoDiv.classList.add('photo');
+    const photo = gen('img');
+    photo.src = image;
+    photo.alt = displayName;
+    photoDiv.appendChild(photo);
     // console.log(data[0]);
 
     // add aggregate scores from skus
@@ -429,12 +422,12 @@
     // title.textContent = displayName['displayName'];
     const prodId = gen('h2');
     prodId.textContent = 'ID: ' + productId;
-    const average = gen('h2');
-    average.textContent = 'Score average: ' + scores[1];
+    // const average = gen('h2');
+    // average.textContent = 'Score average: ' + scores[1];
     const max = gen('h2');
-    max.textContent = 'Score maximum: ' + scores[2];
-    const min = gen('h2');
-    min.textContent = 'Score minimum: ' + scores[3];
+    max.textContent = 'Score maximum: ' + scores[1];
+    // const min = gen('h2');
+    // min.textContent = 'Score minimum: ' + scores[3];
     const count = gen('h2');
     count.textContent = 'SKU count: ' + scores[0];
 
@@ -443,18 +436,18 @@
     contents.appendChild(title);
     // contents.appendChild(title);
     contents.appendChild(prodId);
-    contents.appendChild(average);
+    // contents.appendChild(average);
     contents.appendChild(max);
-    contents.appendChild(min);
+    // contents.appendChild(min);
     contents.appendChild(count);
 
     const article = gen('article');
     article.classList.add('product-card');
     article.classList.add('title-card');
-    // article.appendChild(photoDiv);
+    article.appendChild(photoDiv);
     article.appendChild(contents);
 
-    const parent = document.getElementById(`${search}`);
+    // const parent = document.getElementById(`${search}`);
     const prodContainer = qs(`#${search} .${productId}`);
     prodContainer.prepend(article);
 
@@ -470,20 +463,20 @@
    */
   function productScores(product) {
     let count = 0;
-    let total = 0;
+    // let total = 0;
     let max = 0;
-    let min = 5000000000;
+    // let min = 5000000000;
 
     let sku;
     for (sku in product) {
       let current = parseFloat(product[sku]['skuScore']);
-      total += current;
+      // total += current;
       count ++;
       if (current > max) max = current;
-      if (current < min) min = current;
+      // if (current < min) min = current;
     }
-    let average = total / count;
-    return [count, average, max, min];
+    // let average = total / count;
+    return [count, max];
   }
 
   /**
@@ -503,7 +496,7 @@
 
     // const parent = document.getElementById(`${search}`);
     const prodContainer = qs(`#${search} .${data['productId']}`);
-    prodContainer.appendChild(card);
+    prodContainer.prepend(card);
     // parent.appendChild(prodContainer);
     const productID = sku + '_' + data['productId'];
   
@@ -570,28 +563,28 @@
     dropDownContainer.id = itemId + '-scorelist';
     
     // let file = await readDetails(search);
-    let file = allDetails[search];
+    // let file = allDetails[search];
 
     // for each product in search results, check if it's the item we need
     let item;
-    for (item in file) {
+    for (item in allDetails) {
       if (item === itemId) {
 
         // for each score in item, add to item dropdown
         let score;
-        for (score in file[item]) {
+        for (score in allDetails[item]) {
           const div = gen('div');
 
           const description = gen('p');
-          let descContent = file[itemId][score][1];
+          let descContent = allDetails[itemId][score][1];
           description.textContent = descContent;
           description.classList.add("detail-desc");
 
-          let indent = "indent-" + file[itemId][score][0];
+          let indent = "indent-" + allDetails[itemId][score][0];
           description.classList.add(indent);
 
           const value = gen('p');
-          let valContent = file[itemId][score][2];
+          let valContent = allDetails[itemId][score][2];
           value.textContent = valContent;
           value.classList.add("detail-val");
 
@@ -670,68 +663,18 @@
   }
 
   /**
-   * builds sidebar dropdown to allow user to select which files (searches) to
-   * display returned product cards for.
-   */
-  async function search() {
-    try {
-      // let res = await fetch('/files');
-      // await statusCheck(res);
-      // let data = await res.json();
-
-      // let parent = qs("select");
-      // parent.innerHTML = '';
-      
-      // for (let i = 0; i < data.length; i++) {
-      //   let name = data[i].split(".")[0];
-      //   let option = gen("option");
-      //   option.value = name;
-      //   option.textContent = name;
-      //   parent.appendChild(option);
-      // }
-
-      // let all = gen("option");
-      // all.value = "all";
-      // all.textContent = "all files";
-
-      // qsa("option")[0].selected = true;
-      // parent.appendChild(all);
-      
-      
-    } catch (err) {
-      console.error('get data: ' + err); 
-    }
-  }
-
-  /**
-   * hides non-selected search file contents.
-   */
-  function hideSections() {
-    let selection = qs("select").value;
-    let sections = qsa("#items > section");
-    let search = selection.split(" ").join("-");
-    if (selection !== "all") {
-      for (let i = 0; i < sections.length; i++) {
-        if (sections[i].id !== search) {
-          sections[i].classList.add('hidden');
-        } else {
-          sections[i].classList.remove('hidden');
-        }
-      }
-    } else {
-      for (let i = 0; i < sections.length; i++) {
-        sections[i].classList.remove('hidden');
-      };
-    }
-  }
-
-  /**
    * based upon the selected file to show contents for, changes the title of the
    * sidebar.
    */
   function sidebarTitle() {
     let search = id('searchbar').value;
     qs("#results-desc > h1").textContent = search;
+
+    // show how many products are returned
+    search = search.split(' ').join('-');
+    let count = qsa(`#${search} > section`).length;
+    let span = qs('#results-desc span');
+    span.textContent = count;
   }
 
   /**

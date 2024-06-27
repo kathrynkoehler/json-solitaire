@@ -10,7 +10,7 @@ main {
   /* width: 80%; */
   width: 1580px;
   margin: auto;
-  margin-top: 1rem;
+  margin-top: 2rem;
 }
 
 #items h1 {
@@ -245,8 +245,10 @@ main {
   padding: 5px;
   display: block;
   max-height: 35rem;
-  max-width: 330px;
+  width: 100%;
+  /* max-width: 330px; */
   color: black;
+  box-sizing: border-box;
 }
 
 /* group the added details */
