@@ -27,13 +27,16 @@
    */
   async function init() {
     try {
-      qs('#auth form').addEventListener('submit', async (e) => {
+      let auth = qs('#auth form');
+      auth.addEventListener('submit', async (e) => {
         e.preventDefault();
         await authenticateJWT(e);
+        auth['username'].value = '';
+        auth['password'].value = '';
       });
       // prep searchbar to query api
       id('search-form').addEventListener('submit', async (e) => {
-        e.preventDefault();     // possibly remove, might want page reload?
+        e.preventDefault();
         await loadPage(e);
       });
     } catch (err) {
