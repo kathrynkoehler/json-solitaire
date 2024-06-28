@@ -145,7 +145,7 @@
       let res = await fetch(API_URL + queryURL, { headers });
       await statusCheck(res);
       res = await res.json();         // this is the new "dirty" data to parse
-      console.log(res);
+      // console.log(res);
 
       // decompose products list & scores, write to allProducts and allDetails
       // search = search.split(" ").join("-");
@@ -313,7 +313,7 @@
   async function displayData() {
     try {
       // build card decks, change title to match query
-      console.log(allProducts);
+      // console.log(allProducts);
       await buildInterface();
       // sidebarTitle();
 
@@ -330,11 +330,11 @@
    */
   async function buildInterface() {
     try {
-
-      let search = id('searchbar').value;
-      search = search.split(" ").join("-");
+      
       qs('#scores').innerHTML = '';
       qs('#checklist').innerHTML = '';
+      let search = id('searchbar').value;
+      search = search.split(" ").join("-");
 
       // build section within #items to contain decks
       addHeader(search);
@@ -548,27 +548,34 @@
       order.textContent = number;
       const score = gen('h2');
       score.textContent = 'Score: ' + value;
-
+      
       // score details button + list
       const dropDownButton = gen('button');
       dropDownButton.textContent = 'SCORE DETAILS';
       dropDownButton.classList.add('collapsible');
       let scores = await scoreList(productID, card);
       const dropDownContainer = scores;
+
+      const summary = scoreSummary(scores);
+      photoDiv.appendChild(summary);
+      
       dropDownButton.addEventListener('click', () => {
+        // handle main score details
         dropDownButton.classList.toggle('active');
-        let sidebarDropDown = id(`#${productID}-scorelist`);
+        let sidebarDropDown = id(`${productID}-scorelist`);
         if (sidebarDropDown) {
           sidebarDropDown.classList.toggle('hidden');
         } else {
           sidebarScores(dropDownContainer, productID);
         }
+        // handle score summary
+        photo.classList.toggle('hidden');
+        summary.classList.toggle('hidden');
       });
-      // const simple = scores[1];
 
       const contents = gen('div');
       contents.classList.add('card-contents');
-      contents.append(title, prodId, order, score, dropDownButton, dropDownContainer);
+      contents.append(title, prodId, order, score, dropDownButton);
       card.appendChild(photoDiv);
       card.appendChild(contents);
     } catch (err) {
@@ -627,12 +634,6 @@
               let depth = parent.classList.value;
               depth = parseInt(depth.split("-")[1]);
               let check = (parseInt(allDetails[itemId][score][0]) - 1);
-
-              // console.log('child ', child);
-              // console.log('parent ', parent);
-              // console.log('depth ', depth);
-              // console.log("indent ", check);
-
               
               if (depth < check) {  // if we're not deep enough, go deeper
                 child = parent.querySelectorAll('details');
@@ -655,9 +656,9 @@
           // check which boosts are applied & add class to card for filtering
           if (descContent === "boost") {
             let context = (div.parentNode).parentNode.parentNode.parentNode;
-            console.log('context ', context);
+            // console.log('context ', context);
             let name = context.childNodes[0].textContent;
-            console.log('name ', name);
+            // console.log('name ', name);
             name = (name.split(' ')[0]).split(':')[1];
             // console.log(name);
             card.classList.add(`${name}-boost-${valContent}`);
@@ -666,12 +667,12 @@
             container.classList.add(`${name}-boost-${valContent}`);
             sidebarOption(`${name}-boost-${valContent}`);
             div.classList.add('scoreboost');
-          // } else if (descContent === "max of") {
-          //   scoreSummary(allDetails[item], valContent);
           } else {
-            descContent = descContent.split(',')[0];
-            if (descContent === 'idf' || descContent === 'tf') {
-              div.classList.add('scorenote');
+            descContent = descContent.split('(')[0];
+            if (descContent === 'weight') {   //descContent === 'idf' || descContent === 'tf'
+              div.classList.add('scoreweight');
+            } else if (descContent === 'max of:') {
+              div.classList.add('scoremax');
             }
           }
         }
@@ -680,17 +681,70 @@
     }
   }
 
+  /**
+   * pull out the core details of the score breakdown for display on each
+   * SKU card.
+   */
   function scoreSummary(list) {
-    // let simple = gen('details');
-        // let title = gen('summary');
-        // title.textContent = 'Score Summary';
-        // simple.classList.add('content');
-    let indent = 0;
-    for (let i = 0; i < list.childNodes.length; i++) {
-      if (list[i].childNodes[0].textContent === "max of") {
-        
+
+    // array to hold the important tf/idf vals we pull out
+    let div = gen('div');
+    div.classList.add('hidden');
+    div.classList.add('content');
+
+    // traverse list and look for "max of:" calculations
+    let max = list.querySelectorAll('.scoremax');
+    // console.log(list);
+    for (let i = 0; i < max.length; i++) {
+      // console.log('in max');
+      // set the max value we're looking for in the weights it contains
+      let target = max[i].childNodes[1].textContent;
+      // console.log(target);
+      let weights = max[i].parentNode.parentNode.querySelectorAll('.scoreweight');
+      // console.log(max[i].parentNode);
+      for (let k = 0; k < weights.length; k++) {
+        // console.log('in weights');
+        // if the value matches, save this weight to the array
+        let val = weights[k].childNodes[1].textContent;
+        if (val === target) {
+          // console.log('added div');
+          console.log(val, target);
+          let copy = (weights[k].parentNode.parentNode).cloneNode(true);
+          (copy.childNodes[0]).childNodes[0].textContent = 
+            ((copy.childNodes[0]).childNodes[0]).textContent.split(' [')[0];
+          div.append(copy);
+          // console.log(copy);
+        }
       }
     }
+    // now check for weights that weren't taken as a maximum
+    let outer = list.querySelectorAll('.scoreweight');
+    for (let i = 0; i < outer.length; i++) {
+      let parent = (outer[i].parentNode.parentNode).parentNode;
+      // console.log(parent);
+      parent = parent.childNodes[0].childNodes[0].textContent.split(' ')[0];
+      console.log(parent);
+      if (parent !== "max") {
+        let copy = (outer[i].parentNode.parentNode).cloneNode(true);
+        (copy.childNodes[0]).childNodes[0].textContent = 
+          ((copy.childNodes[0]).childNodes[0]).textContent.split(' [')[0];
+        div.append(copy);
+        // console.log(copy);
+      }
+    }
+
+    // build new element to hold array contents, and return to og addcard call
+    return div;
+
+    // let parent = cores[i].parentNode;
+    // let content = parent.childNodes[0].childNodes[0].childNodes[0].textContent;
+    // if (content === "max of:") {
+    //   let max = parent.childNodes[0].childNodes[0].childNodes[1];
+
+    // } else {
+    //   // it's not under a "max" umbrella, so we can just pull these out
+    // }
+    
   }
 
   /**
@@ -777,6 +831,7 @@
     let label = gen('span');
     label.textContent = title;
     label.classList.add('category');
+    label.classList.add(`${title}`);
     let icon = gen('img');
     icon.src = './img/x.png';
 

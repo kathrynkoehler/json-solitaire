@@ -235,7 +235,7 @@ summary::before {
   width: 1em;
   flex-shrink: 0;
   transition: 0.3s;
-  margin-top: 0.3em;
+  margin-top: 0.2em;
 }
 
 details[open] > summary::before {
