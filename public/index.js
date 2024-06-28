@@ -368,7 +368,7 @@
           search);                      // section
       }
       sidebarTitle();
-      scoreIndent();
+      // scoreIndent(); 
     } catch (err) {
       console.error('buildInterface ' + err);
     }
@@ -588,9 +588,6 @@
     dropDownContainer.classList.add('content');
     dropDownContainer.classList.add('hidden');
     dropDownContainer.id = itemId + '-scorelist';
-    
-    // let file = await readDetails(search);
-    // let file = allDetails[search];
 
     // for each product in search results, check if it's the item we need
     let item;
@@ -604,6 +601,8 @@
         // for each score in item, add to item dropdown
         let score;
         for (score in allDetails[item]) {
+          const drop = gen('details');
+          const summary = gen('summary');
           const div = gen('div');
 
           const description = gen('p');
@@ -612,7 +611,7 @@
           description.classList.add("detail-desc");
 
           let indent = "indent-" + allDetails[itemId][score][0];
-          description.classList.add(indent);
+          // description.classList.add(indent);
 
           const value = gen('p');
           let valContent = allDetails[itemId][score][2];
@@ -621,19 +620,54 @@
 
           div.appendChild(description);
           div.appendChild(value);
-          dropDownContainer.appendChild(div);
+          summary.appendChild(div);
+          drop.appendChild(summary);
+          drop.classList.add(indent);
+
+          let child = dropDownContainer.querySelectorAll('details');
+          let parent = child[child.length-1];
+          if (child.length > 0) {
+            while (parent) {
+              let depth = parent.classList.value;
+              depth = parseInt(depth.split("-")[1]);
+              let check = (parseInt(allDetails[itemId][score][0]) - 1);
+
+              // console.log('child ', child);
+              // console.log('parent ', parent);
+              // console.log('depth ', depth);
+              // console.log("indent ", check);
+
+              
+              if (depth < check) {  // if we're not deep enough, go deeper
+                child = parent.querySelectorAll('details');
+                parent = child[child.length-1];
+              } else if (depth === check) {   // if correct depth, append
+                // console.log('inner else');
+                parent.appendChild(drop);
+                parent = false;
+              } else {             // if too deep, reverse
+                // console.log('final else ???');
+                parent = parent.parentNode;
+              }
+            }
+          } else {
+            // if there's nothing in the list yet, add current to list
+            // console.log('outer else');
+            dropDownContainer.appendChild(drop);
+          }
 
           // check which boosts are applied & add class to card for filtering
           if (descContent === "boost") {
-            let context = (div.previousElementSibling).previousElementSibling;
-            // console.log(context);
+            let context = (div.parentNode).parentNode.parentNode.parentNode;
+            console.log('context ', context);
             let name = context.childNodes[0].textContent;
+            console.log('name ', name);
             name = (name.split(' ')[0]).split(':')[1];
             // console.log(name);
             card.classList.add(`${name}-boost-${valContent}`);
-            const parent = card.parentElement;
+            const container = card.parentElement;
             // add hide-boost to entire product stack when filtered
-            parent.classList.add(`${name}-boost-${valContent}`);
+            container.classList.add(`${name}-boost-${valContent}`);
             sidebarOption(`${name}-boost-${valContent}`);
             div.classList.add('scoreboost');
           } else {
@@ -642,11 +676,6 @@
               div.classList.add('scorenote');
             }
           }
-
-          // make a summary dropdown for the score details
-          // if (allDetails[itemId][score][0] < 6) {
-          //   simple.appendChild(div);
-          // }
         }
         return dropDownContainer;
       }
@@ -658,7 +687,7 @@
    */
   function scoreIndent() {
     for (let i = 1; i < 10; i++) {
-      let desc = qsa(`.indent-${i}`);
+      let desc = qsa(`details .indent-${i}`);
       for (let k = 0; k < desc.length; k++) {
         let indent = (i-1) * 8;
         desc[k].style.marginLeft = `${indent}px`;

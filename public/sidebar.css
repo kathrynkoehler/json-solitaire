@@ -216,3 +216,34 @@ option {
   line-height: 1.2;
   font-size: 16px; */
 }
+
+/* -------- Score List --------- */
+
+details {
+  margin-left: 10px;
+}
+
+summary {
+  display: flex;
+  align-items: start;
+  cursor: pointer;
+  list-style: none;
+}
+
+summary::before {
+  content: '▶︎';
+  width: 1em;
+  flex-shrink: 0;
+  transition: 0.3s;
+  margin-top: 0.3em;
+}
+
+details[open] > summary::before {
+  transform: rotate(90deg);
+  transform-origin: 40% 45% 0;
+}
+
+summary > * {
+  display: flex;
+  justify-content: space-between;
+}
