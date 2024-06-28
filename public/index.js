@@ -588,18 +588,11 @@
     dropDownContainer.classList.add('content');
     dropDownContainer.classList.add('hidden');
     dropDownContainer.id = itemId + '-scorelist';
-    
-    // let file = await readDetails(search);
-    // let file = allDetails[search];
 
     // for each product in search results, check if it's the item we need
     let item;
     for (item in allDetails) {
       if (item === itemId) {
-        // let simple = gen('details');
-        // let title = gen('summary');
-        // title.textContent = 'Score Summary';
-        // simple.classList.add('content');
 
         // for each score in item, add to item dropdown
         let score;
@@ -636,6 +629,8 @@
             parent.classList.add(`${name}-boost-${valContent}`);
             sidebarOption(`${name}-boost-${valContent}`);
             div.classList.add('scoreboost');
+          // } else if (descContent === "max of") {
+          //   scoreSummary(allDetails[item], valContent);
           } else {
             descContent = descContent.split(',')[0];
             if (descContent === 'idf' || descContent === 'tf') {
@@ -649,6 +644,19 @@
           // }
         }
         return dropDownContainer;
+      }
+    }
+  }
+
+  function scoreSummary(list) {
+    // let simple = gen('details');
+        // let title = gen('summary');
+        // title.textContent = 'Score Summary';
+        // simple.classList.add('content');
+    let indent = 0;
+    for (let i = 0; i < list.childNodes.length; i++) {
+      if (list[i].childNodes[0].textContent === "max of") {
+        
       }
     }
   }
@@ -698,9 +706,13 @@
     section.previousSibling.classList.add('spread');
     // section.nextSibling.classList.remove('hidden');
     section.nextSibling.classList.add('spread')
+
+    // give the spreaders a moment to transition
+    setTimeout(() => {
+      // make sure the page view follows the new element location
+      section.scrollIntoView({behavior: 'smooth', block: 'center'});
+    }, 300);
     
-    // make sure the page view follows the new element location
-    section.scrollIntoView({behavior: 'smooth', block: 'center'});
   }
 
   /**
@@ -752,43 +764,6 @@
     container.appendChild(scorelist);
 
     sidebar.appendChild(container);
-  }
-
-  // build expandable icon svg for score list on sidebar
-  function scoreSvg() {
-    let expand = gen('div');
-    let svg1 = gen('img');
-    let svg2 = gen('img');
-    svg1.src = './img/minus.png';
-    svg2.src = './img/minus.png';
-    svg1.classList.add('expandIcon');
-    svg2.classList.add('expandIcon');
-
-    expand.append(svg1, svg2);
-    expand.classList.add('expandedToggle');
-    expand.addEventListener('click', () => {
-      expand.classList.toggle('expandedToggle');
-      expand.classList.toggle('expandToggle');
-    });
-
-    // console.log(expand);
-    return expand;
-  }
-
-  function buildSvg() {
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('viewBox', "0 0 24 24");
-    svg.setAttribute('height', "24");
-    svg.setAttribute('width', "24");
-    svg.classList.add('expandIcon');
-
-    let path = gen('path');
-    path.setAttribute('d', "M21.39 12.75a1 1 0 0 0 1-1v-.5h-19a1 1 0 0 0-1 1v.5Z");
-    path.setAttribute('stroke', "red");
-    console.log(path);
-
-    svg.appendChild(path);
-    return svg;
   }
 
   /**
