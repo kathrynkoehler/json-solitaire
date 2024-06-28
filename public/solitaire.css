@@ -252,7 +252,7 @@ main {
 }
 
 /* group the added details */
-.content > div {
+.content div {
   display: flex;
   justify-content: space-between;
   width: 100%;
