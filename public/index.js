@@ -27,6 +27,7 @@
    */
   async function init() {
     try {
+      // prep login to authenticate new jwt
       let auth = qs('#auth form');
       auth.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -34,6 +35,14 @@
         auth['username'].value = '';
         auth['password'].value = '';
       });
+      let signin = id('signin');
+      signin.addEventListener('click', () => {
+        auth.classList.toggle('hidden');
+      });
+      qs('#error img').addEventListener('click', () => {
+        id('error').classList.add('hidden');
+      });
+
       // prep searchbar to query api
       id('search-form').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -44,13 +53,18 @@
     }
   }
 
+  /**
+   * Shows an informative error message to user when JWT authentication or
+   * API query fails.
+   * @param {String} message - en explanation of where the error occurred
+   * @param {String} err - the error returned by the server
+   */
   function handleError(message, err) {
     let display = qs('#error p');
     display.textContent = message + err;
+    id('items').innerHTML = '';
+    // console.log(qs('#items'));
     id('error').classList.remove('hidden');
-    // when making initial element on page, add 'x' to close (.hidden)
-    // but otherwise leave up indefinitely
-    // cover entire #items section? or all of main?
   }
 
   /**
@@ -64,7 +78,6 @@
       await refreshJwt(API_URL, user, password);
     } catch (err) {
       console.error(err);
-      // TODO: add handlerror here to show user there was a failure
     }
   }
 
@@ -93,12 +106,14 @@
       const graceSeconds = secondsUntilExpiration > 15 ? 10 : 2;
       const secondsUntilRefresh = secondsUntilExpiration - graceSeconds;
       console.log(`Successfully refreshed JWT, refreshing again in ${secondsUntilRefresh} seconds`);
-
+      qs('#auth form').classList.toggle('hidden');
+      qs('#error').classList.add('hidden');
       setTimeout(async () => {
         await refreshJwt(apiUrl, user, password);
       }, secondsUntilRefresh * 1000);
-    } catch (e) {
-      console.error('Attempt to retrieve JWT token failed due to exception. Exiting...', e);
+    } catch (err) {
+      console.error('Attempt to retrieve JWT token failed due to exception. Exiting...', err);
+      handleError('Error authenticating JWT: ', err);
     }
   }
 
@@ -136,6 +151,7 @@
     e.preventDefault();
     try {
       // authenticate current jwt by adding it in auth header
+      id('items').innerHTML = '';
       const headers = {
         'Authorization': `Bearer ${jwt}`
       };
@@ -149,14 +165,13 @@
       await statusCheck(res);
       res = await res.json();         // this is the new "dirty" data to parse
       // console.log(res);
-
+      qs('#error').classList.add('hidden');
       // decompose products list & scores, write to allProducts and allDetails
-      // search = search.split(" ").join("-");
-      // search = search.split(".")[0];
       decomposeSKU(res);
     } catch (err) {
       console.error('queryData: ' + err);
       // TODO: add handlerror here to show user there was a failure to fetch
+      handleError('Error querying API: ', err);
 
     }
   }
@@ -316,9 +331,7 @@
   async function displayData() {
     try {
       // build card decks, change title to match query
-      // console.log(allProducts);
       await buildInterface();
-      // sidebarTitle();
 
       // enable filtering on boosts
       id('filter-btn').addEventListener('click', filterCards);
@@ -384,7 +397,6 @@
   function addHeader(search) {
     try {
       let section = gen('section');
-      
       section.id = search;
 
       let load = gen('div');
@@ -413,9 +425,7 @@
       
       // spacers that isolate the deck when spread
       let spacer1 = gen('div');
-      // spacer1.classList.add('hidden');
       let spacer2 = gen('div');
-      // spacer2.classList.add('hidden');
       
       let parent = document.getElementById(`${search}`);
       parent.appendChild(section);
@@ -442,7 +452,6 @@
       photo.src = image;
       photo.alt = displayName;
       photoDiv.appendChild(photo);
-      // console.log(data[0]);
 
       // add aggregate scores from skus
       let scores = productScores(data);
@@ -617,7 +626,6 @@
           description.classList.add("detail-desc");
 
           let indent = "indent-" + allDetails[itemId][score][0];
-          // description.classList.add(indent);
 
           const value = gen('p');
           let valContent = allDetails[itemId][score][2];
@@ -642,30 +650,25 @@
                 child = parent.querySelectorAll('details');
                 parent = child[child.length-1];
               } else if (depth === check) {   // if correct depth, append
-                // console.log('inner else');
                 parent.appendChild(drop);
                 parent = false;
-              } else {             // if too deep, reverse
-                // console.log('final else ???');
+              } else {                        // if too deep, reverse
                 parent = parent.parentNode;
               }
             }
           } else {
             // if there's nothing in the list yet, add current to list
-            // console.log('outer else');
             dropDownContainer.appendChild(drop);
           }
 
           // check which boosts are applied & add class to card for filtering
           if (descContent === "boost") {
             let context = (div.parentNode).parentNode.parentNode.parentNode;
-            // console.log('context ', context);
             let name = context.childNodes[0].textContent;
-            // console.log('name ', name);
             name = (name.split(' ')[0]).split(':')[1];
-            // console.log(name);
             card.classList.add(`${name}-boost-${valContent}`);
             const container = card.parentElement;
+
             // add hide-boost to entire product stack when filtered
             container.classList.add(`${name}-boost-${valContent}`);
             sidebarOption(`${name}-boost-${valContent}`);
@@ -749,23 +752,7 @@
     // }
     
   }
-
-  /**
-   * indent the score breakdown items according to the nesting level
-   */
-  function scoreIndent() {
-    for (let i = 1; i < 10; i++) {
-      let desc = qsa(`details .indent-${i}`);
-      for (let k = 0; k < desc.length; k++) {
-        let indent = (i-1) * 8;
-        desc[k].style.marginLeft = `${indent}px`;
-        const style = window.getComputedStyle(desc[k]);
-        const width = style.getPropertyValue("max-width");
-        desc[k].style.width = `${width - indent}%`;
-      }
-    }
-  }
-
+  
   /**
    * when a deck is clicked on, spreads the associated SKU cards beneath title
    * card out onto the page. 
@@ -780,9 +767,7 @@
     let spread = qs('.product-container.spread');
     if (spread) {
       spread.previousSibling.classList.remove('spread');
-      // spread.previousSibling.classList.add('hidden');
       spread.nextSibling.classList.remove('spread')
-      // section.nextSibling.classList.add('hidden');
       spread.classList.remove('spread');
       if (spread === section) {
         return;
@@ -791,9 +776,7 @@
 
     // spread the new deck
     section.classList.add('spread');
-    // section.previousSibling.classList.remove('hidden');
     section.previousSibling.classList.add('spread');
-    // section.nextSibling.classList.remove('hidden');
     section.nextSibling.classList.add('spread')
 
     // give the spreaders a moment to transition
@@ -927,7 +910,7 @@
   }
 
   /**
-   * clears all applied filters.
+   * clears all applied filters and filter selections.
    */
   function unfilterCards() {
     let type = qs('input[type=radio]:checked');

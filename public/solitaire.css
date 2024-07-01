@@ -328,6 +328,31 @@ main {
   }
 }
 
+#error {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+  width: 100%;
+  margin: 1rem;
+  padding: 5%;
+}
+
+#error p {
+  width: 60%;
+}
+
+#error img {
+  height: 2rem;
+  width: 2rem;
+  align-self: end;
+  /* padding: 5%; */
+}
+
+#error.hidden {
+  display: none;
+}
 
 /* use to hide filtered cards based on boost */
 .hide-boost {
@@ -338,3 +363,4 @@ main {
 .hidden {
   display: none;
 }
+
