@@ -63,7 +63,6 @@
     let display = qs('#error p');
     display.textContent = message + err;
     id('items').innerHTML = '';
-    // console.log(qs('#items'));
     id('error').classList.remove('hidden');
   }
 
@@ -81,8 +80,13 @@
     }
   }
 
-  // refreshes current jwt, obtaining new from fusion rest api and schedules
-  // method to run again before jwt expires
+  /**
+   * refreshes current jwt, obtaining new from fusion rest api and schedules
+   * method to run again before jwt expires
+   * @param {String} apiUrl - the url to query
+   * @param {String} user - the username to authenticate
+   * @param {String} password - the password to authenticate
+   */
   async function refreshJwt(apiUrl, user, password) {
     const loginUrl = `${apiUrl}/oauth2/token`;
     const auth = btoa(`${user}:${password}`);
@@ -119,6 +123,7 @@
 
   /**
    * retrieves cleaned product data to build interface and handle interactivity. 
+   * @param {Event} e - the event triggering load (submit user/password)
    */
   async function loadPage(e) {
     try {
@@ -146,6 +151,7 @@
 
   /**
    * queries data directly from api.
+   * @param {Event} e - the event triggering the query (user/password submit)
    */
   async function queryData(e) {
     e.preventDefault();
@@ -164,13 +170,11 @@
       let res = await fetch(API_URL + queryURL, { headers });
       await statusCheck(res);
       res = await res.json();         // this is the new "dirty" data to parse
-      // console.log(res);
       qs('#error').classList.add('hidden');
       // decompose products list & scores, write to allProducts and allDetails
       decomposeSKU(res);
     } catch (err) {
       console.error('queryData: ' + err);
-      // TODO: add handlerror here to show user there was a failure to fetch
       handleError('Error querying API: ', err);
 
     }
@@ -201,19 +205,6 @@
       // check if product id already has an object
       let array = setData(data, prodId, skuId);
 
-      // if (!array) {
-      //   console.log("no array");
-      // }
-
-      // console.log(typeof(array));
-      // // console.log(skuId);
-      // let displayName = array[0];
-      // let size = array[1];
-      // let img = array[2];
-      // let price = array[3];
-      // let skuimg = array[4];
-      // console.log(displayName, size, img, skuimg, price);
-
       if (!allProducts[prodId]) {
         allProducts[prodId] = {
           'productId': prodId,
@@ -223,7 +214,6 @@
           'skus': {}
         }
       }
-      // console.log((array[2]).toString());
       allProducts[prodId]['skus'][skuId] = {
         'skuScore': value, 
         'skuImg': array[3],
@@ -242,7 +232,8 @@
    * Grabs the image and displayName from "response" "docs" object in the file.
    * Saves these as an array that will later be saved in the "cleaned" data object.
    * @param {Object} data - the JSON to parse
-   * @param {String} productId - the product whose image and name we are retrieving
+   * @param {String} productId - the productId
+   * @param {String} skuId - the skuId
    * @returns array of displayname + image for each product
    */
   function setData(data, productId, skuId) {
@@ -251,27 +242,17 @@
     // for each product, find details list
     let item;
     for (item in docs) {
-      // console.log(docs[item]["product_id"]);
-      // console.log(productId);
       if (docs[item]["product_id"] === productId) { //&& docs[item]["sku_id"] === skuId
         let array = [docs[item]["product_displayName"],   // object[0]
             docs[item]["sku_size"],                       // object[1]
             docs[item]["sku_skuImages"][0],               // object[2] (prod img)
-            // docs[item]["list_price"]
-          ];                    // object[3]
+          ];
 
         let skuslist = docs[item]["style_order_list"];
-
         for (let i = 0; i < skuslist.length; i++) {
-          // console.log(i);
-          // console.log(skuslist[i]["sku_id"]);
-          // console.log(skuId);
           if (skuslist[i]["sku_id"] === skuId) {
-            // console.log(skuslist[i]);
-
             let colors = [skuslist[i]["sku_colorGroup"], 
               skuslist[i]["sku_colorCodeDesc"]];
-
             array.push(
               skuslist[i]["sku_skuImages"][0],    // object[3]
               skuslist[i]["list_price"],          // object[4]
@@ -290,29 +271,23 @@
    * breakdown for each item. The score value and description are saved into an
    * array, along with the depth of that score in the nested JSON object. 
    * @param {Number} depth - the current depth of the nested object
-   * @param {String} search - the search data being parsed (TODO: remove)
    * @param {String} prodId - the ID of the product's score being parsed
    * @param {Object} item - the JSON object being traversed
    * @returns the array of score depth + description + value for each nested object
    */
   function traverseDetails(depth, prodId, item) {
-    
     // for each field in json, check if it's 'details'
     let object = [];
     Object.keys(item).forEach(key => {
-
       // if details, pull out the score and description
       if (typeof item[key] === 'object' && item[key] !== null && key === "details") {
-        
         // pull out all scores at that depth
         let short = item["details"];
         for (let i = 0; i < short.length; i++) {
           allDetails[prodId].push([depth+1, short[i]["description"], short[i]["value"]]);
-          
           // then check for more details
           traverseDetails(depth+1, prodId, short[i]);
         }
-
         // when finished with one obj, do the other nested ones too
         traverseDetails(depth, prodId, item["details"]);
       } else {
@@ -346,7 +321,6 @@
    */
   async function buildInterface() {
     try {
-      
       qs('#scores').innerHTML = '';
       qs('#checklist').innerHTML = '';
       let search = id('searchbar').value;
@@ -365,9 +339,6 @@
         let sku;
         let count = Object.keys(item['skus']).length;
         for (sku in item['skus']) {
-          // console.log(allProducts[file][product]['productId']);
-          // console.log(allProducts[file][product]['skus'][sku]);
-          // console.log(item);
           await addCard(item,                 // data
             item['skus'][sku]['skuScore'],    // value
             item['skus'][sku],                // skudata
@@ -384,7 +355,6 @@
           search);                      // section
       }
       sidebarTitle();
-      // scoreIndent(); 
     } catch (err) {
       console.error('buildInterface ' + err);
     }
@@ -459,27 +429,18 @@
       const title = gen('h1');
       title.textContent = displayName['displayName'];
       title.classList.add("card-search");
-      // const title = gen('h1');
-      // title.textContent = displayName['displayName'];
       const prodId = gen('h2');
       prodId.textContent = 'ID: ' + productId;
-      // const average = gen('h2');
-      // average.textContent = 'Score average: ' + scores[1];
       const max = gen('h2');
       max.textContent = 'Score maximum: ' + scores[1];
-      // const min = gen('h2');
-      // min.textContent = 'Score minimum: ' + scores[3];
       const count = gen('h2');
       count.textContent = 'SKU count: ' + scores[0];
 
       const contents = gen('div');
       contents.classList.add('card-contents');
       contents.appendChild(title);
-      // contents.appendChild(title);
       contents.appendChild(prodId);
-      // contents.appendChild(average);
       contents.appendChild(max);
-      // contents.appendChild(min);
       contents.appendChild(count);
 
       const article = gen('article');
@@ -488,7 +449,6 @@
       article.appendChild(photoDiv);
       article.appendChild(contents);
 
-      // const parent = document.getElementById(`${search}`);
       const prodContainer = qs(`#${search} .${productId}`);
       prodContainer.prepend(article);
 
@@ -508,19 +468,14 @@
    */
   function productScores(product) {
     let count = 0;
-    // let total = 0;
     let max = 0;
-    // let min = 5000000000;
 
     let sku;
     for (sku in product) {
       let current = parseFloat(product[sku]['skuScore']);
-      // total += current;
       count ++;
       if (current > max) max = current;
-      // if (current < min) min = current;
     }
-    // let average = total / count;
     return [count, max];
   }
 
@@ -532,6 +487,7 @@
    * @param {String} sku - the SKUId of the item
    * @param {String} search - the query the product was returned from. used to 
    *                  place the card on the page
+   * @param {Number} number - the order of this card in the deck
    */
   async function addCard(data, value, skuData, sku, search, number) {
     try {
@@ -547,7 +503,11 @@
       const photoDiv = gen('div');
       photoDiv.classList.add('photo');
       const photo = gen('img');
-      photo.src = skuData['skuImg'];
+      if (skuData['skuImg']) {
+        photo.src = skuData['skuImg'];
+      } else {
+        photo.src = data['prodImg'];
+      }
       photo.alt = data['displayName'];
       photoDiv.appendChild(photo);
       
@@ -675,7 +635,7 @@
             div.classList.add('scoreboost');
           } else {
             descContent = descContent.split('(')[0];
-            if (descContent === 'weight') {   //descContent === 'idf' || descContent === 'tf'
+            if (descContent === 'weight') { 
               div.classList.add('scoreweight');
             } else if (descContent === 'max of:') {
               div.classList.add('scoremax');
@@ -690,36 +650,34 @@
   /**
    * pull out the core details of the score breakdown for display on each
    * SKU card.
+   * @param {HTMLElement} - the existing full score breakdown of nested <details>
+   *          elements.
+   * @returns div element containing the pared-down list of core score details.
    */
   function scoreSummary(list) {
 
-    // array to hold the important tf/idf vals we pull out
     let div = gen('div');
     div.classList.add('hidden');
     div.classList.add('content');
+    let title = gen('h3');
+    title.textContent = 'Score Components';
+    div.append(title);
 
     // traverse list and look for "max of:" calculations
     let max = list.querySelectorAll('.scoremax');
-    // console.log(list);
     for (let i = 0; i < max.length; i++) {
-      // console.log('in max');
       // set the max value we're looking for in the weights it contains
       let target = max[i].childNodes[1].textContent;
-      // console.log(target);
       let weights = max[i].parentNode.parentNode.querySelectorAll('.scoreweight');
-      // console.log(max[i].parentNode);
       for (let k = 0; k < weights.length; k++) {
-        // console.log('in weights');
         // if the value matches, save this weight to the array
         let val = weights[k].childNodes[1].textContent;
         if (val === target) {
-          // console.log('added div');
           console.log(val, target);
           let copy = (weights[k].parentNode.parentNode).cloneNode(true);
           (copy.childNodes[0]).childNodes[0].textContent = 
             ((copy.childNodes[0]).childNodes[0]).textContent.split(' [')[0];
           div.append(copy);
-          // console.log(copy);
         }
       }
     }
@@ -727,32 +685,18 @@
     let outer = list.querySelectorAll('.scoreweight');
     for (let i = 0; i < outer.length; i++) {
       let parent = (outer[i].parentNode.parentNode).parentNode;
-      // console.log(parent);
       parent = parent.childNodes[0].childNodes[0].textContent.split(' ')[0];
-      console.log(parent);
       if (parent !== "max") {
         let copy = (outer[i].parentNode.parentNode).cloneNode(true);
         (copy.childNodes[0]).childNodes[0].textContent = 
           ((copy.childNodes[0]).childNodes[0]).textContent.split(' [')[0];
         div.append(copy);
-        // console.log(copy);
       }
     }
 
-    // build new element to hold array contents, and return to og addcard call
-    return div;
-
-    // let parent = cores[i].parentNode;
-    // let content = parent.childNodes[0].childNodes[0].childNodes[0].textContent;
-    // if (content === "max of:") {
-    //   let max = parent.childNodes[0].childNodes[0].childNodes[1];
-
-    // } else {
-    //   // it's not under a "max" umbrella, so we can just pull these out
-    // }
-    
+    return div; 
   }
-  
+
   /**
    * when a deck is clicked on, spreads the associated SKU cards beneath title
    * card out onto the page. 
@@ -784,7 +728,6 @@
       // make sure the page view follows the new element location
       section.scrollIntoView({behavior: 'smooth', block: 'center'});
     }, 300);
-    
   }
 
   /**

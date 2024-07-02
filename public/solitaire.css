@@ -50,7 +50,6 @@ main {
 }
 
 #items {
-  /* width: 85%; */
   max-width: 1150px;
   margin: 1rem;
 }
@@ -62,7 +61,6 @@ main {
   justify-content: space-between;
   align-items: top;
   box-sizing: border-box;
-  /* row-gap: 2vh; */
   width: 100%;
   margin: auto;
 }
@@ -103,7 +101,6 @@ main {
 .title-card {
   z-index: 1;
   cursor: pointer;
-  /* opacity: 0.1; */
 }
 
 
@@ -276,8 +273,12 @@ main {
 #items .content {
   /* overflow-y: scroll;
   overflow-x: hidden; */
-  padding-top: 1.6rem;
+  /* padding-top: 1rem; */
   max-height: 100%;
+}
+
+#items .content h3 {
+  padding-left: 0.5rem;
 }
 
 .scoreboost {

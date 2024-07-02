@@ -233,6 +233,12 @@ summary > * {
 
 /* --------- Authentication --------- */
 
+#auth {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 #auth div {
   display: flex;
   align-items: center;
@@ -269,6 +275,14 @@ summary > * {
   transition: right .25s ease-in-out;
 }
 
+#auth form {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  margin: 0.5rem;
+  align-self: center;
+}
+
 #auth input {
   font-size: 16px;
   height: 1.5rem;
@@ -276,16 +290,33 @@ summary > * {
   border-radius: .25rem;
   padding: 0.3rem;
   color: #53565a;
-  margin-top: 0.5rem;
+  margin: 0.25rem;
   /* 
   padding: 0 2rem 0 2.5rem;
-  
   height: 3rem;
   width: 100%;
   line-height: 1.2;
   font-size: 16px; */
 }
 
+#auth button {
+  /* background-color: #fff;
+  border: 0.09375rem solid #53565a;
+  margin-right: 0.5rem;
+  top: 0.125rem; */
+  /* font-size: 16px; */
+  /* height: 1.5rem; */
+  border: 1.5px solid #d3d5d7;
+  border-radius: .25rem;
+  padding: 0.3rem;
+  /* color: #53565a; */
+  margin: 0.25rem;
+}
+
 #auth button:active {
   background-color: #d3d5d7;
+}
+
+#auth form.hidden {
+  display: none;
 }
