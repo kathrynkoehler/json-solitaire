@@ -28,12 +28,6 @@ main {
   margin-top: 3px;
 }
 
-/* #items h3 {
-  font-size: medium;
-  padding: 0;
-  margin-bottom: 3px;
-} */
-
 /* ---------------- Style items section ---------------- */
 
 #items img {
@@ -127,7 +121,6 @@ main {
 /* change layout when deck is spread */
 .spread .title-card~.product-card {
   margin: 0;
-  /* transition: transform .3s, margin .8s; */
 }
 
 .product-container.spread {
@@ -137,10 +130,8 @@ main {
 
 /* spread product cards out from deck */
 .spread .product-card:not(:first-child) {
-  /* margin-left: -10px; */
   transition: transform .3s;
   margin-left: 20px;
-  /* transform: translateX(400px); */
 }
 
 /* move cards on hover */
@@ -150,7 +141,6 @@ main {
 
 /* shift other cards away from the one being hovered */
 .spread .product-card:hover~.product-card {
-  /* transform: translateX(10px); */
   transform: translateY(0.5rem);
 }
 
@@ -158,7 +148,6 @@ main {
 #items > section > div {
   width: 0%;
   height: 0rem;
-  /* transition: transform .8s ease-in-out; */
   transition: width .3s linear, height .8s ease-in-out;
 }
 
@@ -193,7 +182,6 @@ main {
   max-width: 50%;
   width: fit-content;
   text-align: center;
-  /* z-index: 1; */
 }
 
 #items .title-card .card-search {
@@ -240,10 +228,10 @@ main {
   border: 1px whitesmoke solid;
   font-size: small;
   padding: 5px;
+  padding-left: 0px;
   display: block;
   max-height: 35rem;
   width: 100%;
-  /* max-width: 330px; */
   color: black;
   box-sizing: border-box;
 }
@@ -271,9 +259,7 @@ main {
 }
 
 #items .content {
-  /* overflow-y: scroll;
-  overflow-x: hidden; */
-  /* padding-top: 1rem; */
+  padding-bottom: 1rem;
   max-height: 100%;
 }
 
@@ -284,10 +270,6 @@ main {
 .scoreboost {
   background-color: rgba(200, 16, 46, 0.2);
 }
-
-/* .scorenote {
-  background-color: rgba(16, 19, 200, 0.2);
-} */
 
 /* content dropdown scrollbar */
 ::-webkit-scrollbar {
@@ -348,7 +330,6 @@ main {
   height: 2rem;
   width: 2rem;
   align-self: end;
-  /* padding: 5%; */
 }
 
 #error.hidden {
@@ -358,7 +339,6 @@ main {
 /* use to hide filtered cards based on boost */
 .hide-boost {
   display: none;
-  /* background-color: blue; */
 }
 
 .hidden {

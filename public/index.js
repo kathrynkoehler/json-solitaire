@@ -673,7 +673,6 @@
         // if the value matches, save this weight to the array
         let val = weights[k].childNodes[1].textContent;
         if (val === target) {
-          console.log(val, target);
           let copy = (weights[k].parentNode.parentNode).cloneNode(true);
           (copy.childNodes[0]).childNodes[0].textContent = 
             ((copy.childNodes[0]).childNodes[0]).textContent.split(' [')[0];

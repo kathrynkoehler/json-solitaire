@@ -13,7 +13,6 @@
   margin: 1rem;
   position: sticky;
   top: 2rem;
-  /* box-sizing: border-box; */
 }
 
 #sidebar ul {
@@ -87,8 +86,6 @@ option {
   height: 3rem;
   width: 100%;
   position: relative;
-  /* font-size: 16px; */
-  margin-top: 16px;
 }
 
 #searchbar {
@@ -111,15 +108,11 @@ option {
 
 #icon_search > path {
   box-sizing: border-box;
-  /* position: absolute; */
-  /* top: 1.125rem; */
   left: 0.75rem;
 }
 
 #searchbar::-webkit-search-cancel-button {
-  /* color: black; */
   -webkit-appearance: none;
-  
   height: 16px;
   width: 16px;
   background: url('./img/plus.png');
@@ -153,15 +146,6 @@ option {
   stroke-width: 0.2rem;
   transform-origin: 50% 50%;
 }
-
-/* @keyframes spin {
-  0% {
-    transform: rotateZ(0deg);
-  }
-  100% {
-    transform: rotateZ(360deg);
-  }
-} */
 
 @keyframes strokeSpin {
   0%, 25% {
@@ -291,25 +275,12 @@ summary > * {
   padding: 0.3rem;
   color: #53565a;
   margin: 0.25rem;
-  /* 
-  padding: 0 2rem 0 2.5rem;
-  height: 3rem;
-  width: 100%;
-  line-height: 1.2;
-  font-size: 16px; */
 }
 
 #auth button {
-  /* background-color: #fff;
-  border: 0.09375rem solid #53565a;
-  margin-right: 0.5rem;
-  top: 0.125rem; */
-  /* font-size: 16px; */
-  /* height: 1.5rem; */
   border: 1.5px solid #d3d5d7;
   border-radius: .25rem;
   padding: 0.3rem;
-  /* color: #53565a; */
   margin: 0.25rem;
 }
 
