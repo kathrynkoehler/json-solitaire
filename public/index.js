@@ -625,13 +625,18 @@
           if (descContent === "boost") {
             let context = (div.parentNode).parentNode.parentNode.parentNode;
             let name = context.childNodes[0].textContent;
-            name = (name.split(' ')[0]).split(':')[1];
-            card.classList.add(`${name}-boost-${valContent}`);
+            let boostname = (name.split(' ')[0]).split(':')[1];
+            if (boostname[0] === '"') {
+              boostname = (name.split('"')[1]).split(' ').join('-');
+              // console.log('boostname', boostname);
+            }
+
+            card.classList.add(`${boostname}-boost-${valContent}`);
             const container = card.parentElement;
 
             // add hide-boost to entire product stack when filtered
-            container.classList.add(`${name}-boost-${valContent}`);
-            sidebarOption(`${name}-boost-${valContent}`);
+            container.classList.add(`${boostname}-boost-${valContent}`);
+            sidebarOption(`${boostname}-boost-${valContent}`);
             div.classList.add('scoreboost');
           } else {
             descContent = descContent.split('(')[0];
@@ -797,9 +802,9 @@
     input.type = 'checkbox';
     input.id = `check-${boost}`;
 
-    boost = boost.split("-");
-    boost[0] = boost[0] + ':';
-    boost = boost.join(" ");
+    boost = boost.split("-boost-");
+    boost = boost[0].split('-').join(' ') + ': ' + boost[1];
+    // boost = boost.join(" ");
 
     let label = gen('label');
     label.for = input.id;
