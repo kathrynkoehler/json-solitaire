@@ -13,6 +13,7 @@
   margin: 1rem;
   position: sticky;
   top: 2rem;
+  /* box-sizing: border-box; */
 }
 
 #sidebar ul {
