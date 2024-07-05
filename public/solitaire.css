@@ -2,6 +2,7 @@ body {
   font-family: Calibre, Helvetica Neue, Helvetica, Roboto, Arial, sans-serif;
   background-color: #fafafa;
   box-sizing: border-box;
+  scroll-behavior: smooth;
 }
 
 main {
@@ -23,16 +24,9 @@ main {
 #items h2 {
   font-size: medium;
   font-weight: 400;
-  /* line-height: 40%; */
   margin-bottom: 3px;
   margin-top: 3px;
 }
-
-/* #items h3 {
-  font-size: medium;
-  padding: 0;
-  margin-bottom: 3px;
-} */
 
 /* ---------------- Style items section ---------------- */
 
@@ -45,12 +39,11 @@ main {
 
 .photo {
   min-height: 65%;
-  max-height: 70%;
+  max-height: 100%;
   overflow: hidden;
 }
 
 #items {
-  /* width: 85%; */
   max-width: 1150px;
   margin: 1rem;
 }
@@ -62,7 +55,6 @@ main {
   justify-content: space-between;
   align-items: top;
   box-sizing: border-box;
-  /* row-gap: 2vh; */
   width: 100%;
   margin: auto;
 }
@@ -89,7 +81,7 @@ main {
   display: flex;
   position: relative;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: start;
   background: white;
   border: 1px grey solid;
   border-radius: 5px;
@@ -103,7 +95,6 @@ main {
 .title-card {
   z-index: 1;
   cursor: pointer;
-  /* opacity: 0.1; */
 }
 
 
@@ -130,7 +121,6 @@ main {
 /* change layout when deck is spread */
 .spread .title-card~.product-card {
   margin: 0;
-  /* transition: transform .3s, margin .8s; */
 }
 
 .product-container.spread {
@@ -140,10 +130,8 @@ main {
 
 /* spread product cards out from deck */
 .spread .product-card:not(:first-child) {
-  /* margin-left: -10px; */
   transition: transform .3s;
   margin-left: 20px;
-  /* transform: translateX(400px); */
 }
 
 /* move cards on hover */
@@ -153,7 +141,6 @@ main {
 
 /* shift other cards away from the one being hovered */
 .spread .product-card:hover~.product-card {
-  /* transform: translateX(10px); */
   transform: translateY(0.5rem);
 }
 
@@ -161,7 +148,6 @@ main {
 #items > section > div {
   width: 0%;
   height: 0rem;
-  /* transition: transform .8s ease-in-out; */
   transition: width .3s linear, height .8s ease-in-out;
 }
 
@@ -176,10 +162,10 @@ main {
 .card-contents {
   display: flex;
   flex-direction: column;
-  justify-content: end;
+  justify-content: start;
   padding: 10px;
   margin-top: 0.7rem;
-  /* height: 100%; */
+  max-height: 35%;
   overflow: hidden;
 }
 
@@ -196,7 +182,6 @@ main {
   max-width: 50%;
   width: fit-content;
   text-align: center;
-  /* z-index: 1; */
 }
 
 #items .title-card .card-search {
@@ -243,16 +228,16 @@ main {
   border: 1px whitesmoke solid;
   font-size: small;
   padding: 5px;
+  padding-left: 0px;
   display: block;
   max-height: 35rem;
   width: 100%;
-  /* max-width: 330px; */
   color: black;
   box-sizing: border-box;
 }
 
 /* group the added details */
-.content > div {
+.content div {
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -271,6 +256,15 @@ main {
   justify-self: flex-end;
   align-self: last baseline;
   margin: 2px;
+}
+
+#items .content {
+  padding-bottom: 1rem;
+  max-height: 100%;
+}
+
+#items .content h3 {
+  padding-left: 0.5rem;
 }
 
 .scoreboost {
@@ -317,13 +311,37 @@ main {
   }
 }
 
+#error {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+  width: 100%;
+  margin: 1rem;
+  padding: 5%;
+}
+
+#error p {
+  width: 60%;
+}
+
+#error img {
+  height: 2rem;
+  width: 2rem;
+  align-self: end;
+}
+
+#error.hidden {
+  display: none;
+}
 
 /* use to hide filtered cards based on boost */
 .hide-boost {
   display: none;
-  /* background-color: blue; */
 }
 
 .hidden {
   display: none;
 }
+

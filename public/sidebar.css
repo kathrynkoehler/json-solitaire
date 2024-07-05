@@ -87,8 +87,6 @@ option {
   height: 3rem;
   width: 100%;
   position: relative;
-  /* font-size: 16px; */
-  margin-top: 16px;
 }
 
 #searchbar {
@@ -111,15 +109,11 @@ option {
 
 #icon_search > path {
   box-sizing: border-box;
-  /* position: absolute; */
-  /* top: 1.125rem; */
   left: 0.75rem;
 }
 
 #searchbar::-webkit-search-cancel-button {
-  /* color: black; */
   -webkit-appearance: none;
-  
   height: 16px;
   width: 16px;
   background: url('./img/plus.png');
@@ -154,15 +148,6 @@ option {
   transform-origin: 50% 50%;
 }
 
-/* @keyframes spin {
-  0% {
-    transform: rotateZ(0deg);
-  }
-  100% {
-    transform: rotateZ(360deg);
-  }
-} */
-
 @keyframes strokeSpin {
   0%, 25% {
     stroke-dashoffset: 140;
@@ -179,56 +164,18 @@ option {
 }
 
 
-/* expand dropdowns */
-
-/* style minimized scorelist heading */
-.expandToggle {
-  position: relative;
-  margin: 0;
-  height: 1rem;
-  width: 1rem;
-  transition: transform .4s ease-in-out;
-}
-
-/* by default the scorelist is expanded */
-.expandedToggle {
-  transition: transform .4s ease-in-out;
-  height: 1rem;
-  width: 1rem;
-  z-index: 1;
-}
-
-.expandToggle:first-child {
-  transform: rotate(90deg);
-  transition: transform .4s ease-in-out;
-}
-
-.expandedToggle:first-child {
-  transform: rotate(0deg);
-  transition: transform .4s ease-in-out;
-}
-
-/* style heading svg */
-.expandIcon {
-  transition: transform .4s ease-in-out;
-  position: absolute;
-  height: 1rem;
-  width: 1rem;
-}
-
-.expandIcon > path {
-  /* background: blue; */
-  background-color: green;
-  color: black;
-  fill: blue;
-  stroke: purple;
-  stroke-width: 4px;
-}
-
-/* show that the sidebar heading for scores is clickable */
+/* the sidebar heading for scores */
 #scores > div > h2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   cursor: pointer;
   margin-bottom: 0.5rem;
+}
+
+#scores img {
+  height: 1.25rem;
+  width: 1.25rem;
 }
 
 .category {
@@ -237,3 +184,111 @@ option {
   position: relative;
 }
 
+/* -------- Score List --------- */
+
+details {
+  margin-left: 10px;
+}
+
+summary {
+  display: flex;
+  align-items: start;
+  cursor: pointer;
+  list-style: none;
+}
+
+summary::before {
+  content: '▶︎';
+  width: 1em;
+  flex-shrink: 0;
+  transition: 0.3s;
+  margin-top: 0.2em;
+}
+
+details[open] > summary::before {
+  transform: rotate(90deg);
+  transform-origin: 40% 45% 0;
+}
+
+summary > * {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+/* --------- Authentication --------- */
+
+#auth {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#auth div {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+#auth svg {
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+#auth span {
+  position: relative;
+  font-size: 0.875rem;
+  margin-left: 0.5rem;
+}
+
+#signin span:hover {
+  right: 0;
+  transition: right .25s ease-in-out;
+}
+
+#signin span:hover:after {
+  background: #c8102e;
+  bottom: -.3125rem;
+  content: "";
+  display: block;
+  height: .125rem;
+  width: 2.9rem;
+  left: 0;
+  position: absolute;
+  right: 100%;
+  top: auto;
+  transition: right .25s ease-in-out;
+}
+
+#auth form {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  margin: 0.5rem;
+  align-self: center;
+}
+
+#auth input {
+  font-size: 16px;
+  height: 1.5rem;
+  border: 1.5px solid #000;
+  border-radius: .25rem;
+  padding: 0.3rem;
+  color: #53565a;
+  margin: 0.25rem;
+}
+
+#auth button {
+  border: 1.5px solid #d3d5d7;
+  border-radius: .25rem;
+  padding: 0.3rem;
+  margin: 0.25rem;
+}
+
+#auth button:active {
+  background-color: #d3d5d7;
+}
+
+#auth form.hidden {
+  display: none;
+}
