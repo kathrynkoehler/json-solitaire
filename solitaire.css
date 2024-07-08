@@ -262,11 +262,15 @@ main {
   padding-bottom: 1rem;
   max-height: 100%;
   font-size: 14px;
-  vertical-align: text-bottom;
 }
 
 #items .content h3 {
-  padding-left: 0.5rem;
+  padding-left: 0.35rem;
+  margin: 0.5rem;
+}
+
+#items div.photo > div.content > h3 + p {
+  margin-bottom: 0.5rem;
 }
 
 
