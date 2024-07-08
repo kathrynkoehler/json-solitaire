@@ -721,8 +721,9 @@
     let newSummary = gen('summary');
     newSummary.append(heading);
     let category = heading.childNodes[0].textContent.split('(').slice(1).join('(').split(' in')[0];
-    let term = category.split(':')[1];
+    let term = category.split(':')[1].split(' ')[0];  // TODO: revise to get all terms!!
     category = category.split(':')[0];
+    console.log(term, category);
 
     let boost = node.childNodes[1].childNodes[1].childNodes[0].childNodes[0].childNodes[1];   // boost val
     let newBoost = gen('details');
@@ -789,7 +790,7 @@
     let tfExplain = gen('p');
     tfExplain.innerHTML = `The term <span>${term}</span> occurs <span>${freq}</span> time(s) within the\
     document. Values of <span>${k1}</span> (k1) and <span>${b}</span> (b) are applied to help\
-    normalize the result based on expected document length and specificity.\ 
+    normalize the result based on expected document relevance and specificity.\ 
     The length of <span>${category}</span> field (dl) is <span>${dl}</span> and the average length of\
     this field (avgdl) is <span>${avgdl}</span>.`;
 
