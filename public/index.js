@@ -730,19 +730,17 @@
     
     // console.log(smallN, bigN);
 
-    
-    
-    // if idf is a sum of several idfs, add all to dropdown
-    if (!idf.childNodes[1].childNodes[1].contains("sum of")) {
+    // check whether idf is a single calculation
+    let newIdf = gen('details');
+    let idf = node.childNodes[1].childNodes[2];
+    let idfscore = idf.childNodes[0].childNodes[0].childNodes[1].textContent;
+    let idfSummary = gen('summary');
+    idfSummary.textContent = `idf = ${idfscore}`;
+
+    if (!(idf.childNodes[1].childNodes[1].textContent).contains("sum of")) {
       
-      let idf = node.childNodes[1].childNodes[2];
-      let idfscore = idf.childNodes[0].childNodes[0].childNodes[1].textContent;
       let smallN = idf.childNodes[1].childNodes[0].childNodes[0].childNodes[1].textContent;
       let bigN = idf.childNodes[2].childNodes[0].childNodes[0].childNodes[1].textContent;
-
-      let newIdf = gen('details');
-      let idfSummary = gen('summary');
-      idfSummary.textContent = `idf = ${idfscore}`;
 
       let idfExplain = gen('p');
       idfExplain.innerHTML = `The number of documents searched (N) is \
@@ -753,10 +751,20 @@
       newIdf.append(idfSummary, idfExplain);
 
     } else {
+      // if idf is a sum of several idfs, add all to dropdown
+      // nest additional summary / score breakdown
+
       for (let i = 1; i < idf.childNodes.length; i++) {
-        let newIdf = gen('details');
-        let idfSummary = gen('summary');
-        idfSummary.textContent = `idf = ${idfscore}`;
+        let current = idf.childNodes[i];
+        idfscore = current.childNodes[0].childNodes[1].textContent;
+        console.log(idfscore);
+
+        let smallN = current.childNodes[1].childNodes[0].childNodes[0].childNodes[1].textContent;
+        let bigN = current.childNodes[2].childNodes[0].childNodes[0].childNodes[1].textContent;
+
+        let nestIdf = gen('details');
+        let idfNestSummary = gen('summary');
+        idfNestSummary.textContent = `idf = ${idfscore}`;
 
         let idfExplain = gen('p');
         idfExplain.innerHTML = `The number of documents searched (N) is \
@@ -764,7 +772,8 @@
         <span>${category}</span> contains <span>${term}</span> (n) is \
         <span>${smallN}</span>.`;
 
-        newIdf.append(idfSummary, idfExplain);
+        nestIdf.append(idfSummary, idfExplain);
+        newIdf.append(nestIdf);
       }
     }
     
