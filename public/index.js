@@ -684,8 +684,8 @@
           // console.log((copy.childNodes[0]).childNodes[0].childNodes[0].textContent);
           (copy.childNodes[0]).childNodes[0].childNodes[0].textContent = 
             ((copy.childNodes[0]).childNodes[0]).textContent.split(' [')[0];
-          div.append(copy);
-          scoreRewrite(copy);
+          // div.append(copy);
+          div.append(scoreRewrite(copy));
         }
       }
     }
@@ -698,7 +698,8 @@
         let copy = (outer[i].parentNode.parentNode).cloneNode(true);
         (copy.childNodes[0]).childNodes[0].childNodes[0].textContent = 
           ((copy.childNodes[0]).childNodes[0]).textContent.split(' [')[0];
-        div.append(copy);
+        // div.append(copy);
+        div.append(scoreRewrite(copy));
       }
     }
 
@@ -716,52 +717,86 @@
     let newWeight = gen('details');
     let newSummary = gen('summary');
     newSummary.append(heading);
-    console.log(newSummary);
     let category = heading.childNodes[0].textContent.split('(')[1].split(' in')[0];
-    let term = category.split(':')[0];
+    let term = category.split(':')[1];
+    category = category.split(':')[0];
+    // console.log(category);
 
     let boost = node.childNodes[1].childNodes[1].childNodes[0].childNodes[0].childNodes[1];   // boost val
-    let idf = node.childNodes[1].childNodes[2];
-    let idfscore = idf.childNodes[0].childNodes[0].childNodes[1].textContent;
-    let smallN = idf.childNodes[1].childNodes[0].childNodes[0].childNodes[1];
-    let bigN = idf.childNodes[2].childNodes[0].childNodes[0].childNodes[1];
+    let newBoost = gen('details');
+    let boostSummary = gen('summary');
+    boostSummary.textContent = `boost = ${boost.textContent}`
+    
+    
     // console.log(smallN, bigN);
 
-    let newIdf = gen('details');
-    let idfSummary = gen('summary');
-    idfSummary.textContent = `idf = ${idfscore}`;
-    let idfExplain = gen('p');
-    idfExplain.textContent = `The number of documents searched (N) is ${bigN}, and 
-    the number of these where ${category} contains ${term} (n) is ${smallN}.`;
-
-    newIdf.append(idfSummary, idfExplain);
     
-    // if (idf.childNodes[1].childNodes[1].contains("sum of")) {
+    
+    // if idf is a sum of several idfs, add all to dropdown
+    if (!idf.childNodes[1].childNodes[1].contains("sum of")) {
       
-    // }
+      let idf = node.childNodes[1].childNodes[2];
+      let idfscore = idf.childNodes[0].childNodes[0].childNodes[1].textContent;
+      let smallN = idf.childNodes[1].childNodes[0].childNodes[0].childNodes[1].textContent;
+      let bigN = idf.childNodes[2].childNodes[0].childNodes[0].childNodes[1].textContent;
+
+      let newIdf = gen('details');
+      let idfSummary = gen('summary');
+      idfSummary.textContent = `idf = ${idfscore}`;
+
+      let idfExplain = gen('p');
+      idfExplain.innerHTML = `The number of documents searched (N) is \
+      <span>${bigN}</span>, and the number of these where the field \
+      <span>${category}</span> contains <span>${term}</span> (n) is \
+      <span>${smallN}</span>.`;
+
+      newIdf.append(idfSummary, idfExplain);
+
+    } else {
+      for (let i = 1; i < idf.childNodes.length; i++) {
+        let newIdf = gen('details');
+        let idfSummary = gen('summary');
+        idfSummary.textContent = `idf = ${idfscore}`;
+
+        let idfExplain = gen('p');
+        idfExplain.innerHTML = `The number of documents searched (N) is \
+        <span>${bigN}</span>, and the number of these where the field \
+        <span>${category}</span> contains <span>${term}</span> (n) is \
+        <span>${smallN}</span>.`;
+
+        newIdf.append(idfSummary, idfExplain);
+      }
+    }
     
     let tf = node.childNodes[1].childNodes[3];
     let tfscore = tf.childNodes[0].childNodes[0].childNodes[1].textContent;
-    let freq = tf.childNodes[1].childNodes[0].childNodes[0].childNodes[1];
-    let k1 = tf.childNodes[2].childNodes[0].childNodes[0].childNodes[1];
-    let b = tf.childNodes[3].childNodes[0].childNodes[0].childNodes[1];
-    let dl = tf.childNodes[4].childNodes[0].childNodes[0].childNodes[1];
-    let avgdl = tf.childNodes[5].childNodes[0].childNodes[0].childNodes[1];
+    let freq = tf.childNodes[1].childNodes[0].childNodes[0].childNodes[1].textContent;
+    let k1 = tf.childNodes[2].childNodes[0].childNodes[0].childNodes[1].textContent;
+    let b = tf.childNodes[3].childNodes[0].childNodes[0].childNodes[1].textContent;
+    let dl = tf.childNodes[4].childNodes[0].childNodes[0].childNodes[1].textContent;
+    let avgdl = tf.childNodes[5].childNodes[0].childNodes[0].childNodes[1].textContent;
     // console.log(freq, k1, b, dl, avgdl);
 
     let newTf = gen('details');
     let tfSummary = gen('summary');
     tfSummary.textContent = `tf = ${tfscore}`;
     let tfExplain = gen('p');
-    tfExplain.textContent = `The term ${term} occurs ${freq} times within the
-    document [prodid]. A k1 of ${k1} and a b of ${b} are applied to help
-    normalize the result based on expected document length and specificity. 
-    The length of ${category} field (dl) is ${dl} and the average length of
-    this field (avgdl) is ${avgdl}.`;
+    tfExplain.innerHTML = `The term <span>${term}</span> occurs <span>${freq}</span> time(s) within the\
+    document. Values of <span>${k1}</span> (k1) and <span>${b}</span> (b) are applied to help\
+    normalize the result based on expected document length and specificity.\ 
+    The length of <span>${category}</span> field (dl) is <span>${dl}</span> and the average length of\
+    this field (avgdl) is <span>${avgdl}</span>.`;
 
     newTf.append(tfSummary, tfExplain);
 
-    newWeight.append(newSummary);
+    // 'The term ' + term + ' occurs ' + freq + 
+    // ' time(s) within the document [prodid]. Values of ' + k1 + ' and ' + b +
+    // ' are applied to help normalize the result based on expected document length and specificity. The length of ' +
+    // category + ' field (dl) is ' + dl + ' and the average length of this field (avgdl) is ' + avgdl + '.';
+
+    newWeight.append(newSummary, newBoost, newIdf, newTf);
+    // console.log(newWeight);
+    return newWeight;
 
   }
 

@@ -271,6 +271,15 @@ main {
   background-color: rgba(200, 16, 46, 0.2);
 }
 
+#items .content span {
+  font-weight: bold;
+}
+
+#items .content p:not(.detail-desc) {
+  padding-left: 15px;
+  margin-top: .25rem;
+}
+
 /* content dropdown scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
