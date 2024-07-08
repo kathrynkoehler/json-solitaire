@@ -726,18 +726,19 @@
     let newBoost = gen('details');
     let boostSummary = gen('summary');
     boostSummary.textContent = `boost = ${boost.textContent}`
+    newBoost.append(boostSummary);
     
     
     // console.log(smallN, bigN);
 
     // check whether idf is a single calculation
     let newIdf = gen('details');
-    let idf = node.childNodes[1].childNodes[2];
+    let idf = node.childNodes[1].childNodes[2];   // details > details > details (idf)
     let idfscore = idf.childNodes[0].childNodes[0].childNodes[1].textContent;
     let idfSummary = gen('summary');
     idfSummary.textContent = `idf = ${idfscore}`;
-
-    if (!(idf.childNodes[1].childNodes[1].textContent).contains("sum of")) {
+    console.log(idf.childNodes[0].childNodes[0].textContent);
+    if (!(idf.childNodes[0].childNodes[0].textContent).includes("sum of")) {
       
       let smallN = idf.childNodes[1].childNodes[0].childNodes[0].childNodes[1].textContent;
       let bigN = idf.childNodes[2].childNodes[0].childNodes[0].childNodes[1].textContent;
@@ -751,9 +752,11 @@
       newIdf.append(idfSummary, idfExplain);
 
     } else {
+      console.log('IDF SUM!!!');
       // if idf is a sum of several idfs, add all to dropdown
       // nest additional summary / score breakdown
-
+      idf = idf.childNodes[1];
+      console.log(idf);
       for (let i = 1; i < idf.childNodes.length; i++) {
         let current = idf.childNodes[i];
         idfscore = current.childNodes[0].childNodes[1].textContent;
