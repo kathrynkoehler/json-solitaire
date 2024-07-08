@@ -60,9 +60,10 @@
    * @param {String} err - the error returned by the server
    */
   function handleError(message, err) {
+    id('items').innerHTML = '';
+    id('items').classList.add('hidden');
     let display = qs('#error p');
     display.textContent = message + err;
-    id('items').innerHTML = '';
     id('error').classList.remove('hidden');
   }
 
@@ -306,6 +307,7 @@
   async function displayData() {
     try {
       // build card decks, change title to match query
+      id('items').classList.remove('hidden');
       await buildInterface();
 
       // enable filtering on boosts
@@ -675,13 +677,15 @@
       let target = max[i].childNodes[1].textContent;
       let weights = max[i].parentNode.parentNode.querySelectorAll('.scoreweight');
       for (let k = 0; k < weights.length; k++) {
-        // if the value matches, save this weight to the array
+        // if the value matches, save this weight
         let val = weights[k].childNodes[1].textContent;
         if (val === target) {
           let copy = (weights[k].parentNode.parentNode).cloneNode(true);
-          (copy.childNodes[0]).childNodes[0].textContent = 
+          // console.log((copy.childNodes[0]).childNodes[0].childNodes[0].textContent);
+          (copy.childNodes[0]).childNodes[0].childNodes[0].textContent = 
             ((copy.childNodes[0]).childNodes[0]).textContent.split(' [')[0];
           div.append(copy);
+          scoreRewrite(copy);
         }
       }
     }
@@ -692,13 +696,73 @@
       parent = parent.childNodes[0].childNodes[0].textContent.split(' ')[0];
       if (parent !== "max") {
         let copy = (outer[i].parentNode.parentNode).cloneNode(true);
-        (copy.childNodes[0]).childNodes[0].textContent = 
+        (copy.childNodes[0]).childNodes[0].childNodes[0].textContent = 
           ((copy.childNodes[0]).childNodes[0]).textContent.split(' [')[0];
         div.append(copy);
       }
     }
 
     return div; 
+  }
+
+  function scoreRewrite(node) {
+    // in scoresummary, instead of appending to div there, call this function
+    // here, convert the dropdown details into the summary
+    // for both idf and tf? check that the summary doesn't contain "sum of". 
+    // else need to repeat idf/tf lines for each component of the sum
+
+    // take the node
+    let heading = node.childNodes[0].childNodes[0];
+    let newWeight = gen('details');
+    let newSummary = gen('summary');
+    newSummary.append(heading);
+    console.log(newSummary);
+    let category = heading.childNodes[0].textContent.split('(')[1].split(' in')[0];
+    let term = category.split(':')[0];
+
+    let boost = node.childNodes[1].childNodes[1].childNodes[0].childNodes[0].childNodes[1];   // boost val
+    let idf = node.childNodes[1].childNodes[2];
+    let idfscore = idf.childNodes[0].childNodes[0].childNodes[1].textContent;
+    let smallN = idf.childNodes[1].childNodes[0].childNodes[0].childNodes[1];
+    let bigN = idf.childNodes[2].childNodes[0].childNodes[0].childNodes[1];
+    // console.log(smallN, bigN);
+
+    let newIdf = gen('details');
+    let idfSummary = gen('summary');
+    idfSummary.textContent = `idf = ${idfscore}`;
+    let idfExplain = gen('p');
+    idfExplain.textContent = `The number of documents searched (N) is ${bigN}, and 
+    the number of these where ${category} contains ${term} (n) is ${smallN}.`;
+
+    newIdf.append(idfSummary, idfExplain);
+    
+    // if (idf.childNodes[1].childNodes[1].contains("sum of")) {
+      
+    // }
+    
+    let tf = node.childNodes[1].childNodes[3];
+    let tfscore = tf.childNodes[0].childNodes[0].childNodes[1].textContent;
+    let freq = tf.childNodes[1].childNodes[0].childNodes[0].childNodes[1];
+    let k1 = tf.childNodes[2].childNodes[0].childNodes[0].childNodes[1];
+    let b = tf.childNodes[3].childNodes[0].childNodes[0].childNodes[1];
+    let dl = tf.childNodes[4].childNodes[0].childNodes[0].childNodes[1];
+    let avgdl = tf.childNodes[5].childNodes[0].childNodes[0].childNodes[1];
+    // console.log(freq, k1, b, dl, avgdl);
+
+    let newTf = gen('details');
+    let tfSummary = gen('summary');
+    tfSummary.textContent = `tf = ${tfscore}`;
+    let tfExplain = gen('p');
+    tfExplain.textContent = `The term ${term} occurs ${freq} times within the
+    document [prodid]. A k1 of ${k1} and a b of ${b} are applied to help
+    normalize the result based on expected document length and specificity. 
+    The length of ${category} field (dl) is ${dl} and the average length of
+    this field (avgdl) is ${avgdl}.`;
+
+    newTf.append(tfSummary, tfExplain);
+
+    newWeight.append(newSummary);
+
   }
 
   /**

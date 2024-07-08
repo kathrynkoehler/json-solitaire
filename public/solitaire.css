@@ -311,6 +311,8 @@ main {
   }
 }
 
+/* ---------------- Style error popup ---------------- */
+
 #error {
   display: flex;
   flex-direction: column;
