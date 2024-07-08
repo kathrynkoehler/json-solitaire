@@ -630,9 +630,9 @@
             let boostname = (name.split(' ')[0]).split(':')[1];
             if (boostname[0] === '"') {
               boostname = (name.split('"')[1]).split(' ').join('-');
-              // console.log('boostname', boostname);
+            } else if (boostname === 'true') {
+              boostname = name.split(':')[0].split('_')[1];
             }
-
             card.classList.add(`${boostname}-boost-${valContent}`);
             const container = card.parentElement;
 
@@ -662,13 +662,16 @@
    * @returns div element containing the pared-down list of core score details.
    */
   function scoreSummary(list) {
-
     let div = gen('div');
     div.classList.add('hidden');
     div.classList.add('content');
     let title = gen('h3');
     title.textContent = 'Score Components';
-    div.append(title);
+    let explain = gen('p');
+    explain.textContent = 'Each category weight is calculated by multiplying ' +
+    'boost * idf * tf. TFIDF (term frequency, inverse document frequency) ' +
+    'represents the relative concentration of the weighted term in the document (item).';
+    div.append(title, explain);
 
     // traverse list and look for "max of:" calculations
     let max = list.querySelectorAll('.scoremax');
@@ -681,10 +684,8 @@
         let val = weights[k].childNodes[1].textContent;
         if (val === target) {
           let copy = (weights[k].parentNode.parentNode).cloneNode(true);
-          // console.log((copy.childNodes[0]).childNodes[0].childNodes[0].textContent);
           (copy.childNodes[0]).childNodes[0].childNodes[0].textContent = 
             ((copy.childNodes[0]).childNodes[0]).textContent.split(' [')[0];
-          // div.append(copy);
           div.append(scoreRewrite(copy));
         }
       }
@@ -698,7 +699,6 @@
         let copy = (outer[i].parentNode.parentNode).cloneNode(true);
         (copy.childNodes[0]).childNodes[0].childNodes[0].textContent = 
           ((copy.childNodes[0]).childNodes[0]).textContent.split(' [')[0];
-        // div.append(copy);
         div.append(scoreRewrite(copy));
       }
     }
@@ -706,76 +706,71 @@
     return div; 
   }
 
+  /**
+   * Format the score components pulled out of the full list in scoreSummary().
+   * @param {HTMLElement} node - the copy of the score dropdown to further
+   *          explain here.
+   * @returns a new element consisting of nested details with explanations for
+   *          each copmonent of a score.
+   */
   function scoreRewrite(node) {
-    // in scoresummary, instead of appending to div there, call this function
-    // here, convert the dropdown details into the summary
-    // for both idf and tf? check that the summary doesn't contain "sum of". 
-    // else need to repeat idf/tf lines for each component of the sum
 
-    // take the node
+    // break apart the copy of the dropdown, create new elements
     let heading = node.childNodes[0].childNodes[0];
     let newWeight = gen('details');
     let newSummary = gen('summary');
     newSummary.append(heading);
-    let category = heading.childNodes[0].textContent.split('(')[1].split(' in')[0];
+    let category = heading.childNodes[0].textContent.split('(').slice(1).join('(').split(' in')[0];
     let term = category.split(':')[1];
     category = category.split(':')[0];
-    // console.log(category);
 
     let boost = node.childNodes[1].childNodes[1].childNodes[0].childNodes[0].childNodes[1];   // boost val
     let newBoost = gen('details');
     let boostSummary = gen('summary');
     boostSummary.textContent = `boost = ${boost.textContent}`
     newBoost.append(boostSummary);
-    
-    
-    // console.log(smallN, bigN);
 
-    // check whether idf is a single calculation
-    let newIdf = gen('details');
     let idf = node.childNodes[1].childNodes[2];   // details > details > details (idf)
     let idfscore = idf.childNodes[0].childNodes[0].childNodes[1].textContent;
+    let newIdf = gen('details');
     let idfSummary = gen('summary');
     idfSummary.textContent = `idf = ${idfscore}`;
-    console.log(idf.childNodes[0].childNodes[0].textContent);
-    if (!(idf.childNodes[0].childNodes[0].textContent).includes("sum of")) {
+    newIdf.append(idfSummary);
+    
+    // check whether idf is a single calculation
+    if (!(idf.childNodes[0].childNodes[0].childNodes[0].textContent).includes("sum of")) {
       
       let smallN = idf.childNodes[1].childNodes[0].childNodes[0].childNodes[1].textContent;
       let bigN = idf.childNodes[2].childNodes[0].childNodes[0].childNodes[1].textContent;
-
       let idfExplain = gen('p');
       idfExplain.innerHTML = `The number of documents searched (N) is \
       <span>${bigN}</span>, and the number of these where the field \
       <span>${category}</span> contains <span>${term}</span> (n) is \
       <span>${smallN}</span>.`;
-
-      newIdf.append(idfSummary, idfExplain);
+      newIdf.append(idfExplain);
 
     } else {
-      console.log('IDF SUM!!!');
       // if idf is a sum of several idfs, add all to dropdown
-      // nest additional summary / score breakdown
-      idf = idf.childNodes[1];
-      console.log(idf);
+      let sumIdf = gen('p');
+      sumIdf.textContent = 'This idf score is a sum of the following idfs:';
+      newIdf.append(sumIdf);
       for (let i = 1; i < idf.childNodes.length; i++) {
         let current = idf.childNodes[i];
-        idfscore = current.childNodes[0].childNodes[1].textContent;
-        console.log(idfscore);
+        idfscore = current.childNodes[0].childNodes[0].childNodes[1].textContent;
 
         let smallN = current.childNodes[1].childNodes[0].childNodes[0].childNodes[1].textContent;
         let bigN = current.childNodes[2].childNodes[0].childNodes[0].childNodes[1].textContent;
-
+        
         let nestIdf = gen('details');
         let idfNestSummary = gen('summary');
         idfNestSummary.textContent = `idf = ${idfscore}`;
-
         let idfExplain = gen('p');
         idfExplain.innerHTML = `The number of documents searched (N) is \
         <span>${bigN}</span>, and the number of these where the field \
         <span>${category}</span> contains <span>${term}</span> (n) is \
         <span>${smallN}</span>.`;
 
-        nestIdf.append(idfSummary, idfExplain);
+        nestIdf.append(idfNestSummary, idfExplain);
         newIdf.append(nestIdf);
       }
     }
@@ -787,7 +782,6 @@
     let b = tf.childNodes[3].childNodes[0].childNodes[0].childNodes[1].textContent;
     let dl = tf.childNodes[4].childNodes[0].childNodes[0].childNodes[1].textContent;
     let avgdl = tf.childNodes[5].childNodes[0].childNodes[0].childNodes[1].textContent;
-    // console.log(freq, k1, b, dl, avgdl);
 
     let newTf = gen('details');
     let tfSummary = gen('summary');
@@ -807,7 +801,6 @@
     // category + ' field (dl) is ' + dl + ' and the average length of this field (avgdl) is ' + avgdl + '.';
 
     newWeight.append(newSummary, newBoost, newIdf, newTf);
-    // console.log(newWeight);
     return newWeight;
 
   }

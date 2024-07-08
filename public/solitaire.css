@@ -261,11 +261,19 @@ main {
 #items .content {
   padding-bottom: 1rem;
   max-height: 100%;
+  font-size: 14px;
+  vertical-align: text-bottom;
 }
 
 #items .content h3 {
   padding-left: 0.5rem;
 }
+
+
+
+/* #items .content details summary {
+  margin: 2px;
+} */
 
 .scoreboost {
   background-color: rgba(200, 16, 46, 0.2);
@@ -278,6 +286,7 @@ main {
 #items .content p:not(.detail-desc) {
   padding-left: 15px;
   margin-top: .25rem;
+  margin-bottom: .25rem;
 }
 
 /* content dropdown scrollbar */
