@@ -620,12 +620,25 @@
             // if there's nothing in the list yet, add current to list
             dropDownContainer.appendChild(drop);
           }
+          // console.log(dropDownContainer);
 
           // check which boosts are applied & add class to card for filtering
           if (descContent === "boost") {
-            let context = (div.parentNode).parentNode.parentNode.parentNode;
-            let name = context.childNodes[0].textContent;
+            let context = div.parentNode.parentNode.parentNode.parentNode;
+            // let context = div.parentNode.closest('div.scoreweight');
+            // console.log(context);
+            let name = context.childNodes[0].childNodes[0].childNodes[0].textContent;
+            console.log(name);
+            if (name === "max of:") {
+              console.log('max');
+              console.log(context);
+              context = div.parentNode.parentNode.parentNode;
+              console.log(context, div.parentNode.parentNode);
+              name = context.childNodes[0].childNodes[0].childNodes[0].textContent;
+              console.log(name);
+            }
             let boostname = (name.split(' ')[0]).split(':')[1];
+            console.log(context, boostname);
             if (boostname[0] === '"') {
               boostname = (name.split('"')[1]).split(' ').join('-');
               // console.log('boostname', boostname);
