@@ -758,14 +758,13 @@
     for (let i = 0; i < max.length; i++) {
       // set the max value we're looking for in the weights it contains
       let target = max[i].childNodes[0].childNodes[0].childNodes[1].textContent;
-      let weights = max[i].parentNode.parentNode.querySelectorAll('.scoreweight');
+      // console.log(max[i]);
+      let weights = max[i].querySelectorAll('.scoreweight');
       for (let k = 0; k < weights.length; k++) {
         // if the value matches, save this weight
         let val = weights[k].childNodes[0].childNodes[0].childNodes[1].textContent;
         if (val === target) {
-          // console.log(weights[k]);
           let copy = (weights[k]).cloneNode(true);
-          // console.log(copy);
           (copy.childNodes[0]).childNodes[0].childNodes[0].textContent = 
             ((copy.childNodes[0]).childNodes[0].childNodes[0]).textContent.split(' [')[0];
           div.append(scoreRewrite(copy));
@@ -776,13 +775,10 @@
     let outer = list.querySelectorAll('.scoreweight');
     for (let i = 0; i < outer.length; i++) {
       let parent = (outer[i].parentNode);
-      console.log(parent);
+      // console.log(parent);
       parent = parent.childNodes[0].childNodes[0].textContent.split(' ')[0];
       if (parent !== "max") {
-        console.log('max', parent);
         let copy = (outer[i]).cloneNode(true);
-        console.log('outer', copy);
-        // console.log((copy.childNodes[0]).childNodes[0].childNodes[0].textContent);
         (copy.childNodes[0]).childNodes[0].childNodes[0].textContent = 
           ((copy.childNodes[0]).childNodes[0].childNodes[0]).textContent.split(' [')[0];
         div.append(scoreRewrite(copy));
