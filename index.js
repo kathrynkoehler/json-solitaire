@@ -763,9 +763,9 @@
         // if the value matches, save this weight
         let val = weights[k].childNodes[0].childNodes[0].childNodes[1].textContent;
         if (val === target) {
-          console.log(weights[k]);
+          // console.log(weights[k]);
           let copy = (weights[k]).cloneNode(true);
-          console.log(copy);
+          // console.log(copy);
           (copy.childNodes[0]).childNodes[0].childNodes[0].textContent = 
             ((copy.childNodes[0]).childNodes[0].childNodes[0]).textContent.split(' [')[0];
           div.append(scoreRewrite(copy));
@@ -775,10 +775,11 @@
     // now check for weights that weren't taken as a maximum
     let outer = list.querySelectorAll('.scoreweight');
     for (let i = 0; i < outer.length; i++) {
-      let parent = (outer[i].parentNode.parentNode);
-      parent = parent.childNodes[0].childNodes[0].textContent.split(' ')[0];
+      let parent = (outer[i].parentNode);
       console.log(parent);
+      parent = parent.childNodes[0].childNodes[0].textContent.split(' ')[0];
       if (parent !== "max") {
+        console.log('max', parent);
         let copy = (outer[i]).cloneNode(true);
         console.log('outer', copy);
         // console.log((copy.childNodes[0]).childNodes[0].childNodes[0].textContent);
@@ -787,7 +788,6 @@
         div.append(scoreRewrite(copy));
       }
     }
-
     return div; 
   }
 
@@ -805,9 +805,9 @@
     let newWeight = gen('details');
     let newSummary = gen('summary');
     newSummary.append(heading);
-    console.log(heading);
+    // console.log(heading);
     let category = heading.childNodes[0].textContent.split('(').slice(1).join('(').split(' in')[0];
-    console.log(category);
+    // console.log(category);
     let term = category.split(':')[1].split(' ')[0];  // TODO: revise to get all terms!!
     category = category.split(':')[0];
 
