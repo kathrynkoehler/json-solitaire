@@ -696,6 +696,10 @@
       card.parentElement.classList.add(boostClass);
       sidebarOption(boostClass);
       drop.classList.add('scoreboost');
+    } else if (description.includes('idf, computed as')) {
+      drop.classList.add('scoreidf')
+    } else if (description.includes('tf, computed as')) {
+      drop.classList.add('scoretf')
     } else {
       const baseDescription = description.split('(')[0];
       if (baseDescription === 'weight') {
@@ -712,15 +716,22 @@
  * @returns {String} The boost name.
  */
   function getBoostName(drop) {
-    let context = drop.closest('details.scoreweight').childNodes[0].childNodes[0];
-    let name = context.childNodes[0].textContent;
-    let boostName = (name.split(' ')[0]).split(':')[1];
-    if (boostName[0] === '"') {
-      boostName = (name.split('"')[1]).split(' ').join('-');
-    } else if (boostName === 'true') {
-      boostName = name.split(':')[0].split('_')[1];
+    try {
+      let context = drop.closest('details.scoreweight');
+      if (context) {
+        context = context.childNodes[0].childNodes[0];
+        let name = context.childNodes[0].textContent;
+        let boostName = (name.split(' ')[0]).split(':')[1];
+        if (boostName[0] === '"') {
+          boostName = (name.split('"')[1]).split(' ').join('-');
+        } else if (boostName === 'true') {
+          boostName = name.split(':')[0].split('_')[1];
+        }
+        return boostName;
+      }
+    } catch (err) {
+      console.error('Error in getBoostName:', err);
     }
-    return boostName;
   }
 
   /**
@@ -754,7 +765,7 @@
         let val = weights[k].childNodes[0].childNodes[0].childNodes[1].textContent;
         if (val === target) {
           let copy = (weights[k].parentNode.parentNode).cloneNode(true);
-          console.log(copy);
+          // console.log(copy);
           (copy.childNodes[0]).childNodes[0].childNodes[0].textContent = 
             ((copy.childNodes[0]).childNodes[0]).textContent.split(' [')[0];
           div.append(scoreRewrite(copy));
@@ -768,8 +779,8 @@
       parent = parent.childNodes[0].childNodes[0].textContent.split(' ')[0];
       if (parent !== "max") {
         let copy = (outer[i]).cloneNode(true);
-        console.log('outer', copy);
-        console.log((copy.childNodes[0]).childNodes[0].childNodes[0].textContent);
+        // console.log('outer', copy);
+        // console.log((copy.childNodes[0]).childNodes[0].childNodes[0].textContent);
         (copy.childNodes[0]).childNodes[0].childNodes[0].textContent = 
           ((copy.childNodes[0]).childNodes[0].childNodes[0]).textContent.split(' [')[0];
         div.append(scoreRewrite(copy));
@@ -796,7 +807,6 @@
     let category = heading.childNodes[0].textContent.split('(').slice(1).join('(').split(' in')[0];
     let term = category.split(':')[1].split(' ')[0];  // TODO: revise to get all terms!!
     category = category.split(':')[0];
-    console.log(term, category);
 
     let boost = node.childNodes[1].childNodes[1].childNodes[0].childNodes[0].childNodes[1];   // boost val
     let newBoost = gen('details');
@@ -804,7 +814,7 @@
     boostSummary.textContent = `boost = ${boost.textContent}`
     newBoost.append(boostSummary);
 
-    let idf = node.childNodes[1].childNodes[2];   // details > details > details (idf)
+    let idf = node.childNodes[1].querySelector('.scoreidf');;   // details > details > details (idf)
     let idfscore = idf.childNodes[0].childNodes[0].childNodes[1].textContent;
     let newIdf = gen('details');
     let idfSummary = gen('summary');
@@ -849,7 +859,8 @@
       }
     }
     
-    let tf = node.childNodes[1].childNodes[3];
+    let tf = node.childNodes[1].querySelector('.scoretf');
+    // console.log(node.childNodes[1], tf);
     let tfscore = tf.childNodes[0].childNodes[0].childNodes[1].textContent;
     let freq = tf.childNodes[1].childNodes[0].childNodes[0].childNodes[1].textContent;
     let k1 = tf.childNodes[2].childNodes[0].childNodes[0].childNodes[1].textContent;
