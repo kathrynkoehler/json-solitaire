@@ -757,17 +757,17 @@
     let max = list.querySelectorAll('.scoremax');
     for (let i = 0; i < max.length; i++) {
       // set the max value we're looking for in the weights it contains
-      let target = max[i].childNodes[1].textContent;
+      let target = max[i].childNodes[0].childNodes[0].childNodes[1].textContent;
       let weights = max[i].parentNode.parentNode.querySelectorAll('.scoreweight');
       for (let k = 0; k < weights.length; k++) {
         // if the value matches, save this weight
-        // console.log(weights[k]);
         let val = weights[k].childNodes[0].childNodes[0].childNodes[1].textContent;
         if (val === target) {
-          let copy = (weights[k].parentNode.parentNode).cloneNode(true);
-          // console.log(copy);
+          console.log(weights[k]);
+          let copy = (weights[k]).cloneNode(true);
+          console.log(copy);
           (copy.childNodes[0]).childNodes[0].childNodes[0].textContent = 
-            ((copy.childNodes[0]).childNodes[0]).textContent.split(' [')[0];
+            ((copy.childNodes[0]).childNodes[0].childNodes[0]).textContent.split(' [')[0];
           div.append(scoreRewrite(copy));
         }
       }
@@ -775,11 +775,12 @@
     // now check for weights that weren't taken as a maximum
     let outer = list.querySelectorAll('.scoreweight');
     for (let i = 0; i < outer.length; i++) {
-      let parent = (outer[i].parentNode.parentNode).parentNode;
+      let parent = (outer[i].parentNode.parentNode);
       parent = parent.childNodes[0].childNodes[0].textContent.split(' ')[0];
+      console.log(parent);
       if (parent !== "max") {
         let copy = (outer[i]).cloneNode(true);
-        // console.log('outer', copy);
+        console.log('outer', copy);
         // console.log((copy.childNodes[0]).childNodes[0].childNodes[0].textContent);
         (copy.childNodes[0]).childNodes[0].childNodes[0].textContent = 
           ((copy.childNodes[0]).childNodes[0].childNodes[0]).textContent.split(' [')[0];
@@ -804,7 +805,9 @@
     let newWeight = gen('details');
     let newSummary = gen('summary');
     newSummary.append(heading);
+    console.log(heading);
     let category = heading.childNodes[0].textContent.split('(').slice(1).join('(').split(' in')[0];
+    console.log(category);
     let term = category.split(':')[1].split(' ')[0];  // TODO: revise to get all terms!!
     category = category.split(':')[0];
 
