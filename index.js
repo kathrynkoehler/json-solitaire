@@ -737,92 +737,123 @@
   /**
    * pull out the core details of the score breakdown for display on each
    * SKU card.
-   * @param {HTMLElement} - the existing full score breakdown of nested <details>
+   * @param {HTMLElement} list - the existing full score breakdown of nested <details>
    *          elements.
-   * @returns div element containing the pared-down list of core score details.
+   * @returns {HTMLElement} div element containing the pared-down list of 
+   *           core score details.
    */
   function scoreSummary(list) {
     let div = gen('div');
-    div.classList.add('hidden');
-    div.classList.add('content');
+    div.classList.add('hidden', 'content');
     let title = gen('h3');
     title.textContent = 'Score Components';
     let explain = gen('p');
-    explain.textContent = 'Each category weight is calculated by multiplying ' +
-    'boost * idf * tf. TFIDF (term frequency, inverse document frequency) ' +
-    'represents the relative concentration of the weighted term in the document (item).';
+    explain.textContent = `Each category weight is calculated by multiplying \
+    boost * idf * tf. TFIDF (term frequency, inverse document frequency) \
+    represents the relative concentration of the weighted term in the document (item).`;
     div.append(title, explain);
 
     // traverse list and look for "max of:" calculations
     let max = list.querySelectorAll('.scoremax');
-    for (let i = 0; i < max.length; i++) {
+    max.forEach(maxElement => {
       // set the max value we're looking for in the weights it contains
-      let target = max[i].childNodes[0].childNodes[0].childNodes[1].textContent;
-      // console.log(max[i]);
-      let weights = max[i].querySelectorAll('.scoreweight');
-      for (let k = 0; k < weights.length; k++) {
-        // if the value matches, save this weight
-        let val = weights[k].childNodes[0].childNodes[0].childNodes[1].textContent;
+      let target = maxElement.querySelector('details > summary > div > p.detail-val').textContent;
+      let weights = maxElement.querySelectorAll('.scoreweight');
+      weights.forEach(weight => {
+        // if the value matches, save this weight for the card summary
+        let val = weight.querySelector('details > summary > div > p.detail-val').textContent;
         if (val === target) {
-          let copy = (weights[k]).cloneNode(true);
-          (copy.childNodes[0]).childNodes[0].childNodes[0].textContent = 
-            ((copy.childNodes[0]).childNodes[0].childNodes[0]).textContent.split(' [')[0];
+          let copy = weight.cloneNode(true);
+          copy.querySelector('details > summary > div > p.detail-desc').textContent = 
+            copy.querySelector('details > summary > div > p.detail-desc').textContent.split(' [')[0];
           div.append(scoreRewrite(copy));
         }
-      }
-    }
-    // now check for weights that weren't taken as a maximum
-    let outer = list.querySelectorAll('.scoreweight');
-    for (let i = 0; i < outer.length; i++) {
-      let parent = (outer[i].parentNode);
-      // console.log(parent);
+      });
+    });
+    // check for weights that weren't taken as a maximum
+    let outerWeights = list.querySelectorAll('.scoreweight');
+    outerWeights.forEach(weight => {
+      let parent = (weight.parentNode);
       parent = parent.childNodes[0].childNodes[0].textContent.split(' ')[0];
       if (parent !== "max") {
-        let copy = (outer[i]).cloneNode(true);
-        (copy.childNodes[0]).childNodes[0].childNodes[0].textContent = 
-          ((copy.childNodes[0]).childNodes[0].childNodes[0]).textContent.split(' [')[0];
+        let copy = weight.cloneNode(true);
+        copy.childNodes[0].childNodes[0].childNodes[0].textContent = 
+          copy.childNodes[0].childNodes[0].childNodes[0].textContent.split(' [')[0];
         div.append(scoreRewrite(copy));
       }
-    }
+    });
     return div; 
   }
 
   /**
    * Format the score components pulled out of the full list in scoreSummary().
    * @param {HTMLElement} node - the copy of the score dropdown to further
-   *          explain here.
-   * @returns a new element consisting of nested details with explanations for
-   *          each copmonent of a score.
+   *          explain.
+   * @returns {HTMLElement} new element consisting of nested details with explanations
+   *            for each component of a score.
    */
-  function scoreRewrite(node) {
-
+  function scoreRewrite(node) {  // TODO: add tooltip for tfidf, components
     // break apart the copy of the dropdown, create new elements
     let heading = node.childNodes[0].childNodes[0];
     let newWeight = gen('details');
     let newSummary = gen('summary');
     newSummary.append(heading);
-    // console.log(heading);
-    let category = heading.childNodes[0].textContent.split('(').slice(1).join('(').split(' in')[0];
-    // console.log(category);
-    let term = category.split(':')[1].split(' ')[0];  // TODO: revise to get all terms!!
-    category = category.split(':')[0];
+    newWeight.append(newSummary);
 
-    let boost = node.childNodes[1].childNodes[1].childNodes[0].childNodes[0].childNodes[1];   // boost val
-    let newBoost = gen('details');
-    let boostSummary = gen('summary');
-    boostSummary.textContent = `boost = ${boost.textContent}`
-    newBoost.append(boostSummary);
+    // split apart the category and term from the weight heading
+    let category = heading.childNodes[0].textContent.split(':');
+    let term = category[1].split(' in')[0];
+    // account for the event that several terms (synonyms) are weighted together
+    if (category.length > 2) {
+      let terms = [];
+      for (let i = 1; i < category.length; i++) {
+        terms.push(`${category[i].split(' ')[0].split(')')}`);
+      }
+      term = terms.join(', ');
+      term = term.substring(0, term.length-1);
+      category = category[0].split('(')[2];
+    } else {
+      category = category[0].split('(').slice(1).join('(');
+    }
 
-    let idf = node.childNodes[1].querySelector('.scoreidf');;   // details > details > details (idf)
+    // build the boost element
+    let boost = node.querySelector('.scoreboost > summary > div > .detail-val');
+    if (boost) {
+      let newBoost = gen('details');
+      let boostSummary = gen('summary');
+      boostSummary.textContent = `boost = ${boost.textContent}`
+      newBoost.append(boostSummary);
+      newWeight.append(newBoost);
+    }
+
+    let idf = node.childNodes[1].querySelector('.scoreidf');
+    let newIdf = createIdfDetail(idf, category, term);
+    
+    let tf = node.childNodes[1].querySelector('.scoretf');
+    let newTf = createTfDetail(tf, category, term);
+
+    newWeight.append(newIdf, newTf);
+    return newWeight;
+  }
+
+  /**
+   * Builds a dropdown for the IDF component of a weighted term's score. Called
+   * from scoreRewrite().
+   * @param {HTMLElement} idf - the original idf element to break down.
+   * @param {String} category - the weighted category.
+   * @param {String} term - the weighted term.
+   * @returns {HTMLElement} new idf details dropdown.
+   */
+  function createIdfDetail(idf, category, term) { // TODO: factor out redundancy
+    // build the idf element
     let idfscore = idf.childNodes[0].childNodes[0].childNodes[1].textContent;
     let newIdf = gen('details');
     let idfSummary = gen('summary');
     idfSummary.textContent = `idf = ${idfscore}`;
     newIdf.append(idfSummary);
     
-    // check whether idf is a single calculation
+    // check whether idf is a single calculation, or sum of several idfs
     if (!(idf.childNodes[0].childNodes[0].childNodes[0].textContent).includes("sum of")) {
-      
       let smallN = idf.childNodes[1].childNodes[0].childNodes[0].childNodes[1].textContent;
       let bigN = idf.childNodes[2].childNodes[0].childNodes[0].childNodes[1].textContent;
       let idfExplain = gen('p');
@@ -831,22 +862,20 @@
       <span>${category}</span> contains <span>${term}</span> (n) is \
       <span>${smallN}</span>.`;
       newIdf.append(idfExplain);
-
     } else {
-      // if idf is a sum of several idfs, add all to dropdown
+      // if idf is a sum, add all to dropdown
       let sumIdf = gen('p');
-      sumIdf.textContent = 'This idf score is a sum of the following idfs:';
+      sumIdf.textContent = 'This idf is a sum of the following:';
       newIdf.append(sumIdf);
       for (let i = 1; i < idf.childNodes.length; i++) {
         let current = idf.childNodes[i];
         idfscore = current.childNodes[0].childNodes[0].childNodes[1].textContent;
-
-        let smallN = current.childNodes[1].childNodes[0].childNodes[0].childNodes[1].textContent;
-        let bigN = current.childNodes[2].childNodes[0].childNodes[0].childNodes[1].textContent;
-        
         let nestIdf = gen('details');
         let idfNestSummary = gen('summary');
         idfNestSummary.textContent = `idf = ${idfscore}`;
+
+        let smallN = current.childNodes[1].childNodes[0].childNodes[0].childNodes[1].textContent;
+        let bigN = current.childNodes[2].childNodes[0].childNodes[0].childNodes[1].textContent;
         let idfExplain = gen('p');
         idfExplain.innerHTML = `The number of documents searched (N) is \
         <span>${bigN}</span>, and the number where the field \
@@ -857,9 +886,19 @@
         newIdf.append(nestIdf);
       }
     }
-    
-    let tf = node.childNodes[1].querySelector('.scoretf');
-    // console.log(node.childNodes[1], tf);
+    return newIdf;
+  }
+
+  /**
+   * Builds a dropdown for the TF component of a weighted term's score. Called
+   * from scoreRewrite().
+   * @param {HTMLElement} tf - the original tf element to break down.
+   * @param {String} category - the weighted category.
+   * @param {String} term - the weighted term.
+   * @returns {HTMLElement} new tf details dropdown.
+   */
+  function createTfDetail(tf, category, term) {
+    // pull out the values for each score component
     let tfscore = tf.childNodes[0].childNodes[0].childNodes[1].textContent;
     let freq = tf.childNodes[1].childNodes[0].childNodes[0].childNodes[1].textContent;
     let k1 = tf.childNodes[2].childNodes[0].childNodes[0].childNodes[1].textContent;
@@ -871,15 +910,15 @@
     let tfSummary = gen('summary');
     tfSummary.textContent = `tf = ${tfscore}`;
     let tfExplain = gen('p');
-    tfExplain.innerHTML = `The term <span>${term}</span> occurs <span>${freq}</span> time(s) within the\
-    document. Values of <span>${k1}</span> (k1) and <span>${b}</span> (b) are applied to\
-    normalize the result based on expected document relevance and specificity.\ 
-    The length of the <span>${category}</span> field (dl) is <span>${dl}</span> and the average length of\
-    this field (avgdl) is <span>${avgdl}</span>.`;
+    tfExplain.innerHTML = `The term <span>${term}</span> occurs <span>${freq}</span>\
+    time(s) within the document. Values of <span>${k1}</span> (k1) and\
+    <span>${b}</span> (b) are applied to normalize the result based on expected
+    document relevance and specificity. The length of the <span>${category}</span>\
+    field (dl) is <span>${dl}</span> and the average length of this field (avgdl)\
+    is <span>${avgdl}</span>.`;
 
     newTf.append(tfSummary, tfExplain);
-    newWeight.append(newSummary, newBoost, newIdf, newTf);
-    return newWeight;
+    return newTf;
   }
 
   /**
@@ -889,7 +928,6 @@
    *                identify the clicked product title card.
    */
   function spreadDeck(e) {
-    // let card = e.currentTarget;
     let section = e.currentTarget.parentElement;
 
     // only allow one deck to be spread at a time. remove spacer elements
@@ -908,7 +946,7 @@
     section.previousSibling.classList.add('spread');
     section.nextSibling.classList.add('spread')
 
-    // give the spreaders a moment to transition
+    // give the spacers a moment to transition
     setTimeout(() => {
       // make sure the page view follows the new element location
       section.scrollIntoView({behavior: 'smooth', block: 'center'});
@@ -944,13 +982,11 @@
 
     let label = gen('span');
     label.textContent = title;
-    label.classList.add('category');
-    label.classList.add(`${title}`);
+    label.classList.add('category', `${title}`);
     let icon = gen('img');
     icon.src = './img/x.png';
 
-    heading.appendChild(label);
-    heading.appendChild(icon);
+    heading.append(label, icon);
     heading.addEventListener('click', () => {
       // heading.classList.toggle('active');
       let content = heading.nextElementSibling;
@@ -961,9 +997,7 @@
       (icon.parentNode).parentNode.classList.toggle('hidden');
     });
 
-    container.appendChild(heading);
-    container.appendChild(scorelist);
-
+    container.append(heading, scorelist);
     sidebar.appendChild(container);
   }
 
@@ -977,28 +1011,25 @@
       return;
     }
 
+    // build new checkbox input and label for boost
     let div = gen('div');
-
     let input = gen('input');
     input.type = 'checkbox';
     input.id = `check-${boost}`;
-
     boost = boost.split("-boost-");
     boost = boost[0].split('-').join(' ') + ': ' + boost[1];
-    // boost = boost.join(" ");
-
     let label = gen('label');
     label.for = input.id;
     label.textContent = boost;
-
-    div.appendChild(input);
-    div.appendChild(label);
-
+    div.append(input, label);
     const parent = id("checklist");
     parent.appendChild(div);
 
+    // resize the loading svg to cover all input elements
     const style = window.getComputedStyle(parent);
-    qs('#options svg').style.height = style.getPropertyValue('height');
+    console.log(style.getPropertyValue('height'));
+    qs('#options > svg').style.height = style.getPropertyValue('height');
+    // TODO: adjust height to entirely cover
   }
 
   /**
@@ -1009,22 +1040,19 @@
     let filters = qsa('#filter input[type=checkbox]:checked');
     
     if (type === "exclude") {   
-      // for each selected boost
+      // for each selected boost, exclude only cards with that boost
       for (let i = 0; i < filters.length; i++) {
         let boost = (filters[i].id).split('-').slice(1).join('-');
-        // exclude only cards with that boost
         let cards = qsa(`.${boost}`);
         for (let i = 0; i < cards.length; i++) {
           cards[i].classList.add('hide-boost');
         }
       }
-      
     } else {    
-      // for each selected boost           
+      // for each selected boost, exclude only cards without that boost        
       for (let i = 0; i < filters.length; i++) {
         let boost = (filters[i].id).split('-').slice(1).join('-');
-        // exclude cards WITHOUT the boost
-        let cards = qsa(`.product-container:not(.${boost}`); // :not(.title-card)
+        let cards = qsa(`.product-container:not(.${boost}`);
         for (let i = 0; i < cards.length; i++) {
           cards[i].classList.add('hide-boost');
         }
