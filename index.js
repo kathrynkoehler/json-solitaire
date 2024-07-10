@@ -93,26 +93,23 @@
     const auth = btoa(`${user}:${password}`);
     const authHeader = `Basic ${auth}`;
 
-    // execute httppost to get jwt
-    console.log(`Obtaining new JWT via ${loginUrl}`);
+    // execute fetch to get jwt
     try {
       const response = await fetch(loginUrl, {
         method: 'POST',
         headers: { 'Authorization': authHeader }
       });
       await statusCheck(response);
-
       const responseJSON = await response.json();
-      console.log(responseJSON);
       jwt = responseJSON['access_token'];
       const secondsUntilExpiration = parseInt(responseJSON['expires_in']);
 
-      // reschedule before it expires
-      const graceSeconds = secondsUntilExpiration > 15 ? 10 : 2;
-      const secondsUntilRefresh = secondsUntilExpiration - graceSeconds;
-      console.log(`Successfully refreshed JWT, refreshing again in ${secondsUntilRefresh} seconds`);
       qs('#auth form').classList.toggle('hidden');
       qs('#error').classList.add('hidden');
+
+      // reschedule before jwt expires
+      const graceSeconds = secondsUntilExpiration > 15 ? 10 : 2;
+      const secondsUntilRefresh = secondsUntilExpiration - graceSeconds;
       setTimeout(async () => {
         await refreshJwt(apiUrl, user, password);
       }, secondsUntilRefresh * 1000);
@@ -167,12 +164,10 @@
       let search = id('searchbar').value;
       search = search.split(' ').join('%20');
       const queryURL = `/api/apps/${APPID}/query/${APPID}?q=${search}&debug=results&debug.explain.structured=true`;
-      
       let res = await fetch(API_URL + queryURL, { headers });
       await statusCheck(res);
       res = await res.json();         // this is the new "dirty" data to parse
-      qs('#error').classList.add('hidden');
-      // decompose products list & scores, write to allProducts and allDetails
+      id('error').classList.add('hidden');
       decomposeSKU(res);
     } catch (err) {
       console.error('queryData: ' + err);
@@ -210,7 +205,7 @@
         allProducts[prodId] = {
           'productId': prodId,
           'displayName' : array[0],
-          'size': array[1],    // when image removed, change to [1]
+          'size': array[1],
           'prodImg': array[2],
           'skus': {}
         }
@@ -225,7 +220,7 @@
       // extract details for every sku_prodid item
       let depth = 0;
       allDetails[item] = [];
-      let newObj = traverseDetails(depth, item, (skus[item]));
+      traverseDetails(depth, item, (skus[item]));
     }
   }
 
@@ -321,7 +316,7 @@
   /**
    * adds all cards to page.
    */
-  async function buildInterface() {
+  async function buildInterface() {  // TODO: change from for/of loops for performance
     try {
       qs('#scores').innerHTML = '';
       qs('#checklist').innerHTML = '';
@@ -369,8 +364,7 @@
       section.id = search;
 
       let load = gen('div');
-      load.classList.add('load-items');
-      load.classList.add('loading');
+      load.classList.add('load-items', 'loading');
       section.appendChild(load);
 
       let parent = id("items");
@@ -389,8 +383,7 @@
   function addProductSection(product, search) {
     try {
       let section = gen('section');
-      section.classList.add(product['productId']);
-      section.classList.add('product-container');
+      section.classList.add(product['productId'], 'product-container');
       
       // spacers that isolate the deck when spread
       let spacer1 = gen('div');
@@ -410,6 +403,7 @@
    * @param {Object} data - JSON object of product data
    * @param {String} productId - ID of product
    * @param {String} displayName - Display name of product
+   * @param {String} image - the image of the product
    * @param {String} search - query the item was returned from
    */
   function addProductCard(data, productId, displayName, image, search) {
@@ -440,8 +434,7 @@
       contents.append(title, prodId, max, count);
 
       const article = gen('article');
-      article.classList.add('product-card');
-      article.classList.add('title-card');
+      article.classList.add('product-card', 'title-card');
       article.append(photoDiv, contents);
 
       const prodContainer = qs(`#${search} .${productId}`);
@@ -453,7 +446,6 @@
     } catch (err) {
       console.error('Error in addProductCard: ', err);
     }
-    
   }
 
   /**
@@ -520,9 +512,8 @@
       const dropDownButton = gen('button');
       dropDownButton.textContent = 'SCORE DETAILS';
       dropDownButton.classList.add('collapsible');
-      let scores = await scoreList(productId, card);
+      let scores = scoreList(productId, card);
       const dropDownContainer = scores;
-
       const summary = scoreSummary(scores);
       photoDiv.appendChild(summary);
       
@@ -543,8 +534,7 @@
       const contents = gen('div');
       contents.classList.add('card-contents');
       contents.append(title, prodId, order, score, dropDownButton);
-      card.appendChild(photoDiv);
-      card.appendChild(contents);
+      card.append(photoDiv, contents);
     } catch (err) {
       console.error(err);
     }
@@ -557,7 +547,7 @@
    *          in so the boost classes can be applied
    * @returns {HTMLElement} completed container element for score dropdown
    */
-  async function scoreList(itemId, card) {
+  function scoreList(itemId, card) {
     const dropDownContainer = gen('article');
     dropDownContainer.classList.add('content');
     dropDownContainer.classList.add('hidden');
@@ -570,53 +560,6 @@
       const drop = createScoreDetail(item[score]);
       appendScoreDetail(dropDownContainer, drop, item[score], itemId);
       addBoostClass(card, item[score], drop);
-
-      // if (child.length > 0) {
-      //   while (parent) {
-      //     let depth = parent.classList.value;
-      //     depth = parseInt(depth.split("-")[1]);
-      //     let check = (parseInt(item[score][0]) - 1);
-          
-      //     if (depth < check) {  // if we're not deep enough, go deeper
-      //       child = parent.querySelectorAll('details');
-      //       parent = child[child.length-1];
-      //     } else if (depth === check) {   // if correct depth, append
-      //       parent.appendChild(drop);
-      //       parent = false;
-      //     } else {                        // if too deep, reverse
-      //       parent = parent.parentNode;
-      //     }
-      //   }
-      // } else {
-      //   // if there's nothing in the list yet, add current to list
-      //   dropDownContainer.appendChild(drop);
-      // }
-
-      // check which boosts are applied & add class to card for filtering
-      // if (descContent === "boost") {
-      //   let context = (div.parentNode).parentNode.parentNode.parentNode;
-      //   let name = context.childNodes[0].textContent;
-      //   let boostname = (name.split(' ')[0]).split(':')[1];
-      //   if (boostname[0] === '"') {
-      //     boostname = (name.split('"')[1]).split(' ').join('-');
-      //   } else if (boostname === 'true') {
-      //     boostname = name.split(':')[0].split('_')[1];
-      //   }
-      //   card.classList.add(`${boostname}-boost-${valContent}`);
-      //   const container = card.parentElement;
-
-      //   // add hide-boost to entire product stack when filtered
-      //   container.classList.add(`${boostname}-boost-${valContent}`);
-      //   sidebarOption(`${boostname}-boost-${valContent}`);
-      //   div.classList.add('scoreboost');
-      // } else {
-      //   descContent = descContent.split('(')[0];
-      //   if (descContent === 'weight') { 
-      //     div.classList.add('scoreweight');
-      //   } else if (descContent === 'max of:') {
-      //     div.classList.add('scoremax');
-      //   }
-      // }
     }
     return dropDownContainer;
   }
@@ -631,13 +574,11 @@
     const drop = gen('details');
     const summary = gen('summary');
     const div = gen('div');
-
+    
+    let indent = `indent-${scoreDetail[0]}`;
     const description = gen('p');
     description.textContent = scoreDetail[1];
     description.classList.add("detail-desc");
-
-    let indent = `indent-${scoreDetail[0]}`;
-
     const value = gen('p');
     value.textContent = scoreDetail[2];
     value.classList.add("detail-val");
@@ -660,7 +601,6 @@
   function appendScoreDetail(dropDownContainer, drop, scoreDetail, itemId) {
     const indentLevel = parseInt(scoreDetail[0]);
     let lastChild = dropDownContainer.querySelectorAll('details');
-    // let lastChild = parent.querySelector('details:last-of-type');
     let parent = lastChild[lastChild.length-1];
 
     if (lastChild.length > 0) {
@@ -739,7 +679,7 @@
    * SKU card.
    * @param {HTMLElement} list - the existing full score breakdown of nested <details>
    *          elements.
-   * @returns {HTMLElement} div element containing the pared-down list of 
+   * @returns {HTMLElement} div containing the pared-down list of 
    *           core score details.
    */
   function scoreSummary(list) {
@@ -803,6 +743,7 @@
     // split apart the category and term from the weight heading
     let category = heading.childNodes[0].textContent.split(':');
     let term = category[1].split(' in')[0];
+
     // account for the event that several terms (synonyms) are weighted together
     if (category.length > 2) {
       let terms = [];
@@ -816,7 +757,7 @@
       category = category[0].split('(').slice(1).join('(');
     }
 
-    // build the boost element
+    // build the boost, idf, and tf elements
     let boost = node.querySelector('.scoreboost > summary > div > .detail-val');
     if (boost) {
       let newBoost = gen('details');
@@ -825,10 +766,8 @@
       newBoost.append(boostSummary);
       newWeight.append(newBoost);
     }
-
     let idf = node.childNodes[1].querySelector('.scoreidf');
     let newIdf = createIdfDetail(idf, category, term);
-    
     let tf = node.childNodes[1].querySelector('.scoretf');
     let newTf = createTfDetail(tf, category, term);
 
@@ -846,16 +785,16 @@
    */
   function createIdfDetail(idf, category, term) { // TODO: factor out redundancy
     // build the idf element
-    let idfscore = idf.childNodes[0].childNodes[0].childNodes[1].textContent;
+    let idfscore = idf.querySelector('div > p.detail-val').textContent;
     let newIdf = gen('details');
     let idfSummary = gen('summary');
     idfSummary.textContent = `idf = ${idfscore}`;
     newIdf.append(idfSummary);
     
     // check whether idf is a single calculation, or sum of several idfs
-    if (!(idf.childNodes[0].childNodes[0].childNodes[0].textContent).includes("sum of")) {
-      let smallN = idf.childNodes[1].childNodes[0].childNodes[0].childNodes[1].textContent;
-      let bigN = idf.childNodes[2].childNodes[0].childNodes[0].childNodes[1].textContent;
+    if (!(idf.childNodes[0].querySelector('div > p.detail-desc').textContent).includes("sum of")) {
+      let smallN = idf.childNodes[1].querySelector('div > p.detail-val').textContent;
+      let bigN = idf.childNodes[2].querySelector('div > p.detail-val').textContent;
       let idfExplain = gen('p');
       idfExplain.innerHTML = `The number of documents searched (N) is \
       <span>${bigN}</span>, and the number where the field \
@@ -869,13 +808,13 @@
       newIdf.append(sumIdf);
       for (let i = 1; i < idf.childNodes.length; i++) {
         let current = idf.childNodes[i];
-        idfscore = current.childNodes[0].childNodes[0].childNodes[1].textContent;
+        idfscore = current.querySelector('div > p.detail-val').textContent;
         let nestIdf = gen('details');
         let idfNestSummary = gen('summary');
         idfNestSummary.textContent = `idf = ${idfscore}`;
 
-        let smallN = current.childNodes[1].childNodes[0].childNodes[0].childNodes[1].textContent;
-        let bigN = current.childNodes[2].childNodes[0].childNodes[0].childNodes[1].textContent;
+        let smallN = current.childNodes[1].querySelector('div > p.detail-val').textContent;
+        let bigN = current.childNodes[2].querySelector('div > p.detail-val').textContent;
         let idfExplain = gen('p');
         idfExplain.innerHTML = `The number of documents searched (N) is \
         <span>${bigN}</span>, and the number where the field \
@@ -898,14 +837,15 @@
    * @returns {HTMLElement} new tf details dropdown.
    */
   function createTfDetail(tf, category, term) {
-    // pull out the values for each score component
-    let tfscore = tf.childNodes[0].childNodes[0].childNodes[1].textContent;
-    let freq = tf.childNodes[1].childNodes[0].childNodes[0].childNodes[1].textContent;
-    let k1 = tf.childNodes[2].childNodes[0].childNodes[0].childNodes[1].textContent;
-    let b = tf.childNodes[3].childNodes[0].childNodes[0].childNodes[1].textContent;
-    let dl = tf.childNodes[4].childNodes[0].childNodes[0].childNodes[1].textContent;
-    let avgdl = tf.childNodes[5].childNodes[0].childNodes[0].childNodes[1].textContent;
+    // pull out the values for each tf score component
+    let tfscore = tf.childNodes[0].querySelector('div > p.detail-val').textContent;
+    let freq = tf.childNodes[1].querySelector('div > p.detail-val').textContent;
+    let k1 = tf.childNodes[2].querySelector('div > p.detail-val').textContent;
+    let b = tf.childNodes[3].querySelector('div > p.detail-val').textContent;
+    let dl = tf.childNodes[4].querySelector('div > p.detail-val').textContent;
+    let avgdl = tf.childNodes[5].querySelector('div > p.detail-val').textContent;
 
+    // build the element
     let newTf = gen('details');
     let tfSummary = gen('summary');
     tfSummary.textContent = `tf = ${tfscore}`;
