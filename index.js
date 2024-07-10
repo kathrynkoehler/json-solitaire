@@ -136,14 +136,13 @@
       // query data from api, then display on page
       await queryData(e);
       await displayData();
-      console.log(allDetails);
       
       // when all data is displayed, remove loading icons
       circle.classList.add('hidden');
       circle2.classList.add('hidden');
       qs(`#items .loading`).classList.add('hidden');
     } catch (err) {
-      console.error(err);
+      console.error('Error in loadPage:', err);
     }
   }
 
@@ -170,7 +169,7 @@
       id('error').classList.add('hidden');
       decomposeSKU(res);
     } catch (err) {
-      console.error('queryData: ' + err);
+      console.error('Error in queryData: ' + err);
       handleError('Error querying API: ', err);
 
     }
@@ -966,7 +965,7 @@
     parent.appendChild(div);
 
     // resize the loading svg to cover all input elements
-    const style = window.getComputedStyle(parent);
+    const style = window.getComputedStyle(id('options'));
     console.log(style.getPropertyValue('height'));
     qs('#options > svg').style.height = style.getPropertyValue('height');
     // TODO: adjust height to entirely cover
