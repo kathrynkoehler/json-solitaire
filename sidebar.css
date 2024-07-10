@@ -202,7 +202,7 @@ summary::before {
   width: 1em;
   flex-shrink: 0;
   transition: 0.3s;
-  margin-top: 0.2em;
+  padding-right: 0.2em;
 }
 
 details[open] > summary::before {
@@ -213,6 +213,17 @@ details[open] > summary::before {
 summary > * {
   display: flex;
   justify-content: space-between;
+}
+
+.content > details summary::before {
+  padding-top: 2px;
+}
+
+.content > details[open] > summary::before {
+  padding: 0;
+  padding-left: 6px;
+  transform: rotate(90deg);
+  transform-origin: 40% 45% 0;
 }
 
 
