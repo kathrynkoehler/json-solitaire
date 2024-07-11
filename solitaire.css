@@ -8,7 +8,6 @@ body {
 main {
   display: flex;
   justify-content: space-evenly;
-  /* width: 80%; */
   width: 1580px;
   margin: auto;
   margin-top: 2rem;
@@ -277,7 +276,6 @@ main {
 #items div.photo > div.content > h3 + p {
   margin-bottom: 0.5rem;
   width: 80%;
-  /* word-break: break-all; */
 }
 
 .tooltip {
