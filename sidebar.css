@@ -277,6 +277,10 @@ summary > * {
   transition: right .25s ease-in-out;
 }
 
+#signin.active {
+  color: #c8102e;
+}
+
 #auth form {
   display: flex;
   flex-direction: column;

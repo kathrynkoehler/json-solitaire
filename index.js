@@ -175,7 +175,10 @@
     } catch (err) {
       console.error('Error in queryData: ' + err);
       handleError('Error querying API: ', err);
-
+      qs('#signin').classList.add('active');
+      setTimeout(() => {
+        qs('#signin').classList.remove('active');
+      }, 5000);
     }
   }
 
