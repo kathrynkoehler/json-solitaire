@@ -127,9 +127,13 @@
     try {
       // loading animations
       let items = id('items');
+      items.innerHTML = '';
+      let itemLoad = gen('div');
+      itemLoad.classList.add('load-items');
+      items.prepend(itemLoad);
+
       let circle = qs('#options svg');
       let circle2 = id('load-circle');
-      items.innerHTML = '';
       circle.classList.remove('hidden');
       circle2.classList.remove('hidden');
 
@@ -140,7 +144,7 @@
       // when all data is displayed, remove loading icons
       circle.classList.add('hidden');
       circle2.classList.add('hidden');
-      qs(`#items .loading`).classList.add('hidden');
+      qs('#items .load-items').remove();
     } catch (err) {
       console.error('Error in loadPage:', err);
     }
@@ -187,18 +191,17 @@
    */
   function decomposeSKU(data) {
     const skus = data["debug"]["explain"];
-    let item;
     let value;
     allProducts = {};
     allDetails = {};
 
-    for (item in skus) {
-      let prodId = item.split('_').slice(1)[0];
-      let skuId = item.split('_')[0];
+    Object.keys(skus).forEach(item => {
+      let [skuId, prodId] = item.split('_');
       value = skus[item].value;
 
       // check if product id already has an object
       let array = setData(data, prodId, skuId);
+      if (!array) return;
 
       if (!allProducts[prodId]) {
         allProducts[prodId] = {
@@ -212,20 +215,21 @@
       allProducts[prodId]['skus'][skuId] = {
         'skuScore': value, 
         'skuImg': array[3],
-        'price': array[4],
-        'color': array[5],
       };
       
       // extract details for every sku_prodid item
-      let depth = 0;
       allDetails[item] = [];
-      traverseDetails(depth, item, (skus[item]));
-    }
+      // account for the first score not being nested inside a 'details' object
+      allDetails[item].push([1, skus[item]['description'], skus[item]['value']]);
+      traverseDetails(1, item, (skus[item]));
+    });
   }
 
   /**
-   * Grabs the image and displayName from "response" "docs" object in the file.
+   * Grabs the image and displayName from "response" "docs" object in the JSON.
    * Saves these as an array that will later be saved in the "cleaned" data object.
+   * If the full SKU details are listed, additionally save the specific SKU
+   * image.
    * @param {Object} data - the JSON to parse
    * @param {String} productId - the productId
    * @param {String} skuId - the skuId
@@ -236,22 +240,17 @@
     
     // for each product, find details list
     let item;
-    for (item in docs) {
-      if (docs[item]["product_id"] === productId) {
-        let array = [docs[item]["product_displayName"],   // object[0]
-            docs[item]["sku_size"],                       // object[1]
-            docs[item]["sku_skuImages"][0],               // object[2] (prod img)
+    for (item of docs) {
+      if (item["product_id"] === productId) {
+        let array = [item["product_displayName"],   // object[0]
+            item["sku_size"],                       // object[1]
+            item["sku_skuImages"][0],               // object[2] (prod img)
           ];
-
-        let skuslist = docs[item]["style_order_list"];
+        let skuslist = item["style_order_list"];
         for (let i = 0; i < skuslist.length; i++) {
           if (skuslist[i]["sku_id"] === skuId) {
-            let colors = [skuslist[i]["sku_colorGroup"], 
-              skuslist[i]["sku_colorCodeDesc"]];
             array.push(
-              skuslist[i]["sku_skuImages"][0],    // object[3]
-              skuslist[i]["list_price"],          // object[4]
-              colors                              // object[5]
+              skuslist[i]["sku_skuImages"][0]       // object[3]
             );
             return array;                   // exit early if sku details found
           }
@@ -275,16 +274,18 @@
     let object = [];
     Object.keys(item).forEach(key => {
       // if details, pull out the score and description
-      if (typeof item[key] === 'object' && item[key] !== null && key === "details") {
+      if (typeof item[key] === 'object' && item[key] !== null) {
         // pull out all scores at that depth
-        let short = item["details"];
-        for (let i = 0; i < short.length; i++) {
-          allDetails[prodId].push([depth+1, short[i]["description"], short[i]["value"]]);
-          // then check for more details
-          traverseDetails(depth+1, prodId, short[i]);
+        if (key === 'details'){
+          let short = item["details"];
+          for (let i = 0; i < short.length; i++) {
+            allDetails[prodId].push([depth+1, short[i]["description"], short[i]["value"]]);
+            // then check for more details
+            traverseDetails(depth+1, prodId, short[i]);
+          }
+          // when finished with one object, do the other nested ones too
+          traverseDetails(depth, prodId, item["details"]);
         }
-        // when finished with one object, do the other nested ones too
-        traverseDetails(depth, prodId, item["details"]);
       } else {
         return object;
       }
@@ -513,6 +514,7 @@
       dropDownButton.classList.add('collapsible');
       let scores = scoreList(productId, card);
       const dropDownContainer = scores;
+      dropDownContainer.classList.add('hidden');
       const summary = scoreSummary(scores);
       photoDiv.appendChild(summary);
       
@@ -524,6 +526,7 @@
           sidebarDropDown.classList.toggle('hidden');
         } else {
           sidebarScores(dropDownContainer, productId);
+          dropDownContainer.classList.remove('hidden');
         }
         // handle score summary on sku card
         photo.classList.toggle('hidden');
@@ -557,7 +560,7 @@
     // for each score in item, add to item dropdown
     for (const score in item) {
       const drop = createScoreDetail(item[score]);
-      appendScoreDetail(dropDownContainer, drop, item[score], itemId);
+      appendScoreDetail(dropDownContainer, drop, item[score]);
       addBoostClass(card, item[score], drop);
     }
     return dropDownContainer;
@@ -595,9 +598,8 @@
    * @param {HTMLElement} dropDownContainer - the parent element to append to.
    * @param {HTMLElement} drop - tthe score detail element to append.
    * @param {Array} scoreDetail - array containg score details.
-   * @param {String} itemId - full SKU_ProductID of the item.
    */
-  function appendScoreDetail(dropDownContainer, drop, scoreDetail, itemId) {
+  function appendScoreDetail(dropDownContainer, drop, scoreDetail) {
     const indentLevel = parseInt(scoreDetail[0]);
     let lastChild = dropDownContainer.querySelectorAll('details');
     let parent = lastChild[lastChild.length-1];
@@ -645,6 +647,8 @@
         drop.classList.add('scoreweight');
       } else if (baseDescription === 'max of:') {
         drop.classList.add('scoremax');
+      } else if (baseDescription === 'query') {
+        drop.classList.add('scorequery');
       }
     }
   }
@@ -686,12 +690,15 @@
     div.classList.add('hidden', 'content');
     let title = gen('h3');
     title.textContent = 'Score Components';
-    let explain = gen('p');
-    explain.textContent = `Each category weight is calculated by multiplying \
-    boost * idf * tf. TFIDF (term frequency, inverse document frequency) \
-    represents the relative concentration of the weighted term in the document (item).`;
-    div.append(title, explain);
+    let tooltip = scoreTooltip();
+    title.append(tooltip);
 
+    let formula = scoreFormula(list, ' = ');
+    formula = scoreFormulaFormat(formula);
+    let calculation = gen('p');
+    calculation.textContent = formula;
+    div.append(title, calculation);
+    
     // traverse list and look for "max of:" calculations
     let max = list.querySelectorAll('.scoremax');
     max.forEach(maxElement => {
@@ -704,7 +711,7 @@
         if (val === target) {
           let copy = weight.cloneNode(true);
           copy.querySelector('details > summary > div > p.detail-desc').textContent = 
-            copy.querySelector('details > summary > div > p.detail-desc').textContent.split(' [')[0];
+          copy.querySelector('details > summary > div > p.detail-desc').textContent.split(' [')[0];
           div.append(scoreRewrite(copy));
         }
       });
@@ -712,16 +719,91 @@
     // check for weights that weren't taken as a maximum
     let outerWeights = list.querySelectorAll('.scoreweight');
     outerWeights.forEach(weight => {
+      let indent = weight.classList.value.split('-')[1][0];
       let parent = (weight.parentNode);
-      parent = parent.childNodes[0].childNodes[0].textContent.split(' ')[0];
-      if (parent !== "max") {
+      let parentText = parent.childNodes[0].childNodes[0].textContent.split(' ')[0];
+      if (indent !== '1' && parentText !== "max") {
         let copy = weight.cloneNode(true);
-        copy.childNodes[0].childNodes[0].childNodes[0].textContent = 
-          copy.childNodes[0].childNodes[0].childNodes[0].textContent.split(' [')[0];
+        copy.querySelector('details > summary > div > p.detail-desc').textContent = 
+        copy.querySelector('details > summary > div > p.detail-desc').textContent.split(' [')[0];
         div.append(scoreRewrite(copy));
       }
     });
+    // check for the query constant multiplier
+    let query = list.querySelector('.scorequery');
+    if (query) {
+      let copy = query.cloneNode(true);
+      copy.querySelector('details > summary > div > p.detail-desc').textContent = 'Query constant'
+      div.append(copy);
+    }
     return div; 
+  }
+
+  /**
+   * Extracts the top-level operations from the score components to show a
+   * simplified calculation on each SKU card's breakdown.
+   * @param {HTMLElement} list - the full score list
+   * @param {String} type - the character to concatenate the operation with
+   * @returns 
+   */
+  function scoreFormula(list, type) {
+    // hunt for "product of" and "sum of" calculations
+    let formula = [];
+    let components = list.querySelectorAll(':scope > details');
+    // console.log(list, components);
+    for (let i = 0; i < components.length; i++) {
+      let description = components[i].querySelector('div > p.detail-desc').textContent;
+      // check if it's a product
+      if (description.includes('product of')) {
+        formula.push(scoreFormula(components[i], '*'));
+      } else if (description.includes('sum of')) {
+        formula.push('(', scoreFormula(components[i], '+'), ')');
+      } else {
+          // if not a sum or a product, just add the value
+          let value = components[i].querySelector('div > p.detail-val').textContent;
+          if (description.includes('weight') && description.length > 100) {
+            formula.push(value, type);
+            formula.push(scoreFormula(components[i], '&'));
+          } else {
+            formula.push(type, value);
+          }
+        }
+      }
+    return formula;
+  }
+
+  /**
+   * Formats the nested array from scoreFormula() into a readable string.
+   * Called from scoreSummary.
+   * @param {Array} formula - the nested array to format
+   * @returns {String} the complete calculation represented as a String
+   */
+  function scoreFormulaFormat(formula) {
+    formula = formula.flat(Infinity);
+    formula = formula.join(' ');
+    formula = formula.replace('( + ', '(');
+    formula = formula.replace(' )', ')');
+    return formula;
+  }
+  
+  /**
+   * Create a tooltip for the SKU score summary that explains TFIDF values.
+   * Called from scoreSummary().
+   */
+  function scoreTooltip() {
+    let tooltip = gen('div');
+    tooltip.classList.add('tooltip');
+    let info = gen('img');
+    info.src = './img/info.png';
+    info.alt = 'Read more';
+    let explain = gen('p');
+    explain.textContent = `Each category weight is calculated by multiplying \
+    boost * idf * tf. TFIDF (term frequency, inverse document frequency) \
+    represents the relative concentration of the weighted term in the document \
+    (item).`;
+    explain.classList.add('tooltiptext');
+    tooltip.append(info, explain);
+    return tooltip;
   }
 
   /**
@@ -926,10 +1008,12 @@
     icon.src = './img/x.png';
 
     heading.append(label, icon);
+    heading.classList.add('active');
     heading.addEventListener('click', () => {
       // heading.classList.toggle('active');
       let content = heading.nextElementSibling;
       content.classList.toggle('hidden');
+      heading.classList.toggle('active');
     });
     icon.addEventListener('click', () => {
       // (icon.parentNode).parentNode.remove();
@@ -966,7 +1050,6 @@
 
     // resize the loading svg to cover all input elements
     const style = window.getComputedStyle(id('options'));
-    console.log(style.getPropertyValue('height'));
     qs('#options > svg').style.height = style.getPropertyValue('height');
     // TODO: adjust height to entirely cover
   }

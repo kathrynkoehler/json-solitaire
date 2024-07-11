@@ -171,6 +171,12 @@ option {
   align-items: center;
   cursor: pointer;
   margin-bottom: 0.5rem;
+  padding: 3px;
+  border-radius: 3px;
+}
+
+#scores > div > h2.active {
+  border: 1px #c8102e solid;
 }
 
 #scores img {
