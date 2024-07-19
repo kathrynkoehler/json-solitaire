@@ -1,5 +1,18 @@
 /* default sizing is for a screen larger than ~1650x1084 (xlarge devices). */
 
+/* Extra-Large devices */
+@media only screen and (max-width: 1600px) {
+  main {
+    width: 100%; /* something less than 1580px*/
+    margin: none;
+  }
+
+  #items {
+    max-width: 75%;
+  }
+}
+
+
 /* large devices (desktops, laptops, 992px+) */
 @media only screen and (max-width: 992px) {
   main {
