@@ -106,6 +106,7 @@
       const secondsUntilExpiration = parseInt(responseJSON['expires_in']);
 
       qs('#auth form').classList.toggle('hidden');
+      qs('#auth p').classList.toggle('hidden');
       qs('#error').classList.add('hidden');
 
       // reschedule before jwt expires
@@ -527,6 +528,8 @@
         dropDownButton.classList.toggle('active');
         let sidebarDropDown = id(`${productId}-scorelist`);
         if (sidebarDropDown) {
+          sidebarDropDown.parentElement.classList.remove('hidden');
+          sidebarDropDown.previousElementSibling.classList.toggle('active');
           sidebarDropDown.classList.toggle('hidden');
         } else {
           sidebarScores(dropDownContainer, productId);
@@ -817,7 +820,7 @@
    * @returns {HTMLElement} new element consisting of nested details with explanations
    *            for each component of a score.
    */
-  function scoreRewrite(node) {  // TODO: add tooltip for tfidf, components
+  function scoreRewrite(node) {
     // break apart the copy of the dropdown, create new elements
     let heading = node.childNodes[0].childNodes[0];
     let newWeight = gen('details');
