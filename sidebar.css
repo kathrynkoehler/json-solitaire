@@ -232,6 +232,17 @@ summary > * {
   transform-origin: 40% 45% 0;
 }
 
+details:not([open]) > summary > div > p.detail-desc {
+  -webkit-line-clamp: 6;
+  line-clamp: 6;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 7rem;
+  display: -webkit-box;
+  /* white-space: nowrap; */
+  -webkit-box-orient: vertical;
+}
+
 
 /* --------- Authentication --------- */
 
