@@ -38,6 +38,7 @@
       let signin = id('signin');
       signin.addEventListener('click', () => {
         auth.classList.toggle('hidden');
+        qs('#auth p').classList.toggle('hidden');
       });
       qs('#error img').addEventListener('click', () => {
         id('error').classList.add('hidden');

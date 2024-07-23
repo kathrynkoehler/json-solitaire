@@ -289,6 +289,12 @@ summary > * {
   align-self: center;
 }
 
+#auth p {
+  width: 80%;
+  align-self: center;
+  margin: 0.75rem 0 0.5rem;
+}
+
 #auth input {
   font-size: 16px;
   height: 1.5rem;
