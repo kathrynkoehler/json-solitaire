@@ -33,7 +33,6 @@ main {
 #items {
   min-width: 30%;
   max-width: 1150px;
-  margin: 1rem;
 }
 
 #items .photo > img {
@@ -380,6 +379,7 @@ p.tooltiptext {
   height: 2rem;
   width: 2rem;
   align-self: end;
+  cursor: pointer;
 }
 
 #error.hidden {

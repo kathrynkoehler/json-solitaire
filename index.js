@@ -17,6 +17,8 @@
   // api constants
   const API_URL = 'https://lululemon-dev.c.lucidworks.cloud';
   const APPID = 'LLM_us';
+  const ROW_LIMIT = '40';
+  const SKU_LIMIT = '100';
 
   // holds extracted product information from cleaned json files
   let allProducts = {};
@@ -168,7 +170,7 @@
       // get the search string, query api
       let search = id('searchbar').value;
       search = search.split(' ').join('%20');
-      const queryURL = `/api/apps/${APPID}/query/${APPID}?q=${search}&rows=40&group.limit=500&debug=results&debug.explain.structured=true`;
+      const queryURL = `/api/apps/LLM_us/query/${APPID}?q=${search}&rows=${ROW_LIMIT}&group.limit=${SKU_LIMIT}&debug=results&debug.explain.structured=true`;
       let res = await fetch(API_URL + queryURL, { headers });
       await statusCheck(res);
       res = await res.json();         // this is the new "dirty" data to parse
@@ -321,7 +323,7 @@
   /**
    * adds all cards to page.
    */
-  async function buildInterface() {  // TODO: change from for/of loops for performance
+  async function buildInterface() {
     try {
       qs('#scores').innerHTML = '';
       qs('#checklist').innerHTML = '';
@@ -639,10 +641,10 @@
     const description = scoreDetail[1];
     if (description === "boost") {
       const boostName = getBoostName(drop);
-      const boostClass = `${boostName}-boost-${scoreDetail[2]}`;
+      const boostClass = `${boostName[0]}-boost-${scoreDetail[2]}`;
       card.classList.add(boostClass);
       card.parentElement.classList.add(boostClass);
-      sidebarOption(boostClass);
+      sidebarOption(boostClass, boostName[1]);
       drop.classList.add('scoreboost');
     } else if (description.includes('idf, computed as')) {
       drop.classList.add('scoreidf')
@@ -677,7 +679,7 @@
         } else if (boostName === 'true') {
           boostName = name.split(':')[0].split('_')[1];
         }
-        return boostName;
+        return [boostName, name];
       }
     } catch (err) {
       console.error('Error in getBoostName:', err);
@@ -871,7 +873,7 @@
    * @param {String} term - the weighted term.
    * @returns {HTMLElement} new idf details dropdown.
    */
-  function createIdfDetail(idf, category, term) { // TODO: factor out redundancy
+  function createIdfDetail(idf, category, term) {
     // build the idf element
     let idfscore = idf.querySelector('div > p.detail-val').textContent;
     let newIdf = gen('details');
@@ -1034,8 +1036,9 @@
   /**
    * dynamically add checkboxes to sidebar to filter cards by boost applied
    * @param {String} boost - the boost to be filtered on
+   * @param {String} title - the full title of the boost
    */
-  function sidebarOption(boost) {
+  function sidebarOption(boost, title) {
     // check that boost is not already on list
     if (id(`check-${boost}`)) {
       return;
@@ -1051,6 +1054,7 @@
     let label = gen('label');
     label.for = input.id;
     label.textContent = boost;
+    label.title = title;
     div.append(input, label);
     const parent = id("checklist");
     parent.appendChild(div);
@@ -1058,7 +1062,6 @@
     // resize the loading svg to cover all input elements
     const style = window.getComputedStyle(id('options'));
     qs('#options > svg').style.height = style.getPropertyValue('height');
-    // TODO: adjust height to entirely cover
   }
 
   /**
