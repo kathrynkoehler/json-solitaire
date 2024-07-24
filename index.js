@@ -168,7 +168,7 @@
       // get the search string, query api
       let search = id('searchbar').value;
       search = search.split(' ').join('%20');
-      const queryURL = `/api/apps/${APPID}/query/${APPID}?q=${search}&debug=results&debug.explain.structured=true`;
+      const queryURL = `/api/apps/${APPID}/query/${APPID}?q=${search}&rows=40&group.limit=500&debug=results&debug.explain.structured=true`;
       let res = await fetch(API_URL + queryURL, { headers });
       await statusCheck(res);
       res = await res.json();         // this is the new "dirty" data to parse
