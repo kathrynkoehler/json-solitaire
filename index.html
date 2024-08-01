@@ -20,8 +20,15 @@
             </svg>
             <span>Sign In</span>
           </div>
+          <div id="choose-api" class="hidden">
+            <label for="api-input">Select API:</label>
+            <input list="api-options" id="api-input">
+            <datalist id="api-options">
+            </datalist>
+            <!-- <button id="choose-api-btn">Select API</button> -->
+          </div>
           <p class="hidden">
-            Sign in with Lucidworks credentials to authorize queries.
+            Sign in with Lucidworks credentials to authorize queries to the selected API.
           </p>
           <form class="hidden">
             <input type="text" placeholder="username" name="username">

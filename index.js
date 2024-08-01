@@ -15,10 +15,14 @@
   let jwt;
 
   // api constants
-  const API_URL = 'https://lululemon.c.lucidworks.cloud';
+  const PROD_URL = 'https://lululemon.c.lucidworks.cloud';
+  const DEV_URL = 'https://lululemon-dev.c.lucidworks.cloud';
   const APPID = 'LLM_us';
   const ROW_LIMIT = '40';
   const SKU_LIMIT = '100';
+  const SEARCH_START = '0';
+
+  let API_URL = '';
 
   // holds extracted product information from cleaned json files
   let allProducts = {};
@@ -29,10 +33,12 @@
    */
   async function init() {
     try {
+      prepAPI();
       // prep login to authenticate new jwt
       let auth = qs('#auth form');
       auth.addEventListener('submit', async (e) => {
         e.preventDefault();
+        chooseAPI();
         await authenticateJWT(e);
         auth['username'].value = '';
         auth['password'].value = '';
@@ -40,6 +46,7 @@
       let signin = id('signin');
       signin.addEventListener('click', () => {
         auth.classList.toggle('hidden');
+        id('choose-api').classList.toggle('hidden');
         qs('#auth p').classList.toggle('hidden');
       });
       qs('#error img').addEventListener('click', () => {
@@ -53,6 +60,43 @@
       });
     } catch (err) {
       console.error('init ' + err);
+    }
+  }
+
+  /**
+   * Get saved API urls from localstorage and add to list of options.
+   */
+  function prepAPI() {
+    if (!window.localStorage.getItem("api-list")) {
+      let setUrls = ([{url: PROD_URL}, {url: DEV_URL}]);
+      window.localStorage.setItem("api-list", setUrls);
+    }
+    let urls = (window.localStorage.getItem("api-list")).split(",");
+    let list = id("api-options");
+    for (let i = 0; i < urls.length; i++) {
+      list.append(gen("option", {value: `${urls[i]}`}));
+    }
+  }
+
+  /**
+   * Allow user to select the API to query, and add selection to list of
+   * options if the URL is new.
+   */
+  function chooseAPI() {
+    let input = id("api-input").value;
+    API_URL = input;
+    let options = window.localStorage.getItem("api-list").split(",");
+    let exists = false;
+    for (let i = 0; i < options.length; i++) {
+      let current = options[i];
+      if (current.includes(input)) {
+        exists = true;
+        break;
+      }
+    }
+    if (!exists) {
+      options.push(input);
+      window.localStorage.setItem("api-list", options);
     }
   }
 
@@ -107,6 +151,7 @@
       jwt = responseJSON['access_token'];
       const secondsUntilExpiration = parseInt(responseJSON['expires_in']);
 
+      id('choose-api').classList.toggle('hidden');
       qs('#auth form').classList.toggle('hidden');
       qs('#auth p').classList.toggle('hidden');
       qs('#error').classList.add('hidden');
@@ -132,7 +177,7 @@
       // loading animations
       let items = id('items');
       items.innerHTML = '';
-      let itemLoad = gen('div');
+      let itemLoad = gen('div', {classList: 'load-items'});
       itemLoad.classList.add('load-items');
       items.prepend(itemLoad);
 
@@ -170,7 +215,7 @@
       // get the search string, query api
       let search = id('searchbar').value;
       search = search.split(' ').join('%20');
-      const queryURL = `/api/apps/LLM_us/query/${APPID}?q=${search}&rows=${ROW_LIMIT}&group.limit=${SKU_LIMIT}&debug=results&debug.explain.structured=true`;
+      const queryURL = `/api/apps/LLM_us/query/${APPID}?q=${search}&start=${SEARCH_START}&rows=${ROW_LIMIT}&group.limit=${SKU_LIMIT}&debug=results&debug.explain.structured=true`;
       let res = await fetch(API_URL + queryURL, { headers });
       await statusCheck(res);
       res = await res.json();         // this is the new "dirty" data to parse
@@ -1136,7 +1181,23 @@
     return document.querySelectorAll(query);
   }
 
-  function gen(tag) {
-    return document.createElement(tag);
+  /**
+   * Shorthand for createElement; additionally allows addition of attributes
+   * in line with element generation.
+   * @param {String} tag - type of element to generate
+   * @param {Object} attributes - attributes to attach to the element
+   * @returns {HTMLElement}
+   */
+  function gen(tag, attributes = {}) {
+    const element = document.createElement(tag);
+    for (const [key, value] of Object.entries(attributes)) {
+      if (key === 'classList') {
+        element.classList.add(value);
+      } else {
+        element[key] = value;
+      }
+    }
+    return element;
   }
+
 })();

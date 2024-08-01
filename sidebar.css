@@ -293,6 +293,19 @@ details:not([open]) > summary > div > p.detail-desc {
   color: #c8102e;
 }
 
+#choose-api {
+  align-self: center;
+  margin: 0.75rem 0 0.5rem;
+}
+
+#choose-api input {
+  width: 80%;
+}
+
+#choose-api label {
+  padding: 0.25rem;
+}
+
 #auth form {
   display: flex;
   flex-direction: column;
@@ -302,7 +315,7 @@ details:not([open]) > summary > div > p.detail-desc {
 }
 
 #auth p {
-  width: 80%;
+  width: 75%;
   align-self: center;
   margin: 0.75rem 0 0.5rem;
 }
@@ -328,6 +341,6 @@ details:not([open]) > summary > div > p.detail-desc {
   background-color: #d3d5d7;
 }
 
-#auth form.hidden {
+#auth .hidden {
   display: none;
 }
