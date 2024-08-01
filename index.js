@@ -15,7 +15,7 @@
   let jwt;
 
   // api constants
-  const API_URL = 'https://lululemon-dev.c.lucidworks.cloud';
+  const API_URL = 'https://lululemon.c.lucidworks.cloud';
   const APPID = 'LLM_us';
   const ROW_LIMIT = '40';
   const SKU_LIMIT = '100';
