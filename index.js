@@ -669,12 +669,12 @@
     } else if (description.includes('tf, computed as')) {
       drop.classList.add('scoretf')
     } else {
-      const baseDescription = description.split('(')[0];
-      if (baseDescription === 'weight') {
+      const baseDescription = description.split('(');
+      if (baseDescription[0] === 'weight') {
         drop.classList.add('scoreweight');
-      } else if (baseDescription === 'max of:') {
+      } else if (baseDescription[0] === 'max of:') {
         drop.classList.add('scoremax');
-      } else if (baseDescription === 'query') {
+      } else if (baseDescription[0] === 'query' || baseDescription[1] === 'query') {
         drop.classList.add('scorequery');
       }
     }
@@ -758,7 +758,7 @@
     let query = list.querySelector('.scorequery');
     if (query) {
       let copy = query.cloneNode(true);
-      copy.querySelector('details > summary > div > p.detail-desc').textContent = 'Query constant'
+      copy.querySelector('details > summary > div > p.detail-desc').textContent = 'Signal boosting';
       div.append(copy);
     }
     return div; 
