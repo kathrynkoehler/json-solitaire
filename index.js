@@ -178,7 +178,6 @@
       let items = id('items');
       items.innerHTML = '';
       let itemLoad = gen('div', {classList: 'load-items'});
-      itemLoad.classList.add('load-items');
       items.prepend(itemLoad);
 
       let circle = qs('#options svg');
@@ -412,8 +411,7 @@
  */
   function addHeader(search) {
     try {
-      let section = gen('section');
-      section.id = search;
+      let section = gen('section', {id: search});
 
       let load = gen('div');
       load.classList.add('load-items', 'loading');
@@ -461,28 +459,19 @@
   function addProductCard(data, productId, displayName, image, search) {
     try {
       // add product photo
-      const photoDiv = gen('div');
-      photoDiv.classList.add('photo');
-      const photo = gen('img');
-      photo.src = image;
-      photo.alt = displayName;
+      const photoDiv = gen('div', {classList: 'photo'});
+      const photo = gen('img', {src: image, alt: displayName});
       photoDiv.appendChild(photo);
 
       // add aggregate scores from skus
       let scores = productScores(data);
       
-      const title = gen('h1');
-      title.textContent = displayName;
-      title.classList.add("card-search");
-      const prodId = gen('h2');
-      prodId.textContent = 'ID: ' + productId;
-      const max = gen('h2');
-      max.textContent = `Score maximum: ${scores[1]}`;
-      const count = gen('h2');
-      count.textContent = `SKU count: ${scores[0]}`;
+      const title = gen('h1', {textContent: displayName, classList: 'card-search'});
+      const prodId = gen('h2', {textContent: `ID: ${productId}`});
+      const max = gen('h2', {textContent: `Score maximum: ${scores[1]}`});
+      const count = gen('h2', {textContent: `SKU count: ${scores[0]}`});
 
-      const contents = gen('div');
-      contents.classList.add('card-contents');
+      const contents = gen('div', {classList: 'card-contents'});
       contents.append(title, prodId, max, count);
 
       const article = gen('article');
@@ -531,39 +520,32 @@
   async function addCard(data, value, skuData, sku, search, number) {
     try {
       // the card that we'll assemble below
-      const card = gen('article');
-      card.classList.add('product-card');
+      const card = gen('article', {classList: 'product-card'});
 
       const prodContainer = qs(`#${search} .${data['productId']}`);
       prodContainer.prepend(card);
       const productId = sku + '_' + data['productId'];
 
       // add photo
-      const photoDiv = gen('div');
-      photoDiv.classList.add('photo');
-      const photo = gen('img');
+      const photoDiv = gen('div', {classList: 'photo'});
+      const photo = gen('img', {alt: data['displayName']});
       if (skuData['skuImg']) {
         photo.src = skuData['skuImg'];
       } else {
         photo.src = data['prodImg'];
       }
-      photo.alt = data['displayName'];
       photoDiv.appendChild(photo);
       
       // add title, productID, SKUID, overall score
-      const title = gen('h1');
-      title.textContent = data['displayName'];
-      const prodId = gen('h2');
-      prodId.textContent = `ID: ${productId}`;
-      const order = gen('p');
-      order.textContent = number;
-      const score = gen('h2');
-      score.textContent = `Score: ${value}`;
-      
+      const title = gen('h1', {textContent: data['displayName']});
+      const prodId = gen('h2', {textContent: `ID: ${productId}`});
+      const order = gen('p', {textContent: number});
+      const score = gen('h2', {textContent: `Score: ${value}`});
+
       // score details button + list
-      const dropDownButton = gen('button');
+      const dropDownButton = gen('button', {textContent: 'SCORE DETAILS', 
+        classList: 'collapsible'});
       dropDownButton.textContent = 'SCORE DETAILS';
-      dropDownButton.classList.add('collapsible');
       let scores = scoreList(productId, card);
       const dropDownContainer = scores;
       dropDownContainer.classList.add('hidden');
@@ -587,8 +569,7 @@
         summary.classList.toggle('hidden');
       });
 
-      const contents = gen('div');
-      contents.classList.add('card-contents');
+      const contents = gen('div', {classList: 'card-contents'});
       contents.append(title, prodId, order, score, dropDownButton);
       card.append(photoDiv, contents);
     } catch (err) {
@@ -604,10 +585,8 @@
    * @returns {HTMLElement} completed container element for score dropdown
    */
   function scoreList(itemId, card) {
-    const dropDownContainer = gen('article');
-    dropDownContainer.classList.add('content');
-    dropDownContainer.classList.add('hidden');
-    dropDownContainer.id = itemId + '-scorelist';
+    const dropDownContainer = gen('article', {id: `${itemId} + -scorelist`});
+    dropDownContainer.classList.add('content', 'hidden');
 
     // find the item we need in allDetails
     const item = allDetails[itemId];
@@ -627,22 +606,16 @@
    * @returns {HTMLElement} the score detail element.
    */
   function createScoreDetail(scoreDetail) {
-    const drop = gen('details');
-    const summary = gen('summary');
-    const div = gen('div');
-    
     let indent = `indent-${scoreDetail[0]}`;
-    const description = gen('p');
-    description.textContent = scoreDetail[1];
-    description.classList.add("detail-desc");
-    const value = gen('p');
-    value.textContent = scoreDetail[2];
-    value.classList.add("detail-val");
-
+    const description = gen('p', {textContent: scoreDetail[1], classList: 'detail-desc'});
+    const value = gen('p', {textContent: scoreDetail[2], classList: 'detail-val'});
+    
+    const div = gen('div');
+    const summary = gen('summary');
+    const drop = gen('details', {classList: indent});
     div.append(description, value);
     summary.appendChild(div);
     drop.appendChild(summary);
-    drop.classList.add(indent);
 
     return drop;
   }
@@ -742,15 +715,13 @@
   function scoreSummary(list) {
     let div = gen('div');
     div.classList.add('hidden', 'content');
-    let title = gen('h3');
-    title.textContent = 'Score Components';
+    let title = gen('h3', {textContent: 'Score Components'});
     let tooltip = scoreTooltip();
     title.append(tooltip);
 
     let formula = scoreFormula(list, ' = ');
     formula = scoreFormulaFormat(formula);
-    let calculation = gen('p');
-    calculation.textContent = formula;
+    let calculation = gen('p', {textContent: formula});
     div.append(title, calculation);
     
     // traverse list and look for "max of:" calculations
@@ -765,7 +736,7 @@
         if (val === target) {
           let copy = weight.cloneNode(true);
           copy.querySelector('details > summary > div > p.detail-desc').textContent = 
-          copy.querySelector('details > summary > div > p.detail-desc').textContent.split(' [')[0];
+            copy.querySelector('details > summary > div > p.detail-desc').textContent.split(' [')[0];
           div.append(scoreRewrite(copy));
         }
       });
@@ -845,17 +816,13 @@
    * Called from scoreSummary().
    */
   function scoreTooltip() {
-    let tooltip = gen('div');
-    tooltip.classList.add('tooltip');
-    let info = gen('img');
-    info.src = './img/info.png';
-    info.alt = 'Read more';
-    let explain = gen('p');
-    explain.textContent = `Each category weight is calculated by multiplying \
-    boost * idf * tf. TFIDF (term frequency, inverse document frequency) \
-    represents the relative concentration of the weighted term in the document \
-    (item).`;
-    explain.classList.add('tooltiptext');
+    let tooltip = gen('div', {classList: 'tooltip'});
+    let info = gen('img', {src: './img/info.png', alt: 'Read more'});
+    let explain = gen('p', {classList: 'tooltiptext', 
+      textContent: `Each category weight is calculated by multiplying \
+      boost * idf * tf. TFIDF (term frequency, inverse document frequency) \
+      represents the relative concentration of the weighted term in the document \
+      (item).`});
     tooltip.append(info, explain);
     return tooltip;
   }
@@ -896,8 +863,7 @@
     let boost = node.querySelector('.scoreboost > summary > div > .detail-val');
     if (boost) {
       let newBoost = gen('details');
-      let boostSummary = gen('summary');
-      boostSummary.textContent = `boost = ${boost.textContent}`
+      let boostSummary = gen('summary', {textContent: `boost = ${boost.textContent}`});
       newBoost.append(boostSummary);
       newWeight.append(newBoost);
     }
@@ -922,39 +888,34 @@
     // build the idf element
     let idfscore = idf.querySelector('div > p.detail-val').textContent;
     let newIdf = gen('details');
-    let idfSummary = gen('summary');
-    idfSummary.textContent = `idf = ${idfscore}`;
+    let idfSummary = gen('summary', {textContent: `idf = ${idfscore}`});
     newIdf.append(idfSummary);
     
     // check whether idf is a single calculation, or sum of several idfs
     if (!(idf.childNodes[0].querySelector('div > p.detail-desc').textContent).includes("sum of")) {
       let smallN = idf.childNodes[1].querySelector('div > p.detail-val').textContent;
       let bigN = idf.childNodes[2].querySelector('div > p.detail-val').textContent;
-      let idfExplain = gen('p');
-      idfExplain.innerHTML = `The number of documents searched (N) is \
-      <span>${bigN}</span>, and the number where the field \
-      <span>${category}</span> contains <span>${term}</span> (n) is \
-      <span>${smallN}</span>.`;
+      let idfExplain = gen('p', {innerHTML: `The number of documents searched (N) is \
+        <span>${bigN}</span>, and the number where the field \
+        <span>${category}</span> contains <span>${term}</span> (n) is \
+        <span>${smallN}</span>.`});
       newIdf.append(idfExplain);
     } else {
       // if idf is a sum, add all to dropdown
-      let sumIdf = gen('p');
-      sumIdf.textContent = 'This idf is a sum of the following:';
+      let sumIdf = gen('p', {textContent: 'This idf is a sum of the following:'});
       newIdf.append(sumIdf);
       for (let i = 1; i < idf.childNodes.length; i++) {
         let current = idf.childNodes[i];
         idfscore = current.querySelector('div > p.detail-val').textContent;
         let nestIdf = gen('details');
-        let idfNestSummary = gen('summary');
-        idfNestSummary.textContent = `idf = ${idfscore}`;
+        let idfNestSummary = gen('summary', {textContent: `idf = ${idfscore}`});
 
         let smallN = current.childNodes[1].querySelector('div > p.detail-val').textContent;
         let bigN = current.childNodes[2].querySelector('div > p.detail-val').textContent;
-        let idfExplain = gen('p');
-        idfExplain.innerHTML = `The number of documents searched (N) is \
-        <span>${bigN}</span>, and the number where the field \
-        <span>${category}</span> contains <span>${term}</span> (n) is \
-        <span>${smallN}</span>.`;
+        let idfExplain = gen('p', {innerHTML: `The number of documents searched (N) is \
+          <span>${bigN}</span>, and the number where the field \
+          <span>${category}</span> contains <span>${term}</span> (n) is \
+          <span>${smallN}</span>.`});
 
         nestIdf.append(idfNestSummary, idfExplain);
         newIdf.append(nestIdf);
@@ -982,15 +943,14 @@
 
     // build the element
     let newTf = gen('details');
-    let tfSummary = gen('summary');
-    tfSummary.textContent = `tf = ${tfscore}`;
-    let tfExplain = gen('p');
-    tfExplain.innerHTML = `The term <span>${term}</span> occurs <span>${freq}</span>\
-    time(s) within the document. Values of <span>${k1}</span> (k1) and\
-    <span>${b}</span> (b) are applied to normalize the result based on expected
-    document relevance and specificity. The length of the <span>${category}</span>\
-    field (dl) is <span>${dl}</span> and the average length of this field (avgdl)\
-    is <span>${avgdl}</span>.`;
+    let tfSummary = gen('summary', {textContent: `tf = ${tfscore}`});
+    let tfExplain = gen('p', 
+      {innerHTML: `The term <span>${term}</span> occurs <span>${freq}</span>\
+      time(s) within the document. Values of <span>${k1}</span> (k1) and\
+      <span>${b}</span> (b) are applied to normalize the result based on expected
+      document relevance and specificity. The length of the <span>${category}</span>\
+      field (dl) is <span>${dl}</span> and the average length of this field (avgdl)\
+      is <span>${avgdl}</span>.`});
 
     newTf.append(tfSummary, tfExplain);
     return newTf;
@@ -1051,18 +1011,14 @@
    */
   function sidebarScores(scorelist, title) {
     let sidebar = id('scores');
-
     let container = gen('div');
-    let heading = gen('h2');
-
-    let label = gen('span');
-    label.textContent = title;
+    
+    let label = gen('span', {textContent: title});
     label.classList.add('category', `${title}`);
-    let icon = gen('img');
-    icon.src = './img/x.png';
-
+    let icon = gen('img', {src: './img/x.png', alt: 'Close'});
+    
+    let heading = gen('h2', {classList: 'active'});
     heading.append(label, icon);
-    heading.classList.add('active');
     heading.addEventListener('click', () => {
       // heading.classList.toggle('active');
       let content = heading.nextElementSibling;
@@ -1091,15 +1047,10 @@
 
     // build new checkbox input and label for boost
     let div = gen('div');
-    let input = gen('input');
-    input.type = 'checkbox';
-    input.id = `check-${boost}`;
+    let input = gen('input', {type: 'checkbox', id: `check-${boost}`});
     boost = boost.split("-boost-");
     boost = boost[0].split('-').join(' ') + ': ' + boost[1];
-    let label = gen('label');
-    label.for = input.id;
-    label.textContent = boost;
-    label.title = title;
+    let label = gen('label', {for: input.id, textContent: boost, title: title});
     div.append(input, label);
     const parent = id("checklist");
     parent.appendChild(div);
