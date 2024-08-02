@@ -17,6 +17,13 @@
   /* box-sizing: border-box; */
 }
 
+#sidebar a img {
+  position: absolute;
+  width: 1.5rem;
+  height: 1.5rem;
+  right: 1rem;
+}
+
 #sidebar ul {
   list-style-type: disc;
 }
@@ -84,7 +91,7 @@ option {
 
 
 /* search bar */
-#choose-files > div {
+#search-input {
   height: 3rem;
   width: 100%;
   position: relative;
@@ -123,6 +130,47 @@ option {
 #searchbar::-webkit-search-cancel-button::before, 
 #searchbar::-webkit-search-cancel-button::after {
   transform: rotate(45deg);
+}
+
+#search-params {
+  padding: 0.25rem;
+}
+
+#search-params p {
+  cursor: pointer;
+  margin: 0.5rem 0 0.75rem;
+  color:#53565a
+}
+
+#search-params p:hover:after {
+  background: #c8102e;
+  bottom: -.3125rem;
+  content: "";
+  display: block;
+  height: .125rem;
+  width: 11.4rem;
+  left: 0;
+  /* position: absolute; */
+  right: 100%;
+  /* top: auto; */
+  transition: right .25s ease-in-out;
+}
+
+#search-params div {
+  display: flex;
+  flex-direction: column;
+}
+
+#search-params input {
+  width: 3rem;
+}
+
+#search-params div.hidden {
+  display: none;
+}
+
+hr {
+  width: 100%;
 }
 
 /* loading animation for boost list */
@@ -266,7 +314,7 @@ details:not([open]) > summary > div > p.detail-desc {
 
 #auth span {
   position: relative;
-  font-size: 0.875rem;
+  /* font-size: 0.875rem; */
   margin-left: 0.5rem;
 }
 
@@ -281,7 +329,7 @@ details:not([open]) > summary > div > p.detail-desc {
   content: "";
   display: block;
   height: .125rem;
-  width: 2.9rem;
+  width: 3.3rem;
   left: 0;
   position: absolute;
   right: 100%;

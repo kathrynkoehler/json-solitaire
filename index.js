@@ -18,9 +18,9 @@
   const PROD_URL = 'https://lululemon.c.lucidworks.cloud';
   const DEV_URL = 'https://lululemon-dev.c.lucidworks.cloud';
   const APPID = 'LLM_us';
-  const ROW_LIMIT = '40';
-  const SKU_LIMIT = '100';
-  const SEARCH_START = '0';
+  let ROW_LIMIT = '40';
+  let SKU_LIMIT = '100';
+  let SEARCH_START = '0';
 
   let API_URL = '';
 
@@ -43,8 +43,7 @@
         auth['username'].value = '';
         auth['password'].value = '';
       });
-      let signin = id('signin');
-      signin.addEventListener('click', () => {
+      id('signin').addEventListener('click', () => {
         auth.classList.toggle('hidden');
         id('choose-api').classList.toggle('hidden');
         qs('#auth p').classList.toggle('hidden');
@@ -57,6 +56,9 @@
       id('search-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         await loadPage(e);
+      });
+      qs('#search-params > p').addEventListener('click', () => {
+        qs('#search-params > div').classList.toggle('hidden');
       });
     } catch (err) {
       console.error('init ' + err);
@@ -211,6 +213,10 @@
         'Authorization': `Bearer ${jwt}`
       };
 
+      SEARCH_START = id('start-index').value;
+      ROW_LIMIT = id('results-limit').value;
+      SKU_LIMIT = id('sku-limit').value;
+
       // get the search string, query api
       let search = id('searchbar').value;
       search = search.split(' ').join('%20');
@@ -219,6 +225,7 @@
       await statusCheck(res);
       res = await res.json();         // this is the new "dirty" data to parse
       id('error').classList.add('hidden');
+      qs('#search-params > div').classList.add('hidden');
       decomposeSKU(res);
     } catch (err) {
       console.error('Error in queryData: ' + err);
