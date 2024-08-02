@@ -153,9 +153,9 @@
       jwt = responseJSON['access_token'];
       const secondsUntilExpiration = parseInt(responseJSON['expires_in']);
 
-      id('choose-api').classList.toggle('hidden');
-      qs('#auth form').classList.toggle('hidden');
-      qs('#auth p').classList.toggle('hidden');
+      id('choose-api').classList.add('hidden');
+      qs('#auth form').classList.add('hidden');
+      qs('#auth p').classList.add('hidden');
       qs('#error').classList.add('hidden');
 
       // reschedule before jwt expires
