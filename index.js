@@ -81,6 +81,9 @@
       }
     } catch(err) {
       console.error(err);
+      let setUrls = JSON.stringify([{"url": `${PROD_URL}`}, {"url": `${DEV_URL}`}]);
+      window.localStorage.setItem("api-list", setUrls);
+      prepAPI();
     }
   }
 
