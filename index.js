@@ -33,8 +33,8 @@
    */
   async function init() {
     try {
-      prepAPI();
       // prep login to authenticate new jwt
+      prepAPI();
       let auth = qs('#auth form');
       auth.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -69,14 +69,18 @@
    * Get saved API urls from localstorage and add to list of options.
    */
   function prepAPI() {
-    if (!window.localStorage.getItem("api-list")) {
-      let setUrls = ([{url: `${PROD_URL}`}, {url: `${DEV_URL}`}]);
-      window.localStorage.setItem("api-list", setUrls);
-    }
-    let urls = (window.localStorage.getItem("api-list")).split(",");
-    let list = id("api-options");
-    for (let i = 0; i < urls.length; i++) {
-      list.append(gen("option", {value: `${urls[i]}`}));
+    try {
+      let urls = JSON.parse(window.localStorage.getItem("api-list"));
+      if (!urls) {
+        let setUrls = JSON.stringify([{"url": `${PROD_URL}`}, {"url": `${DEV_URL}`}]);
+        window.localStorage.setItem("api-list", setUrls);
+      }
+      let list = id("api-options");
+      for (let i = 0; i < urls.length; i++) {
+        list.append(gen("option", {value: `${urls[i]["url"]}`}));
+      }
+    } catch(err) {
+      console.error(err);
     }
   }
 
@@ -87,7 +91,7 @@
   function chooseAPI() {
     let input = id("api-input").value;
     API_URL = input;
-    let options = window.localStorage.getItem("api-list").split(",");
+    let options = JSON.parse(window.localStorage.getItem("api-list")); //.split(",")
     let exists = false;
     for (let i = 0; i < options.length; i++) {
       let current = options[i];
