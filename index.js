@@ -70,7 +70,7 @@
    */
   function prepAPI() {
     if (!window.localStorage.getItem("api-list")) {
-      let setUrls = ([{url: PROD_URL}, {url: DEV_URL}]);
+      let setUrls = ([{url: `${PROD_URL}`}, {url: `${DEV_URL}`}]);
       window.localStorage.setItem("api-list", setUrls);
     }
     let urls = (window.localStorage.getItem("api-list")).split(",");
