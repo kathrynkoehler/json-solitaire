@@ -94,14 +94,15 @@
     let options = JSON.parse(window.localStorage.getItem("api-list")); //.split(",")
     let exists = false;
     for (let i = 0; i < options.length; i++) {
-      let current = options[i];
+      let current = options[i]["url"];
       if (current.includes(input)) {
         exists = true;
         break;
       }
     }
     if (!exists) {
-      options.push(input);
+      options.push({"url": `${input}`});
+      console.log(options);
       window.localStorage.setItem("api-list", options);
     }
   }
