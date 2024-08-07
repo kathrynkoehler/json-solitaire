@@ -1140,14 +1140,29 @@
     return response;
   }
 
+  /**
+   * Shorthand for getElementByID
+   * @param {String} idName - id to find (exluding '#')
+   * @returns {HTMLElement}
+   */
   function id(idName) {
     return document.getElementById(idName);
   }
 
+  /**
+   * Shorthand for querySelector
+   * @param {String} query - the selector to query for
+   * @returns {HTMLElement}
+   */
   function qs(query) {
     return document.querySelector(query);
   }
 
+  /**
+   * Shorthand for querySelectorAll
+   * @param {String} query - the selector to query for
+   * @returns {HTMLElement}
+   */
   function qsa(query) {
     return document.querySelectorAll(query);
   }
