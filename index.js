@@ -1129,9 +1129,9 @@
   /* ----- Helpers & wrappers ----- */
 
   /**
-   * 
-   * @param {*} response 
-   * @returns 
+   * Check whether a fetch result is in the ok status range.
+   * @param {Promise} response - the promise to check the ok range of
+   * @returns {Promise}
    */
   async function statusCheck(response) {
     if (!response.ok) {
