@@ -8,8 +8,8 @@ body {
 main {
   display: flex;
   justify-content: space-evenly;
-  width: 80%;
-  max-width: 1600px;
+  width: 90%;
+  max-width: 1700px;
   margin: auto;
   margin-top: 2rem;
 }
@@ -32,7 +32,7 @@ main {
 
 #items {
   min-width: 30%;
-  max-width: 1150px;
+  max-width: 1200px;
 }
 
 #items .photo > img {

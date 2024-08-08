@@ -19,7 +19,7 @@
   const DEV_URL = 'https://lululemon-dev.c.lucidworks.cloud';
   const APPID = 'LLM_us';
   let ROW_LIMIT = '40';
-  let SKU_LIMIT = '100';
+  let SKU_LIMIT = '50';
   let SEARCH_START = '0';
 
   let API_URL = '';
@@ -50,6 +50,9 @@
       });
       qs('#error img').addEventListener('click', () => {
         id('error').classList.add('hidden');
+      });
+      qs('#search-signals img').addEventListener('click', () => {
+        id('search-signals').classList.add('hidden');
       });
 
       // prep searchbar to query api
@@ -196,6 +199,7 @@
       circle2.classList.remove('hidden');
 
       // query data from api, then display on page
+      await querySignals();
       await queryData(e);
       await displayData();
       
@@ -243,6 +247,43 @@
         qs('#signin').classList.remove('active');
       }, 5000);
     }
+  }
+
+  /**
+   * Check the signals aggregates being used to return query results. Sometimes
+   * queries are too specific and don't have their own aggregate; in this case, 
+   * a broader term will be used for the search.
+   */
+  async function querySignals() {
+    try {
+      const headers = {
+        'Authorization': `Bearer ${jwt}`
+      };
+
+      let search = id('searchbar').value.split(' ').join('%20');
+      const queryURL = `/api/solr/LLM_us_Search_signals_aggr/select?fq=aggr_type_s:"click@doc_id,filters,query"&deftype=edismax&mm=50%25&qf=query_t&fl=query_s,doc_id_s,weight_d,score&q=${search}&group.sort=score`;
+      let res = await fetch(API_URL + queryURL, { headers });
+      await statusCheck(res);
+      res = await res.json();
+      displaySignals(res);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  /**
+   * Display the terms being used for signal aggregates applied to this search.
+   * @param {JSON} data - the JSON formatted rresponse from the signals query
+   */
+  function displaySignals(data) {
+    console.log(data);
+
+    const response = data["response"]["docs"].map(term => term["query_s"]);
+    console.log(response);
+    const message = id('search-signals');
+    const content = message.querySelector('span');
+    content.textContent = `Signal aggregate matched: "${response[0]}"`;
+    message.classList.remove('hidden');
   }
 
   /*
