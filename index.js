@@ -108,8 +108,7 @@
     }
     if (!exists) {
       options.push({"url": `${input}`});
-      console.log(options);
-      window.localStorage.setItem("api-list", options);
+      window.localStorage.setItem("api-list", JSON.stringify(options));
     }
   }
 
