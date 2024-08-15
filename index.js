@@ -19,7 +19,7 @@
   const DEV_URL = 'https://lululemon-dev.c.lucidworks.cloud';
   const APPID = 'LLM_us';
   let ROW_LIMIT = '40';
-  let SKU_LIMIT = '50';
+  let SKU_LIMIT = '25';
   let SEARCH_START = '0';
 
   let API_URL = '';
@@ -53,6 +53,12 @@
       });
       qs('#search-signals img').addEventListener('click', () => {
         id('search-signals').classList.add('hidden');
+      });
+      id('more-signals').addEventListener('click', () => {
+        id('full-signals').classList.remove('hidden');
+      });
+      qs('#full-signals img').addEventListener('click', () => {
+        id('full-signals').classList.add('hidden');
       });
 
       // prep searchbar to query api
@@ -119,8 +125,8 @@
    * @param {String} err - the error returned by the server
    */
   function handleError(message, err) {
-    id('items').innerHTML = '';
-    id('items').classList.add('hidden');
+    // qs('#items > section').remove();
+    // id('items').classList.add('hidden');
     let display = qs('#error p');
     display.textContent = message + err;
     id('error').classList.remove('hidden');
@@ -186,26 +192,27 @@
    */
   async function loadPage(e) {
     try {
-      // loading animations
-      let items = id('items');
-      items.innerHTML = '';
-      let itemLoad = gen('div', {classList: 'load-items'});
-      items.prepend(itemLoad);
+      // clear page
+      let items = id('items').querySelector('section');
+      if (items) {
+        items.remove();
+      }
+      id('full-signals').classList.add('hidden');
 
+      // loading animations
       let circle = qs('#options svg');
       let circle2 = id('load-circle');
       circle.classList.remove('hidden');
       circle2.classList.remove('hidden');
 
       // query data from api, then display on page
-      await querySignals();
       await queryData(e);
       await displayData();
+      await querySignals();
       
       // when all data is displayed, remove loading icons
       circle.classList.add('hidden');
       circle2.classList.add('hidden');
-      qs('#items .load-items').remove();
     } catch (err) {
       console.error('Error in loadPage:', err);
     }
@@ -218,8 +225,12 @@
   async function queryData(e) {
     e.preventDefault();
     try {
+      let items = id('items').querySelector('section');
+      console.log(items);
+      if (items) {
+        items.remove();
+      }
       // authenticate current jwt by adding it in auth header
-      id('items').innerHTML = '';
       const headers = {
         'Authorization': `Bearer ${jwt}`
       };
@@ -272,17 +283,30 @@
 
   /**
    * Display the terms being used for signal aggregates applied to this search.
-   * @param {JSON} data - the JSON formatted rresponse from the signals query
+   * @param {JSON} data - the JSON formatted response from the signals query
    */
   function displaySignals(data) {
     console.log(data);
 
-    const response = data["response"]["docs"].map(term => term["query_s"]);
+    const response = data["response"]["docs"].map(term => [term["query_s"], term["score"], term["weight_d"]]);
     console.log(response);
     const message = id('search-signals');
     const content = message.querySelector('span');
-    content.textContent = `Signal aggregate matched: "${response[0]}"`;
+    content.textContent = `Top signal aggregate score: "${response[0][0]}"`;
     message.classList.remove('hidden');
+
+    const more = qs('#full-signals div ol');
+    more.innerHTML = '';
+    for (let i = 0; i < response.length; i++) {
+      let result = gen('li', {textContent: `${response[i][0]}`});
+      let contents = gen('ul');
+      let score = gen('li', {textContent: `score: ${response[i][1]}`});
+      let weight = gen('li', {textContent: `weight: ${response[i][2]}`});
+      contents.append(score, weight);
+      result.append(contents);
+      more.append(result);
+    }
+
   }
 
   /*
@@ -461,17 +485,12 @@
   }
 
 /**
- * add new section within #items for search query
+ * Add new section within #items to hold product decks.
  * @param {String} search - the query string
  */
   function addHeader(search) {
     try {
       let section = gen('section', {id: search});
-
-      let load = gen('div');
-      load.classList.add('load-items', 'loading');
-      section.appendChild(load);
-
       let parent = id("items");
       parent.appendChild(section);
     } catch (err) {

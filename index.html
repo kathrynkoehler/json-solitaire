@@ -28,7 +28,6 @@
             <input list="api-options" id="api-input">
             <datalist id="api-options">
             </datalist>
-            <!-- <button id="choose-api-btn">Select API</button> -->
           </div>
           <p class="hidden">
             Sign in with Lucidworks credentials to authorize queries to the selected API.
@@ -44,7 +43,10 @@
           <h1></h1>
         </section>
         <section id="search">
-          <div id="search-signals" class="hidden"><img src="./img/x.png"><span></span></div>
+          <div id="search-signals" class="hidden">
+            <img src="./img/x.png">
+            <p><span></span>. <span id="more-signals">See More</span></p>
+          </div>
           <div id="search-input">
             <form id="search-form">
               <svg id="icon_search" height="16" width="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" class="search_searchIcon__3DZ3s" focusable="false" role="img">
@@ -59,7 +61,7 @@
             <p>Adjust search parameters</p>
             <div class="hidden">
               <label><input type="number" id="results-limit" name="params" value="20"> Results limit</label>
-              <label><input type="number" id="sku-limit" name="params" value="100"> SKU limit</label>
+              <label><input type="number" id="sku-limit" name="params" value="25"> SKU limit</label>
               <label><input type="number" id="start-index" name="params" value="0"> Start index</label>
             </div>
           </div>
@@ -85,13 +87,30 @@
           <!-- when a card is selected, its score breakdown populates here -->
         </section>
       </section>
-      <section id="error" class="hidden">
-        <img src="./img/x.png" alt="close">
-        <p></p>
-      </section>
       <section id="items">
         <!-- Card stacks are dynamically added here -->
-        <!-- <div class="load-items loading"></div> -->
+        <article id="error" class="hidden">
+          <div>
+            <img src="./img/x.png" alt="close">
+            <h2>Error</h2>
+            <p></p>
+          </div>
+        </article>
+        <article id="full-signals" class="hidden">
+          <div>
+            <img src="./img/x.png">
+            <h2>Search Signals</h2>
+            <div>
+              <p>
+                Queries aren't always processed exactly as they're written; a more
+                or less specific phrase is used to make a search based on aggregated
+                signal data. If the results for a search seem inaccurate, the cause
+                may be an overly broad or poorly matched signal aggregation.
+              </p>
+              <ol></ol>
+            </div>
+          </div>
+        </article>
       </section>
     </main>
   </body>

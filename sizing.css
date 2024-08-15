@@ -3,7 +3,7 @@
 /* Extra-Large devices */
 @media only screen and (max-width: 1600px) {
   main {
-    width: 100%; /* something less than 1580px*/
+    width: 100%;
     margin: none;
   }
 
@@ -16,7 +16,7 @@
 /* large devices (desktops, laptops, 992px+) */
 @media only screen and (max-width: 992px) {
   main {
-    width: 100%; /* something less than 1580px*/
+    width: 100%;
     margin: none;
   }
 
@@ -28,7 +28,7 @@
 /* medium devices (tablets, 768px+) */
 @media only screen and (max-width: 768px) {
   main {
-    width: 100%; /* something less than 1580px*/
+    width: 100%;
     margin: none;
   }
 
@@ -40,7 +40,7 @@
 /* small devices (406px+) */
 @media only screen and (max-width: 400px) {
   main {
-    width: 100%; /* something less than 1580px*/
+    width: 100%;
     margin: none;
   }
 
